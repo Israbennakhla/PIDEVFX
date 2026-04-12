@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.EvenementController" prefHeight="550.0" prefWidth="950.0">
+    <left>
+        <VBox spacing="15" style="-fx-padding: 20;">
+            <Label text="Formulaire Événement" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <TextField fx:id="tfName" promptText="Name (Nom de l'événement)"/>
+            <DatePicker fx:id="dpDate" promptText="Date"/>
+            <TextField fx:id="tfHeure" promptText="Heure (ex: 14:30)"/>
+            <TextField fx:id="tfAddresse" promptText="Address (ex: Tunis)"/>
+            <TextField fx:id="tfDescription" promptText="Description"/>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="Ajouter" onAction="#ajouterEvenement" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                <Button text="Modifier" onAction="#modifierEvenement" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+            </HBox>
+            <Button text="Vider le formulaire" onAction="#viderFormulaire" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+    <center>
+        <VBox spacing="10" style="-fx-padding: 20;">
+            <ListView fx:id="listEvenements" VBox.vgrow="ALWAYS" onMouseClicked="#remplirFormulaire" />
+            <HBox alignment="CENTER_RIGHT">
+                <Button text="Supprimer" onAction="#supprimerEvenement" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>
