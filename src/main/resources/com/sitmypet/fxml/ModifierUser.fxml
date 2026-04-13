@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.sitmypet.controllers.ModifierUserController"
+      stylesheets="/style.css"
+      spacing="15" prefHeight="550.0" prefWidth="500.0">
+    
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+    
+    <!-- Titre -->
+    <Label text="✏️ Modifier l'utilisateur" styleClass="form-title">
+        <font>
+            <Font name="System Bold" size="20"/>
+        </font>
+    </Label>
+    
+    <Separator/>
+    
+    <!-- Formulaire -->
+    <GridPane hgap="10" vgap="15">
+        <columnConstraints>
+            <ColumnConstraints minWidth="120" prefWidth="120"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+        
+        <!-- Nom -->
+        <Label text="Nom *" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="txtNom" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                  promptText="Nom de famille"/>
+        
+        <!-- Prénom -->
+        <Label text="Prénom *" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="txtPrenom" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                  promptText="Prénom"/>
+        
+        <!-- Email -->
+        <Label text="Email *" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <TextField fx:id="txtEmail" GridPane.columnIndex="1" GridPane.rowIndex="2"
+                  promptText="exemple@email.com"/>
+        
+        <!-- Téléphone -->
+        <Label text="Téléphone" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <TextField fx:id="txtTelephone" GridPane.columnIndex="1" GridPane.rowIndex="3"
+                  promptText="+216 XX XXX XXX"/>
+        
+        <!-- Adresse -->
+        <Label text="Adresse" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+        <TextField fx:id="txtAdresse" GridPane.columnIndex="1" GridPane.rowIndex="4"
+                  promptText="Adresse complète"/>
+        
+        <!-- Photo -->
+        <Label text="Photo" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+        <HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <TextField fx:id="txtPhoto" HBox.hgrow="ALWAYS" 
+                      promptText="Nom du fichier photo" editable="false"/>
+            <Button fx:id="btnParcourir" text="Parcourir..." onAction="#handleParcourir"/>
+        </HBox>
+        
+        <!-- Rôle -->
+        <Label text="Rôle *" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+        <ComboBox fx:id="comboRole" GridPane.columnIndex="1" GridPane.rowIndex="6"
+                 prefWidth="200"/>
+        
+        <!-- Statut -->
+        <Label text="Statut" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+        <CheckBox fx:id="checkActif" text="Compte actif" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+    </GridPane>
+    
+    <Separator/>
+    
+    <!-- Note -->
+    <Label text="* Champs obligatoires" styleClass="note-text"/>
+    
+    <!-- Boutons -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button fx:id="btnAnnuler" text="Annuler" onAction="#handleAnnuler" 
+               styleClass="btn-secondary" prefWidth="100"/>
+        <Button fx:id="btnEnregistrer" text="Enregistrer" onAction="#handleEnregistrer" 
+               styleClass="btn-success" prefWidth="120"/>
+    </HBox>
+</VBox>

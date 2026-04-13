@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.sitmypet.controllers.LoginController"
+      stylesheets="/style.css"
+      prefHeight="600.0" prefWidth="900.0"
+      style="-fx-background-color: white;">
+
+    <!-- PARTIE GAUCHE (Dégradé / Branding) -->
+    <VBox prefWidth="450" alignment="CENTER" spacing="20"
+          style="-fx-background-color: linear-gradient(to bottom right, #8e5bd6, #5a369e);">
+        <Label text="🐾" style="-fx-font-size: 80px; -fx-text-fill: white;"/>
+        <Label text="SitMyPet" style="-fx-font-size: 36px; -fx-font-weight: 900; -fx-text-fill: white;"/>
+        <Label text="L'espace d'administration" style="-fx-font-size: 16px; -fx-text-fill: #d1cadd;"/>
+    </VBox>
+
+    <!-- PARTIE DROITE (Formulaire de Connexion) -->
+    <VBox prefWidth="450" alignment="CENTER" spacing="30" style="-fx-padding: 50;">
+        <VBox alignment="CENTER" spacing="5">
+            <Label text="Connexion" style="-fx-font-size: 32px; -fx-font-weight: 900; -fx-text-fill: #2d3748;"/>
+            <Label text="Veuillez vous identifier pour continuer." style="-fx-text-fill: #718096; -fx-font-size: 14px;"/>
+        </VBox>
+
+        <VBox spacing="15" prefWidth="1000">
+            <!-- Email -->
+            <VBox spacing="5">
+                <Label text="Adresse Email" style="-fx-font-weight: bold; -fx-text-fill: #4a5568;"/>
+                <TextField fx:id="txtEmail" promptText="admin@sitmypet.com" styleClass="text-field" prefHeight="45"/>
+            </VBox>
+            
+            <!-- Mot de passe -->
+            <VBox spacing="5">
+                <Label text="Mot de Passe" style="-fx-font-weight: bold; -fx-text-fill: #4a5568;"/>
+                <PasswordField fx:id="txtPassword" promptText="••••••••" styleClass="text-field" prefHeight="45"/>
+            </VBox>
+            
+            <HBox alignment="CENTER_RIGHT">
+                <Label text="Mot de passe oublié ?" style="-fx-text-fill: #8e5bd6; -fx-cursor: hand; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+            </HBox>
+        </VBox>
+
+        <!-- Message d'erreur caché par défaut -->
+        <Label fx:id="lblErreur" text="Email ou mot de passe incorrect." style="-fx-text-fill: #e74c3c; -fx-font-weight: bold; -fx-font-size: 14px;" visible="false"/>
+
+        <Button text="Se Connecter" onAction="#handleLogin" prefWidth="350" prefHeight="50" styleClass="btn-primary" style="-fx-font-size: 18px;"/>
+    </VBox>
+</HBox>
