@@ -1,15 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sitmypet.controllers.FrontAccueilController">
-   <children>
-      <Label fx:id="welcomeLabel" layoutX="150.0" layoutY="250.0" text="Bienvenue sur l'interface Front (Gardien / Propriétaire)">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Label>
-   </children>
-</AnchorPane>
+<BorderPane prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sitmypet.controllers.FrontAccueilController" stylesheets="/style.css">
+    
+    <!-- LEFT SIDEBAR -->
+    <left>
+        <VBox prefWidth="250" spacing="8" style="-fx-background-color: #f8fafc; -fx-padding: 20; -fx-border-color: #e2e8f0; -fx-border-width: 0 1 0 0;">
+            <Label text="🐾 SitMyPet" style="-fx-font-size: 24px; -fx-font-weight: 900; -fx-text-fill: #5a369e; -fx-padding: 0 0 20 0;"/>
+            
+            <Label text="GÉNÉRAL" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #a0aec0; -fx-padding: 10 0 5 0;"/>
+            <Button fx:id="btnAccueil" text="🏠 Accueil" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;" prefWidth="210" alignment="BASELINE_LEFT"/>
+            <Button fx:id="btnProfil" text="👤 Mon Profil" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;" prefWidth="210" alignment="BASELINE_LEFT"/>
+            
+            <!-- SECTION PROPRIETAIRE -->
+            <VBox fx:id="boxProprietaire" spacing="8" managed="false" visible="false">
+                <Label text="ESPACE PROPRIÉTAIRE" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #a0aec0; -fx-padding: 15 0 5 0;"/>
+                <Button fx:id="btnMesAnimaux" text="🐾 Mes Animaux" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;" prefWidth="210" alignment="BASELINE_LEFT"/>
+                <Button fx:id="btnMesAnnonces" text="📢 Mes Annonces" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;" prefWidth="210" alignment="BASELINE_LEFT"/>
+                <Button fx:id="btnPostulationsRecues" text="📥 Postulations Reçues" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;" prefWidth="210" alignment="BASELINE_LEFT"/>
+            </VBox>
+
+            <!-- SECTION GARDIEN -->
+            <VBox fx:id="boxGardien" spacing="8" managed="false" visible="false">
+                <Label text="ESPACE GARDIEN" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #a0aec0; -fx-padding: 15 0 5 0;"/>
+                <Button fx:id="btnRechercherAnnonces" text="🔍 Rechercher Annonces" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;" prefWidth="210" alignment="BASELINE_LEFT"/>
+                <Button fx:id="btnMesPostulations" text="📤 Mes Postulations envoyées" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;" prefWidth="210" alignment="BASELINE_LEFT"/>
+            </VBox>
+
+            <Label text="COMMUNICATION" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #a0aec0; -fx-padding: 15 0 5 0;"/>
+            <Button fx:id="btnMessagerie" text="💬 Messagerie" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;" prefWidth="210" alignment="BASELINE_LEFT"/>
+            <Button fx:id="btnArticles" text="📄 Articles / Blog" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;" prefWidth="210" alignment="BASELINE_LEFT"/>
+            
+            <Region VBox.vgrow="ALWAYS" />
+            <Button fx:id="btnDeconnexion" text="🚪 Se Déconnecter" onAction="#handleDeconnexion" style="-fx-background-color: #fee2e2; -fx-text-fill: #ef4444; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="210" prefHeight="40" alignment="CENTER"/>
+        </VBox>
+    </left>
+    
+    <!-- CENTER CONTENT -->
+    <center>
+        <StackPane style="-fx-background-color: white;">
+            <VBox alignment="CENTER" spacing="20">
+                <Label fx:id="lblWelcomeTitle" text="Bienvenue sur votre espace !" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                <Label text="Sélectionnez une option dans le menu de gauche pour commencer." style="-fx-font-size: 16px; -fx-text-fill: #718096;"/>
+                <HBox alignment="CENTER" spacing="10" style="-fx-padding: 20 0 0 0;">
+                    <Label text="Mode de connexion sécurisé :" style="-fx-text-fill: #a0aec0; -fx-font-size: 13px;"/>
+                    <Label fx:id="lblRoleDisplay" text="Rôle Non Défini" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: #8e5bd6; -fx-padding: 4 12; -fx-background-radius: 12;"/>
+                </HBox>
+            </VBox>
+        </StackPane>
+    </center>
+    
+</BorderPane>

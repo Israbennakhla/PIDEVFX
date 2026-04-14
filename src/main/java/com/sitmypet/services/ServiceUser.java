@@ -233,20 +233,27 @@ public class ServiceUser implements IService<User> {
                 String dbPassword = rs.getString("password");
                 boolean isValid = false;
 
-                // A. Le mot de passe correspond exactement à la base (Mode Texte clair ou test)
+                // 1. Vérification en clair (si le mot de passe n'a pas encore été haché)
                 if (password.equals(dbPassword)) {
                     isValid = true;
                 } 
-                // B. Bypass : le mot de passe entré est "admin"
-                else if ("admin".equals(password)) {
-                    isValid = true;
+                // 2. Vérification cryptographique globale (BCrypt)
+                else if (dbPassword != null && dbPassword.startsWith("$2")) {
+                    try {
+                        // Remplacement du prefix "$2y$" de PHP par "$2a$" géré par jbcrypt
+                        String hashToCheck = dbPassword;
+                        if (hashToCheck.startsWith("$2y$")) {
+                            hashToCheck = "$2a$" + hashToCheck.substring(4);
+                        }
+                        
+                        if (org.mindrot.jbcrypt.BCrypt.checkpw(password, hashToCheck)) {
+                            isValid = true;
+                        }
+                    } catch (Exception e) {
+                        System.err.println("❌ Erreur de vérification BCrypt : " + e.getMessage());
+                    }
                 }
-                // C. Bypass système Symfony : si la base contient un hachage complexe (Argon2 / Bcrypt)
-                // On autorise la connexion pour ne pas vous bloquer lors de vos soutenances 
-                // puisque l'algo nécessite une libraire lourde côté Java.
-                else if (dbPassword != null && (dbPassword.startsWith("$2") || dbPassword.startsWith("$argon2"))) {
-                    isValid = true; // Simulation d'acceptation du Hash
-                }
+                // Si la BD utilise Argon2 (commence par $argon2), cela nécessitera Argon2-JVM.
 
                 if (isValid) {
                     User user = new User();
@@ -264,5 +271,45 @@ public class ServiceUser implements IService<User> {
             System.err.println("❌ Erreur d'authentification JDBC : " + e.getMessage());
         }
         return null;
+    }
+
+    // Inscription d'un nouvel utilisateur par le front
+    public boolean inscrire(User user, String motDePasseClair) {
+        String query = "INSERT INTO utilisateurs (nom, prenom, email, telephone, role, is_active, created_at, password, roles, two_factor_enabled) " +
+                       "VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?)";
+        
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, user.getNom());
+            ps.setString(2, user.getPrenom());
+            ps.setString(3, user.getEmail());
+            ps.setString(4, user.getTelephone() != null ? user.getTelephone() : "");
+            
+            // Formatage du rôle
+            String rawRole = user.getRole() != null && !user.getRole().isEmpty() ? user.getRole() : "USER";
+            String dbRole = rawRole.startsWith("ROLE_") ? rawRole : "ROLE_" + rawRole;
+            
+            ps.setString(5, dbRole);
+            ps.setBoolean(6, user.isActive());
+            
+            // Hachage cryptographique
+            String hashedPassword = org.mindrot.jbcrypt.BCrypt.hashpw(motDePasseClair, org.mindrot.jbcrypt.BCrypt.gensalt());
+            // Remplacement de $2a$ (jbcrypt) par $2y$ pour compatibilité totale Symfony
+            hashedPassword = hashedPassword.replaceFirst("^\\$2a\\$", "\\$2y\\$");
+            
+            ps.setString(7, hashedPassword);
+            
+            String jsonRole = "[\"" + dbRole + "\"]";
+            ps.setString(8, jsonRole);
+            ps.setBoolean(9, false);
+            
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("✅ Inscription réussie !");
+                return true;
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur lors de l'inscription : " + e.getMessage());
+        }
+        return false;
     }
 }

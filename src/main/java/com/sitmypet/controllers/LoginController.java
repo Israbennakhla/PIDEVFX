@@ -56,11 +56,15 @@ public class LoginController {
                     stage.show();
                 } else if (role.contains("GARDIEN") || role.contains("PROPRIETAIRE") || role.contains("PROPRIÉTAIRE")) {
                     // Connexion réussie, charger l'interface Client (Front)
-                    Parent root = FXMLLoader.load(getClass().getResource("/com/sitmypet/fxml/FrontAccueil.fxml"));
-                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sitmypet/fxml/FrontAccueil.fxml"));
+                    Parent root = loader.load();
                     
-                    stage.setTitle("SitMyPet - Espace Client");
-                    stage.setScene(new Scene(root, 800, 600));
+                    FrontAccueilController controller = loader.getController();
+                    controller.setUser(user);
+                    
+                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    stage.setTitle("SitMyPet - Espace " + (role.contains("GARDIEN") ? "Gardien" : "Propriétaire"));
+                    stage.setScene(new Scene(root, 1200, 750));
                     stage.centerOnScreen();
                     stage.show();
                 } else {
@@ -73,6 +77,20 @@ public class LoginController {
         } else {
             lblErreur.setText("Email non reconnu ou mot de passe invalide.");
             lblErreur.setVisible(true);
+        }
+    }
+
+    @FXML
+    private void handleGoToInscription(javafx.scene.input.MouseEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/com/sitmypet/fxml/Inscription.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setTitle("SitMyPet - Inscription");
+            stage.setScene(new Scene(root, 900, 650));
+            stage.centerOnScreen();
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
