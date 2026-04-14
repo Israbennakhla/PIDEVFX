@@ -1,0 +1,335 @@
+/* ══════════════════════════════════════
+   COULEURS PRINCIPALES
+══════════════════════════════════════ */
+* {
+    -fx-primary: #9b8ec4;
+    -fx-primary-light: #e8e3f5;
+    -fx-primary-dark: #7b6ba8;
+    -fx-bg: #f8f8f8;
+    -fx-white: #ffffff;
+    -fx-text-dark: #2c2c2c;
+    -fx-text-grey: #888888;
+    -fx-border-light: #e0e0e0;
+}
+
+/* ══════════════════════════════════════
+   FOND GÉNÉRAL
+══════════════════════════════════════ */
+.root {
+    -fx-background-color: #f8f8f8;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* ══════════════════════════════════════
+   TITRES
+══════════════════════════════════════ */
+.titre-page {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c2c2c;
+}
+
+.lien-retour {
+    -fx-text-fill: #9b8ec4;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+/* ══════════════════════════════════════
+   BANNIÈRE VIOLETTE (nom du champ principal)
+══════════════════════════════════════ */
+.banniere-violet {
+    -fx-background-color: #c4b5e8;
+    -fx-background-radius: 15;
+    -fx-padding: 20 25;
+}
+
+.banniere-violet .text-input {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent white transparent;
+    -fx-border-width: 0 0 1.5 0;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: rgba(255,255,255,0.8);
+}
+
+.btn-plus {
+    -fx-background-color: white;
+    -fx-text-fill: #9b8ec4;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 50;
+    -fx-min-width: 45px;
+    -fx-min-height: 45px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 6, 0, 0, 2);
+}
+
+/* ══════════════════════════════════════
+   LABELS
+══════════════════════════════════════ */
+.label-champ {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #444444;
+}
+
+.label-erreur {
+    -fx-text-fill: #e74c3c;
+    -fx-font-size: 11px;
+}
+
+/* ══════════════════════════════════════
+   CHAMPS TEXTE
+══════════════════════════════════════ */
+.champ-texte {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 10 14;
+    -fx-font-size: 13px;
+    -fx-text-fill: #2c2c2c;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0, 0, 1);
+}
+
+.champ-texte:focused {
+    -fx-border-color: #9b8ec4;
+    -fx-effect: dropshadow(gaussian, rgba(155,142,196,0.3), 8, 0, 0, 0);
+}
+
+.champ-textarea {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 10 14;
+    -fx-font-size: 13px;
+}
+
+.champ-textarea:focused {
+    -fx-border-color: #9b8ec4;
+}
+
+/* ══════════════════════════════════════
+   COMBOBOX
+══════════════════════════════════════ */
+.combo-style {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 4 10;
+    -fx-font-size: 13px;
+}
+
+.combo-style:focused {
+    -fx-border-color: #9b8ec4;
+}
+
+.combo-style .list-cell {
+    -fx-padding: 6 12;
+}
+
+/* ══════════════════════════════════════
+   BOUTON PRINCIPAL (Enregistrer)
+══════════════════════════════════════ */
+.btn-principal {
+    -fx-background-color: #9b8ec4;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-padding: 12 30;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(155,142,196,0.4), 8, 0, 0, 3);
+}
+
+.btn-principal:hover {
+    -fx-background-color: #7b6ba8;
+}
+
+/* ══════════════════════════════════════
+   BOUTON SECONDAIRE (Annuler)
+══════════════════════════════════════ */
+.btn-secondaire {
+    -fx-background-color: white;
+    -fx-text-fill: #888888;
+    -fx-font-size: 13px;
+    -fx-background-radius: 10;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 10;
+    -fx-padding: 12 30;
+    -fx-cursor: hand;
+}
+
+.btn-secondaire:hover {
+    -fx-border-color: #9b8ec4;
+    -fx-text-fill: #9b8ec4;
+}
+
+/* ══════════════════════════════════════
+   BOUTONS ICÔNES (modifier/supprimer)
+══════════════════════════════════════ */
+.btn-modifier {
+    -fx-background-color: #e8e3f5;
+    -fx-text-fill: #9b8ec4;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-font-size: 13px;
+    -fx-padding: 6 12;
+}
+
+.btn-modifier:hover {
+    -fx-background-color: #9b8ec4;
+    -fx-text-fill: white;
+}
+
+.btn-supprimer {
+    -fx-background-color: #fdecea;
+    -fx-text-fill: #e74c3c;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-font-size: 13px;
+    -fx-padding: 6 12;
+}
+
+.btn-supprimer:hover {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+}
+
+.btn-reponse {
+    -fx-background-color: #fff4e3;
+    -fx-text-fill: #f39c12;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-font-size: 13px;
+    -fx-padding: 6 12;
+}
+
+.btn-reponse:hover {
+    -fx-background-color: #f39c12;
+    -fx-text-fill: white;
+}
+
+/* ══════════════════════════════════════
+   CARTES RÉCLAMATIONS
+══════════════════════════════════════ */
+.carte {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 3);
+    -fx-padding: 18;
+}
+
+.carte:hover {
+    -fx-effect: dropshadow(gaussian, rgba(155,142,196,0.25), 15, 0, 0, 5);
+}
+
+.carte-sujet {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c2c2c;
+}
+
+.carte-info {
+    -fx-font-size: 12px;
+    -fx-text-fill: #666666;
+}
+
+.carte-date {
+    -fx-font-size: 11px;
+    -fx-text-fill: #aaaaaa;
+}
+
+/* ══════════════════════════════════════
+   BADGES STATUT / PRIORITÉ
+══════════════════════════════════════ */
+.badge-attente {
+    -fx-background-color: #fff3e0;
+    -fx-text-fill: #f39c12;
+    -fx-background-radius: 20;
+    -fx-padding: 3 10;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.badge-cours {
+    -fx-background-color: #e3f2fd;
+    -fx-text-fill: #2196f3;
+    -fx-background-radius: 20;
+    -fx-padding: 3 10;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.badge-resolue {
+    -fx-background-color: #e8f5e9;
+    -fx-text-fill: #27ae60;
+    -fx-background-radius: 20;
+    -fx-padding: 3 10;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.badge-haute {
+    -fx-background-color: #fdecea;
+    -fx-text-fill: #e74c3c;
+    -fx-background-radius: 20;
+    -fx-padding: 3 10;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.badge-moyenne {
+    -fx-background-color: #fff3e0;
+    -fx-text-fill: #f39c12;
+    -fx-background-radius: 20;
+    -fx-padding: 3 10;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.badge-basse {
+    -fx-background-color: #e8f5e9;
+    -fx-text-fill: #27ae60;
+    -fx-background-radius: 20;
+    -fx-padding: 3 10;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+/* ══════════════════════════════════════
+   FILTRES / BARRE DU HAUT
+══════════════════════════════════════ */
+.barre-filtres {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 12 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 2);
+}
+
+/* ══════════════════════════════════════
+   SCROLLPANE
+══════════════════════════════════════ */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #c4b5e8;
+    -fx-background-radius: 4;
+}

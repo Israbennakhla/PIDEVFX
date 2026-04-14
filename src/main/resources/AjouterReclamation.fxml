@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="0" style="-fx-background-color: #f8f8f8; -fx-padding: 30; -fx-min-width: 550;" stylesheets="@style.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="Controllers.AjouterReclamation">
+
+   <!-- En-tête -->
+   <HBox alignment="CENTER_LEFT">
+      <Label styleClass="titre-page" text="🐾 Ajouter une Réclamation" />
+      <Region HBox.hgrow="ALWAYS" />
+      <Button onAction="#annuler" styleClass="lien-retour" text="← Retour" />
+   </HBox>
+
+   <!-- Bannière violette — Sujet -->
+   <HBox alignment="CENTER_LEFT" spacing="15" styleClass="banniere-violet">
+      <VBox spacing="5" HBox.hgrow="ALWAYS">
+         <Label style="-fx-text-fill: white; -fx-font-size: 12px;" text="Sujet de la réclamation" />
+         <TextField fx:id="champSujet" promptText="Ex: Problème avec une réservation" style="-fx-background-color: transparent;                               -fx-border-color: transparent transparent white transparent;                               -fx-border-width: 0 0 1 0;                               -fx-text-fill: white; -fx-prompt-text-fill: rgba(255,255,255,0.7);" styleClass="champ-texte" />
+      </VBox>
+   </HBox>
+
+   <Label fx:id="errSujet" style="-fx-padding: 2 0 8 0;" styleClass="label-erreur" />
+
+   <!-- Grille champs -->
+   <GridPane hgap="20" style="-fx-padding-top: 10;" vgap="5">
+      <columnConstraints>
+         <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+         <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+      </columnConstraints>
+
+      <!-- Nom client -->
+      <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+         <Label styleClass="label-champ" text="Nom Client" />
+         <TextField fx:id="champNom" promptText="Votre nom" styleClass="champ-texte" />
+         <Label fx:id="errNom" styleClass="label-erreur" />
+      </VBox>
+
+      <!-- Email -->
+      <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+         <Label styleClass="label-champ" text="Email Client" />
+         <TextField fx:id="champEmail" promptText="exemple@email.com" styleClass="champ-texte" />
+         <Label fx:id="errEmail" styleClass="label-erreur" />
+      </VBox>
+
+      <!-- Priorité -->
+      <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+         <Label styleClass="label-champ" text="Priorité" />
+         <ComboBox fx:id="champPriorite" maxWidth="Infinity" styleClass="combo-style" />
+         <Label fx:id="errPriorite" styleClass="label-erreur" />
+      </VBox>
+
+      <!-- Statut -->
+      <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <Label styleClass="label-champ" text="Statut" />
+         <ComboBox fx:id="champStatut" maxWidth="Infinity" styleClass="combo-style" />
+      </VBox>
+      <rowConstraints>
+         <RowConstraints />
+         <RowConstraints />
+      </rowConstraints>
+   </GridPane>
+
+   <!-- Description -->
+   <VBox spacing="5" style="-fx-padding-top: 12;">
+      <Label styleClass="label-champ" text="Description" />
+      <TextArea fx:id="champDescription" prefRowCount="4" promptText="Décrivez votre problème en détail..." styleClass="champ-textarea" wrapText="true" />
+      <Label fx:id="errDescription" styleClass="label-erreur" />
+   </VBox>
+
+   <!-- Bouton Enregistrer -->
+   <HBox alignment="CENTER_RIGHT" style="-fx-padding-top: 20;">
+      <Button onAction="#enregistrer" styleClass="btn-principal" text="Enregistrer" />
+   </HBox>
+
+   <VBox.margin><Insets bottom="20" /></VBox.margin>
+
+</VBox>

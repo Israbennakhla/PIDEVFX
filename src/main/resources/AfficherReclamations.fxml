@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="15"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Controllers.AfficherReclamations"
+      stylesheets="@style.css"
+      style="-fx-background-color: #f8f8f8; -fx-padding: 25;">
+
+    <!-- En-tête -->
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Label text="🐾 Réclamations" styleClass="titre-page"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="➕ Nouvelle Réclamation" onAction="#ouvrirAjout"
+                styleClass="btn-principal"/>
+    </HBox>
+
+    <!-- Barre filtres -->
+    <HBox spacing="12" alignment="CENTER_LEFT" styleClass="barre-filtres">
+        <Label text="Statut :" styleClass="label-champ"/>
+        <ComboBox fx:id="filtreStatut" onAction="#appliquerFiltre"
+                  prefWidth="140" styleClass="combo-style"/>
+        <Label text="Priorité :" styleClass="label-champ"/>
+        <ComboBox fx:id="filtrePriorite" onAction="#appliquerFiltre"
+                  prefWidth="140" styleClass="combo-style"/>
+        <Button text="Réinitialiser" onAction="#reinitialiser"
+                styleClass="btn-secondaire"/>
+    </HBox>
+
+    <!-- Grille cartes -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+        <GridPane fx:id="gridCartes" hgap="18" vgap="18" style="-fx-padding: 5;"/>
+    </ScrollPane>
+
+</VBox>

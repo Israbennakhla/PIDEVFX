@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="15"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Controllers.AfficherReponses"
+      stylesheets="@style.css"
+      style="-fx-background-color: #f8f8f8; -fx-padding: 25; -fx-min-width: 580;">
+
+    <!-- En-tête -->
+    <HBox alignment="CENTER_LEFT">
+        <VBox spacing="4">
+            <Label fx:id="titreReclamation" styleClass="titre-page"/>
+            <Label fx:id="infoReclamation" styleClass="carte-info"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="➕ Ajouter une Réponse" onAction="#ouvrirAjoutReponse"
+                styleClass="btn-principal"/>
+    </HBox>
+
+    <!-- Liste des réponses -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+        <VBox fx:id="listeReponses" spacing="12" style="-fx-padding: 5;"/>
+    </ScrollPane>
+
+</VBox>
