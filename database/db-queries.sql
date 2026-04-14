@@ -1,0 +1,43 @@
+CREATE DATABASE IF NOT EXISTS esprit;
+USE esprit;
+
+CREATE TABLE personne (
+                          id INT AUTO_INCREMENT PRIMARY KEY,
+                          nom VARCHAR(50),
+                          prenom VARCHAR(50),
+                          age INT
+) ENGINE=InnoDB;
+
+CREATE TABLE pet (
+                     id INT AUTO_INCREMENT PRIMARY KEY,
+                     name VARCHAR(255) NOT NULL,
+                     birth_date DATE NOT NULL,
+                     type_pet VARCHAR(50) NOT NULL,
+                     breed VARCHAR(255) NOT NULL,
+                     weight FLOAT NOT NULL,
+                     description TEXT NOT NULL,
+                     gender VARCHAR(50) NOT NULL,
+                     has_contagious_disease BOOLEAN NOT NULL,
+                     has_medical_record BOOLEAN NOT NULL,
+                     has_critical_condition BOOLEAN NOT NULL,
+                     is_vaccinated BOOLEAN NOT NULL,
+                     image_name VARCHAR(255),
+                     owner_id INT NOT NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE announcement (
+                              id INT AUTO_INCREMENT PRIMARY KEY,
+                              address VARCHAR(255) NOT NULL,
+                              visit_hours JSON,
+                              care_type VARCHAR(50) NOT NULL,
+                              date_debut DATE NOT NULL,
+                              date_fin DATE NOT NULL,
+                              visit_per_day INT,
+                              renumeration_min FLOAT,
+                              renumeration_max FLOAT,
+                              services VARCHAR(255),
+                              pet_id INT NOT NULL,
+                              user_id INT NOT NULL,
+                              CONSTRAINT fk_announcement_pet FOREIGN KEY (pet_id)
+                                  REFERENCES pet(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
