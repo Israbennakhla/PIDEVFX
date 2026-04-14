@@ -42,10 +42,11 @@ public class LoginController {
         User user = serviceUser.authentifier(email, password);
 
         if (user != null) {
-            // Vérifier que c'est bien un Administrateur
-            if (user.getRole() != null && user.getRole().contains("ADMIN")) {
-                // Connexion réussie, charger le Dashboard
-                try {
+            String role = user.getRole() != null ? user.getRole().toUpperCase() : "";
+
+            try {
+                if (role.contains("ADMIN")) {
+                    // Connexion réussie, charger le Dashboard
                     Parent root = FXMLLoader.load(getClass().getResource("/com/sitmypet/fxml/AfficherUser.fxml"));
                     Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     
@@ -53,12 +54,21 @@ public class LoginController {
                     stage.setScene(new Scene(root, 1300, 750));
                     stage.centerOnScreen();
                     stage.show();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } else if (role.contains("GARDIEN") || role.contains("PROPRIETAIRE") || role.contains("PROPRIÉTAIRE")) {
+                    // Connexion réussie, charger l'interface Client (Front)
+                    Parent root = FXMLLoader.load(getClass().getResource("/com/sitmypet/fxml/FrontAccueil.fxml"));
+                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    
+                    stage.setTitle("SitMyPet - Espace Client");
+                    stage.setScene(new Scene(root, 800, 600));
+                    stage.centerOnScreen();
+                    stage.show();
+                } else {
+                    lblErreur.setText("⛔ Accès refusé : Rôle non reconnu.");
+                    lblErreur.setVisible(true);
                 }
-            } else {
-                lblErreur.setText("⛔ Accès refusé : L'interface Desktop est strictement\nréservée aux Administrateurs.");
-                lblErreur.setVisible(true);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         } else {
             lblErreur.setText("Email non reconnu ou mot de passe invalide.");
