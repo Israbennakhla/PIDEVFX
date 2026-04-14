@@ -25,12 +25,14 @@ import java.util.List;
 
 public class ListeAnimauxController {
 
+    // ── Filtres ───────────────────────────────────────────────
     @FXML private TextField            searchNom;
     @FXML private ComboBox<String>     filterType;
     @FXML private ComboBox<String>     filterGenre;
     @FXML private ComboBox<String>     filterVaccine;
     @FXML private ComboBox<String>     filterCritique;
 
+    // ── Tableau ───────────────────────────────────────────────
     @FXML private TableView<Pet>            tableAnimaux;
     @FXML private TableColumn<Pet, Void>    colPhoto;
     @FXML private TableColumn<Pet, String>  colNom;
@@ -46,18 +48,33 @@ public class ListeAnimauxController {
     @FXML private TableColumn<Pet, Void>    colCritique;
     @FXML private TableColumn<Pet, Void>    colActions;
 
-    private final ServicePet        servicePet   = new ServicePet();
-    private ObservableList<Pet>     allPets      = FXCollections.observableArrayList();
-    private FilteredList<Pet>       filteredPets;
+    // ── Pagination ────────────────────────────────────────────
+    @FXML private Label              labelPagination;
+    @FXML private Button             btnPrev;
+    @FXML private Button             btnNext;
+    @FXML private HBox               pageButtons;
+    @FXML private ComboBox<Integer>  comboPerPage;
 
+    // ── Données ───────────────────────────────────────────────
+    private final ServicePet              servicePet   = new ServicePet();
+    private ObservableList<Pet>           allPets      = FXCollections.observableArrayList();
+    private FilteredList<Pet>             filteredPets;
+    private ObservableList<Pet>           pageData     = FXCollections.observableArrayList();
+
+    private int currentPage  = 1;
+    private int itemsPerPage = 5;
+
+    // ──────────────────────────────────────────────────────────
     @FXML
     public void initialize() {
         initComboBoxes();
         initColumns();
         initLiveFilters();
+        initPaginationControls();
         loadData();
     }
 
+    // ── Init ComboBoxes filtres ───────────────────────────────
     private void initComboBoxes() {
         filterType.setItems(FXCollections.observableArrayList("Tous","CHAT","CHIEN","TORTUE","LAPIN","OISEAU","POISSON","SOURIS"));
         filterType.setValue("Tous");
@@ -69,21 +86,33 @@ public class ListeAnimauxController {
         filterCritique.setValue("Tous");
     }
 
+    // ── Init contrôles pagination ─────────────────────────────
+    private void initPaginationControls() {
+        comboPerPage.setItems(FXCollections.observableArrayList(5, 10, 15, 20));
+        comboPerPage.setValue(itemsPerPage);
+        comboPerPage.valueProperty().addListener((obs, o, n) -> {
+            if (n != null) { itemsPerPage = n; currentPage = 1; updatePage(); }
+        });
+        tableAnimaux.setItems(pageData);
+    }
+
+    // ── Filtrage temps réel ───────────────────────────────────
     private void initLiveFilters() {
         filteredPets = new FilteredList<>(allPets, p -> true);
-        searchNom.textProperty().addListener((obs, o, n) -> applyFilters());
-        filterType.valueProperty().addListener((obs, o, n) -> applyFilters());
-        filterGenre.valueProperty().addListener((obs, o, n) -> applyFilters());
-        filterVaccine.valueProperty().addListener((obs, o, n) -> applyFilters());
-        filterCritique.valueProperty().addListener((obs, o, n) -> applyFilters());
-        tableAnimaux.setItems(filteredPets);
+        searchNom.textProperty().addListener((obs, o, n) -> { currentPage = 1; applyFilters(); });
+        filterType.valueProperty().addListener((obs, o, n) -> { currentPage = 1; applyFilters(); });
+        filterGenre.valueProperty().addListener((obs, o, n) -> { currentPage = 1; applyFilters(); });
+        filterVaccine.valueProperty().addListener((obs, o, n) -> { currentPage = 1; applyFilters(); });
+        filterCritique.valueProperty().addListener((obs, o, n) -> { currentPage = 1; applyFilters(); });
     }
 
     private void applyFilters() {
         filteredPets.setPredicate(pet -> {
-            String nom = searchNom.getText().trim().toLowerCase();
-            String type = filterType.getValue(), genre = filterGenre.getValue();
-            String vaccine = filterVaccine.getValue(), critique = filterCritique.getValue();
+            String nom      = searchNom.getText().trim().toLowerCase();
+            String type     = filterType.getValue();
+            String genre    = filterGenre.getValue();
+            String vaccine  = filterVaccine.getValue();
+            String critique = filterCritique.getValue();
             if (!nom.isEmpty() && !pet.getName().toLowerCase().contains(nom)) return false;
             if (type != null && !type.equals("Tous") && !pet.getTypePet().equals(type)) return false;
             if (genre != null && !genre.equals("Tous") && !pet.getGender().equals(genre)) return false;
@@ -91,13 +120,57 @@ public class ListeAnimauxController {
             if (critique != null && !critique.equals("Tous") && pet.isHasCriticalCondition() != critique.equals("Oui")) return false;
             return true;
         });
+        updatePage();
     }
 
+    // ── Chargement données ────────────────────────────────────
     private void loadData() {
-        List<Pet> pets = servicePet.getAll();
-        allPets.setAll(pets);
+        allPets.setAll(servicePet.getAll());
+        currentPage = 1;
         applyFilters();
     }
+
+    // ── Mise à jour de la page affichée ──────────────────────
+    private void updatePage() {
+        List<Pet> filtered = filteredPets;
+        int total     = filtered.size();
+        int totalPages = (int) Math.ceil((double) total / itemsPerPage);
+        if (totalPages == 0) totalPages = 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+
+        int from = (currentPage - 1) * itemsPerPage;
+        int to   = Math.min(from + itemsPerPage, total);
+
+        pageData.setAll(filtered.subList(from, to));
+
+        // Label info
+        labelPagination.setText(total == 0 ? "Aucun résultat"
+                : "Affichage " + (from + 1) + " – " + to + " sur " + total + " animaux");
+
+        // Boutons Précédent / Suivant
+        btnPrev.setDisable(currentPage <= 1);
+        btnNext.setDisable(currentPage >= totalPages);
+
+        // Numéros de pages
+        pageButtons.getChildren().clear();
+        for (int i = 1; i <= totalPages; i++) {
+            final int page = i;
+            Button btn = new Button(String.valueOf(i));
+            if (i == currentPage) {
+                btn.setStyle("-fx-background-color:#9b72e8;-fx-text-fill:white;-fx-font-size:12px;" +
+                        "-fx-background-radius:6px;-fx-padding:4 10;-fx-cursor:hand;-fx-font-weight:bold;");
+            } else {
+                btn.setStyle("-fx-background-color:#eeeeee;-fx-text-fill:#333333;-fx-font-size:12px;" +
+                        "-fx-background-radius:6px;-fx-padding:4 10;-fx-cursor:hand;");
+            }
+            btn.setOnAction(e -> { currentPage = page; updatePage(); });
+            pageButtons.getChildren().add(btn);
+        }
+    }
+
+    // ── Boutons Précédent / Suivant ───────────────────────────
+    @FXML private void handlePrevPage() { if (currentPage > 1) { currentPage--; updatePage(); } }
+    @FXML private void handleNextPage() { currentPage++; updatePage(); }
 
     @FXML private void handleRechercher() { applyFilters(); }
 
@@ -108,10 +181,12 @@ public class ListeAnimauxController {
         filterVaccine.setValue("Tous"); filterCritique.setValue("Tous");
     }
 
+    // ── Image ─────────────────────────────────────────────────
     private Image loadPetImage(String imageName) {
         if (imageName == null || imageName.isEmpty()) return null;
-        String[] filePaths = { "images/" + imageName, "src/main/resources/images/" + imageName,
-                System.getProperty("user.dir") + "/images/" + imageName };
+        String[] filePaths = { "images/" + imageName,
+                System.getProperty("user.dir") + "/images/" + imageName,
+                "src/main/resources/images/" + imageName };
         for (String path : filePaths) {
             File f = new File(path);
             if (f.exists()) { try { return new Image(f.toURI().toString(), 45, 45, true, true); } catch (Exception ignored) {} }
@@ -124,6 +199,7 @@ public class ListeAnimauxController {
         return null;
     }
 
+    // ── Init colonnes ─────────────────────────────────────────
     private void initColumns() {
         colPhoto.setCellFactory(col -> new TableCell<>() {
             private final ImageView iv = new ImageView();
@@ -155,9 +231,9 @@ public class ListeAnimauxController {
             @Override protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || getTableRow() == null || getTableRow().getItem() == null) { setGraphic(null); return; }
-                Pet pet = (Pet) getTableRow().getItem();
-                Label l = new Label(pet.isVaccinated() ? "✔" : "—");
-                l.setStyle(pet.isVaccinated() ? "-fx-text-fill:#9b72e8;-fx-font-size:16px;" : "-fx-text-fill:#aaaaaa;-fx-font-size:16px;");
+                Pet p = (Pet) getTableRow().getItem();
+                Label l = new Label(p.isVaccinated() ? "✔" : "—");
+                l.setStyle(p.isVaccinated() ? "-fx-text-fill:#9b72e8;-fx-font-size:16px;" : "-fx-text-fill:#aaaaaa;-fx-font-size:16px;");
                 setGraphic(l); setText(null); setAlignment(Pos.CENTER);
             }
         });
@@ -166,9 +242,9 @@ public class ListeAnimauxController {
             @Override protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || getTableRow() == null || getTableRow().getItem() == null) { setGraphic(null); return; }
-                Pet pet = (Pet) getTableRow().getItem();
-                Label l = new Label(pet.isHasContagiousDisease() ? "✔" : "—");
-                l.setStyle(pet.isHasContagiousDisease() ? "-fx-text-fill:#e87272;-fx-font-size:16px;" : "-fx-text-fill:#aaaaaa;-fx-font-size:16px;");
+                Pet p = (Pet) getTableRow().getItem();
+                Label l = new Label(p.isHasContagiousDisease() ? "✔" : "—");
+                l.setStyle(p.isHasContagiousDisease() ? "-fx-text-fill:#e87272;-fx-font-size:16px;" : "-fx-text-fill:#aaaaaa;-fx-font-size:16px;");
                 setGraphic(l); setText(null); setAlignment(Pos.CENTER);
             }
         });
@@ -177,9 +253,9 @@ public class ListeAnimauxController {
             @Override protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || getTableRow() == null || getTableRow().getItem() == null) { setGraphic(null); return; }
-                Pet pet = (Pet) getTableRow().getItem();
-                Label l = new Label(pet.isHasMedicalRecord() ? "✔" : "—");
-                l.setStyle(pet.isHasMedicalRecord() ? "-fx-text-fill:#72b8e8;-fx-font-size:16px;" : "-fx-text-fill:#aaaaaa;-fx-font-size:16px;");
+                Pet p = (Pet) getTableRow().getItem();
+                Label l = new Label(p.isHasMedicalRecord() ? "✔" : "—");
+                l.setStyle(p.isHasMedicalRecord() ? "-fx-text-fill:#72b8e8;-fx-font-size:16px;" : "-fx-text-fill:#aaaaaa;-fx-font-size:16px;");
                 setGraphic(l); setText(null); setAlignment(Pos.CENTER);
             }
         });
@@ -188,9 +264,9 @@ public class ListeAnimauxController {
             @Override protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || getTableRow() == null || getTableRow().getItem() == null) { setGraphic(null); return; }
-                Pet pet = (Pet) getTableRow().getItem();
-                Label l = new Label(pet.isHasCriticalCondition() ? "✔" : "—");
-                l.setStyle(pet.isHasCriticalCondition() ? "-fx-text-fill:#e8a272;-fx-font-size:16px;" : "-fx-text-fill:#aaaaaa;-fx-font-size:16px;");
+                Pet p = (Pet) getTableRow().getItem();
+                Label l = new Label(p.isHasCriticalCondition() ? "✔" : "—");
+                l.setStyle(p.isHasCriticalCondition() ? "-fx-text-fill:#e8a272;-fx-font-size:16px;" : "-fx-text-fill:#aaaaaa;-fx-font-size:16px;");
                 setGraphic(l); setText(null); setAlignment(Pos.CENTER);
             }
         });
@@ -203,8 +279,8 @@ public class ListeAnimauxController {
                 box.setAlignment(Pos.CENTER);
                 btnEdit.setStyle("-fx-background-color:#f5a623;-fx-text-fill:white;-fx-background-radius:6px;-fx-font-size:13px;-fx-cursor:hand;-fx-padding:5 10;");
                 btnDelete.setStyle("-fx-background-color:#e74c3c;-fx-text-fill:white;-fx-background-radius:6px;-fx-font-size:13px;-fx-cursor:hand;-fx-padding:5 10;");
-                btnEdit.setOnAction(e -> { Pet pet = getTableRow().getItem(); if (pet != null) handleModifier(pet); });
-                btnDelete.setOnAction(e -> { Pet pet = getTableRow().getItem(); if (pet != null) handleSupprimer(pet); });
+                btnEdit.setOnAction(e -> { Pet p = getTableRow().getItem(); if (p != null) handleModifier(p); });
+                btnDelete.setOnAction(e -> { Pet p = getTableRow().getItem(); if (p != null) handleSupprimer(p); });
             }
             @Override protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -213,17 +289,10 @@ public class ListeAnimauxController {
         });
     }
 
+    // ── CRUD ──────────────────────────────────────────────────
     @FXML
     private void handleAjouter() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterAnimal.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Ajouter un animal");
-            stage.setScene(new Scene(root));
-            stage.showAndWait();
-            loadData();
-        } catch (IOException e) { e.printStackTrace(); }
+        naviguer("/AjouterAnimal.fxml", "Ajouter un animal");
     }
 
     private void handleModifier(Pet pet) {
@@ -232,11 +301,10 @@ public class ListeAnimauxController {
             Parent root = loader.load();
             ModifierAnimalController ctrl = loader.getController();
             ctrl.setPet(pet);
-            Stage stage = new Stage();
-            stage.setTitle("Modifier - " + pet.getName());
+            Stage stage = (Stage) tableAnimaux.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.showAndWait();
-            loadData();
+            stage.setTitle("Modifier - " + pet.getName());
+            stage.show();
         } catch (IOException e) { e.printStackTrace(); }
     }
 
@@ -262,9 +330,7 @@ public class ListeAnimauxController {
             if (resource == null) { System.out.println("FXML introuvable : " + fxml); return; }
             Parent root = FXMLLoader.load(resource);
             Stage stage = (Stage) tableAnimaux.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle(titre);
-            stage.show();
+            stage.setScene(new Scene(root)); stage.setTitle(titre); stage.show();
         } catch (IOException e) { e.printStackTrace(); }
     }
 }
