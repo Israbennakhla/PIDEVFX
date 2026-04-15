@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class AfficherReclamations implements Initializable {
-
+    @FXML private TextField rechercheNom;
     @FXML private GridPane     gridCartes;
     @FXML private ComboBox<String> filtreStatut;
     @FXML private ComboBox<String> filtrePriorite;
@@ -41,12 +41,22 @@ public class AfficherReclamations implements Initializable {
         ));
         filtreStatut.setValue("Tous");
         filtrePriorite.setValue("Tous");
+        rechercheNom.textProperty().addListener((observable, oldValue, newValue) -> {
+            appliquerFiltre();
+        });
 
         chargerCartes(service.getAll());
     }
 
     private void chargerCartes(List<Reclamation> list) {
         gridCartes.getChildren().clear();
+        gridCartes.getColumnConstraints().clear();
+        for (int i = 0; i < 3; i++) {
+            ColumnConstraints cc = new ColumnConstraints();
+            cc.setPercentWidth(33.33);
+            cc.setHgrow(Priority.ALWAYS);
+            gridCartes.getColumnConstraints().add(cc);
+        }
 
         if (list.isEmpty()) {
             Label vide = new Label("Aucune réclamation trouvée.");
@@ -60,20 +70,18 @@ public class AfficherReclamations implements Initializable {
 
         for (Reclamation r : list) {
             VBox carte = creerCarte(r);
+            carte.setMaxWidth(Double.MAX_VALUE);
+            HBox.setHgrow(carte, Priority.ALWAYS);
             gridCartes.add(carte, col, row);
-
             col++;
-            if (col == 3) { // 3 cartes par ligne
-                col = 0;
-                row++;
-            }
+            if (col == 3) { col = 0; row++; }
         }
     }
 
     private VBox creerCarte(Reclamation r) {
         VBox carte = new VBox(10);
         carte.setPadding(new Insets(18));
-        carte.setPrefWidth(290);
+        carte.setMaxWidth(Double.MAX_VALUE);
         carte.getStyleClass().add("carte");
 
         // Bandeau couleur priorité
@@ -121,17 +129,20 @@ public class AfficherReclamations implements Initializable {
 
         // Boutons
         HBox boutons = new HBox(8);
-        boutons.setAlignment(Pos.CENTER_RIGHT);
+        boutons.setAlignment(Pos.CENTER_LEFT);
 
         Button btnMod = new Button("Modifier");
+        btnMod.setMinWidth(90);
         btnMod.getStyleClass().add("btn-modifier");
         btnMod.setOnAction(e -> ouvrirModification(r));
 
-        Button btnSup = new Button("🗑️ Supprimer");
+        Button btnSup = new Button("Supprimer");
+        btnMod.setMinWidth(110);
         btnSup.getStyleClass().add("btn-supprimer");
         btnSup.setOnAction(e -> supprimerReclamation(r));
 
-        Button btnRep = new Button("💬 Réponses");
+        Button btnRep = new Button("Réponses");
+        btnMod.setMinWidth(100);
         btnRep.getStyleClass().add("btn-reponse");
         btnRep.setOnAction(e -> voirReponses(r));
 
@@ -160,14 +171,31 @@ public class AfficherReclamations implements Initializable {
 
     @FXML
     private void appliquerFiltre() {
-        List<Reclamation> list = service.searchByStatutAndPriorite(
-                filtreStatut.getValue(), filtrePriorite.getValue()
-        );
+        String nom      = rechercheNom.getText().trim();
+        String statut   = filtreStatut.getValue();
+        String priorite = filtrePriorite.getValue();
+
+        List<Reclamation> list;
+
+        // Cas 1 : recherche par nom uniquement
+        if (!nom.isEmpty() && statut.equals("Tous") && priorite.equals("Tous")) {
+            list = service.searchByNom(nom);
+        }
+        // Cas 2 : recherche par nom + filtres
+        else if (!nom.isEmpty()) {
+            list = service.searchByNomStatutPriorite(nom, statut, priorite);
+        }
+        // Cas 3 : filtres seulement
+        else {
+            list = service.searchByStatutAndPriorite(statut, priorite);
+        }
+
         chargerCartes(list);
     }
 
     @FXML
     private void reinitialiser() {
+        rechercheNom.setText("");
         filtreStatut.setValue("Tous");
         filtrePriorite.setValue("Tous");
         chargerCartes(service.getAll());
@@ -242,4 +270,5 @@ public class AfficherReclamations implements Initializable {
     private void erreur(String msg) {
         new Alert(Alert.AlertType.ERROR, msg).showAndWait();
     }
+
 }

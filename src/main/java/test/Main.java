@@ -14,7 +14,7 @@ public class Main extends Application {
                 getClass().getResource("/AfficherReclamations.fxml")
         );
         primaryStage.setTitle("SitMyPet — Gestion des Réclamations");
-        primaryStage.setScene(new Scene(root, 1050, 680));
+        primaryStage.setScene(new Scene(root, 1400, 760));
         primaryStage.show();
     }
 

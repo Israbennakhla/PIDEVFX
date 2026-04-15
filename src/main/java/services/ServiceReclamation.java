@@ -256,4 +256,37 @@ public class ServiceReclamation implements IService<Reclamation> {
         r.setUserId(rs.getInt("user_id"));
         return r;
     }
+    public List<Reclamation> searchByNom(String nom) {
+        List<Reclamation> list = new ArrayList<>();
+        String sql = "SELECT * FROM reclamation WHERE nom_client LIKE ?";
+        try {
+            PreparedStatement ps = cnx.prepareStatement(sql);
+            ps.setString(1, "%" + nom + "%"); // % = contient ce mot
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) list.add(mapRow(rs));
+        } catch (SQLException e) {
+            System.out.println("Erreur searchByNom : " + e.getMessage());
+        }
+        return list;
+    }
+    // Recherche par nom + statut + priorité combinés
+    public List<Reclamation> searchByNomStatutPriorite(String nom, String statut, String priorite) {
+        List<Reclamation> list = new ArrayList<>();
+        String sql = "SELECT * FROM reclamation WHERE nom_client LIKE ?";
+
+        if (statut != null && !statut.equals("Tous"))
+            sql += " AND statut = '" + statut + "'";
+        if (priorite != null && !priorite.equals("Tous"))
+            sql += " AND priorite = '" + priorite + "'";
+
+        try {
+            PreparedStatement ps = cnx.prepareStatement(sql);
+            ps.setString(1, "%" + nom + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) list.add(mapRow(rs));
+        } catch (SQLException e) {
+            System.out.println("Erreur searchByNomStatutPriorite : " + e.getMessage());
+        }
+        return list;
+    }
 }
