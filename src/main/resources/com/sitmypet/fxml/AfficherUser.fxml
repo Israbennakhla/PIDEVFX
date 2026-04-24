@@ -120,22 +120,22 @@
                     <padding>
                         <Insets top="10" right="10" bottom="10" left="10"/>
                     </padding>
-                    <Label text="Rechercher:" style="-fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                    <Label text="Rechercher:" style="-fx-font-weight: bold; -fx-text-fill: #2d3748;" minWidth="-Infinity"/>
                     <TextField fx:id="txtRecherche" promptText="Nom ou prénom..." HBox.hgrow="ALWAYS" prefWidth="180"/>
                     
-                    <Label text="Rôle:" style="-fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
-                    <ComboBox fx:id="comboRole" prefWidth="110"/>
+                    <Label text="Rôle:" style="-fx-font-weight: bold; -fx-text-fill: #2d3748;" minWidth="-Infinity"/>
+                    <ComboBox fx:id="comboRole" prefWidth="110" minWidth="-Infinity"/>
                     
-                    <Label text="Statut:" style="-fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
-                    <ComboBox fx:id="comboStatut" prefWidth="100"/>
+                    <Label text="Statut:" style="-fx-font-weight: bold; -fx-text-fill: #2d3748;" minWidth="-Infinity"/>
+                    <ComboBox fx:id="comboStatut" prefWidth="100" minWidth="-Infinity"/>
                     
-                    <Label text="Tri:" style="-fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
-                    <ComboBox fx:id="comboTri" prefWidth="120"/>
+                    <Label text="Tri:" style="-fx-font-weight: bold; -fx-text-fill: #2d3748;" minWidth="-Infinity"/>
+                    <ComboBox fx:id="comboTri" prefWidth="120" minWidth="-Infinity"/>
                     
-                    <Button text="Rechercher" onAction="#handleRechercher" styleClass="btn-primary" style="-fx-padding: 8 15; -fx-font-size: 13px;"/>
-                    <Button text="Reset" onAction="#handleReinitialiser" styleClass="btn-secondary" style="-fx-padding: 8 15; -fx-font-size: 13px;"/>
+                    <Button text="Rechercher" onAction="#handleRechercher" styleClass="btn-primary" style="-fx-padding: 8 15; -fx-font-size: 13px;" minWidth="-Infinity"/>
+                    <Button text="Reset" onAction="#handleReinitialiser" styleClass="btn-secondary" style="-fx-padding: 8 15; -fx-font-size: 13px;" minWidth="-Infinity"/>
                     <Region HBox.hgrow="ALWAYS"/>
-                    <Button text="+ Ajouter" onAction="#handleAjouter" styleClass="btn-success" style="-fx-padding: 8 20; -fx-font-size: 14px;"/>
+                    <Button text="+ Ajouter" onAction="#handleAjouter" styleClass="btn-success" style="-fx-padding: 8 20; -fx-font-size: 14px;" minWidth="-Infinity"/>
                 </HBox>
                 
                 <!-- Conteneur Principal ListView + Menu Détails -->
