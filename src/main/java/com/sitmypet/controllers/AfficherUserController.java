@@ -94,13 +94,11 @@ public class AfficherUserController {
                     HBox actionBox = new HBox(10);
                     actionBox.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
                     Button btnModifier = new Button("✎");
-                    btnModifier.getStyleClass().add("btn-warning");
-                    btnModifier.setStyle("-fx-padding: 5 0; -fx-background-radius: 8; -fx-font-size: 18px; -fx-min-width: 42px; -fx-pref-width: 42px; -fx-min-height: 38px; -fx-alignment: center;");
+                    btnModifier.setStyle("-fx-background-color: transparent; -fx-text-fill: #f39c12; -fx-padding: 5 0; -fx-font-size: 20px; -fx-min-width: 42px; -fx-pref-width: 42px; -fx-min-height: 38px; -fx-alignment: center; -fx-cursor: hand;");
                     btnModifier.setOnAction(e -> modifierUser(item));
                     
                     Button btnSupprimer = new Button("✖");
-                    btnSupprimer.getStyleClass().add("btn-danger");
-                    btnSupprimer.setStyle("-fx-padding: 5 0; -fx-background-radius: 8; -fx-font-size: 18px; -fx-min-width: 42px; -fx-pref-width: 42px; -fx-min-height: 38px; -fx-alignment: center;");
+                    btnSupprimer.setStyle("-fx-background-color: transparent; -fx-text-fill: #e74c3c; -fx-padding: 5 0; -fx-font-size: 20px; -fx-min-width: 42px; -fx-pref-width: 42px; -fx-min-height: 38px; -fx-alignment: center; -fx-cursor: hand;");
                     btnSupprimer.setOnAction(e -> supprimerUser(item));
                     
                     actionBox.getChildren().addAll(btnModifier, btnSupprimer);
