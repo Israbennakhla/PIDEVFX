@@ -99,7 +99,7 @@
                     <!-- Admins -->
                     <HBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: #f1f5f9; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
                         <StackPane style="-fx-background-color: #f3e8ff; -fx-background-radius: 12; -fx-padding: 15;">
-                            <Label text="🛡️" style="-fx-font-size: 24px;"/>
+                            <Label text="⭐" style="-fx-font-size: 24px;"/>
                         </StackPane>
                         <VBox alignment="CENTER_LEFT" spacing="2">
                             <Label text="Administrateurs" style="-fx-font-size: 13px; -fx-text-fill: #a0aec0; -fx-font-weight: bold;"/>
@@ -110,7 +110,7 @@
                     <!-- Propriétaires -->
                     <HBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: #f1f5f9; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
                         <StackPane style="-fx-background-color: #e6fffa; -fx-background-radius: 12; -fx-padding: 15;">
-                            <Label text="🏡" style="-fx-font-size: 24px;"/>
+                            <Label text="🏠" style="-fx-font-size: 24px;"/>
                         </StackPane>
                         <VBox alignment="CENTER_LEFT" spacing="2">
                             <Label text="Propriétaires" style="-fx-font-size: 13px; -fx-text-fill: #a0aec0; -fx-font-weight: bold;"/>
@@ -121,7 +121,7 @@
                     <!-- Gardiens -->
                     <HBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: #f1f5f9; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
                         <StackPane style="-fx-background-color: #fffff0; -fx-background-radius: 12; -fx-padding: 15;">
-                            <Label text="🐕" style="-fx-font-size: 24px;"/>
+                            <Label text="🐾" style="-fx-font-size: 24px;"/>
                         </StackPane>
                         <VBox alignment="CENTER_LEFT" spacing="2">
                             <Label text="Gardiens" style="-fx-font-size: 13px; -fx-text-fill: #a0aec0; -fx-font-weight: bold;"/>
