@@ -4,63 +4,64 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
 
-<VBox spacing="15" alignment="CENTER" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sitmypet.controllers.AjouterUserController" stylesheets="@../css/style.css">
-    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+<VBox alignment="CENTER" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.sitmypet.controllers.AjouterUserController" stylesheets="/style.css" styleClass="root">
+    <padding><Insets top="40" right="40" bottom="40" left="40"/></padding>
     
-    <Label text="Ajouter un Utilisateur" styleClass="title-label">
-        <font>
-            <Font name="System Bold" size="20"/>
-        </font>
-    </Label>
-    
-    <Separator/>
-    
-    <GridPane hgap="10" vgap="15">
-        <columnConstraints>
-            <ColumnConstraints minWidth="120" prefWidth="120"/>
-            <ColumnConstraints hgrow="ALWAYS"/>
-        </columnConstraints>
-        
-        <!-- Nom -->
-        <Label text="Nom *" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-        <TextField fx:id="txtNom" GridPane.columnIndex="1" GridPane.rowIndex="0" promptText="Nom de famille"/>
-        
-        <!-- Prénom -->
-        <Label text="Prénom *" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-        <TextField fx:id="txtPrenom" GridPane.columnIndex="1" GridPane.rowIndex="1" promptText="Prénom"/>
-        
-        <!-- Email -->
-        <Label text="Email *" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-        <TextField fx:id="txtEmail" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="exemple@email.com"/>
-        
-        <!-- Téléphone -->
-        <Label text="Téléphone" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-        <TextField fx:id="txtTelephone" GridPane.columnIndex="1" GridPane.rowIndex="3" promptText="+216 XX XXX XXX"/>
-        
-        <!-- Adresse -->
-        <Label text="Adresse" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-        <TextField fx:id="txtAdresse" GridPane.columnIndex="1" GridPane.rowIndex="4" promptText="Adresse complète"/>
-        
-        <!-- Photo -->
-        <Label text="Photo" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-        <HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="5">
-            <TextField fx:id="txtPhoto" HBox.hgrow="ALWAYS" promptText="Nom du fichier photo" editable="false"/>
-            <Button fx:id="btnParcourir" text="Parcourir..." onAction="#handleParcourir"/>
+    <VBox styleClass="details-pane" spacing="20" maxWidth="600">
+        <!-- En-tête du formulaire -->
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Label text="✨" style="-fx-font-size: 28px;"/>
+            <VBox>
+                <Label text="Ajouter un Utilisateur" styleClass="form-title"/>
+                <Label text="Remplissez les informations ci-dessous pour créer un nouveau compte" styleClass="note-text"/>
+            </VBox>
         </HBox>
         
-        <!-- Rôle -->
-        <Label text="Rôle *" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-        <ComboBox fx:id="comboRole" GridPane.columnIndex="1" GridPane.rowIndex="6" prefWidth="200"/>
+        <Separator styleClass="separator"/>
         
-        <!-- Statut -->
-        <Label text="Statut" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
-        <CheckBox fx:id="checkActif" text="Compte actif" GridPane.columnIndex="1" GridPane.rowIndex="7" selected="true"/>
-    </GridPane>
-    
-    <Separator/>
-    
-    <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button text="Voir la liste" onAction="#handleShowList" styleClass="btn-secondary"/>
-        <Button text="Ajouter" onAction="#handleAddUser" styleClass="btn-primary"/>
-    </HBox>
+        <!-- Formulaire -->
+        <GridPane hgap="15" vgap="18">
+            <columnConstraints>
+                <ColumnConstraints minWidth="130" prefWidth="130" halignment="RIGHT"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+            
+            <Label text="Nom *" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-weight: bold; -fx-text-fill: #4a5568;"/>
+            <TextField fx:id="txtNom" GridPane.columnIndex="1" GridPane.rowIndex="0" promptText="Saisissez le nom de famille"/>
+            
+            <Label text="Prénom *" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-weight: bold; -fx-text-fill: #4a5568;"/>
+            <TextField fx:id="txtPrenom" GridPane.columnIndex="1" GridPane.rowIndex="1" promptText="Saisissez le prénom"/>
+            
+            <Label text="Email *" GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-font-weight: bold; -fx-text-fill: #4a5568;"/>
+            <TextField fx:id="txtEmail" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="exemple@domaine.com"/>
+            
+            <Label text="Téléphone" GridPane.columnIndex="0" GridPane.rowIndex="3" style="-fx-font-weight: bold; -fx-text-fill: #4a5568;"/>
+            <TextField fx:id="txtTelephone" GridPane.columnIndex="1" GridPane.rowIndex="3" promptText="+216 20 123 456"/>
+            
+            <Label text="Adresse" GridPane.columnIndex="0" GridPane.rowIndex="4" style="-fx-font-weight: bold; -fx-text-fill: #4a5568;"/>
+            <TextField fx:id="txtAdresse" GridPane.columnIndex="1" GridPane.rowIndex="4" promptText="Adresse complète du domicile"/>
+            
+            <Label text="Photo" GridPane.columnIndex="0" GridPane.rowIndex="5" style="-fx-font-weight: bold; -fx-text-fill: #4a5568;"/>
+            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                <TextField fx:id="txtPhoto" HBox.hgrow="ALWAYS" promptText="Aucun fichier sélectionné" editable="false"/>
+                <Button fx:id="btnParcourir" text="Parcourir" onAction="#handleParcourir" style="-fx-padding: 8 15;"/>
+            </HBox>
+            
+            <Label text="Rôle *" GridPane.columnIndex="0" GridPane.rowIndex="6" style="-fx-font-weight: bold; -fx-text-fill: #4a5568;"/>
+            <ComboBox fx:id="comboRole" GridPane.columnIndex="1" GridPane.rowIndex="6" maxWidth="Infinity"/>
+            
+            <Label text="Statut" GridPane.columnIndex="0" GridPane.rowIndex="7" style="-fx-font-weight: bold; -fx-text-fill: #4a5568;"/>
+            <CheckBox fx:id="checkActif" text="Activer le compte immédiatement" GridPane.columnIndex="1" GridPane.rowIndex="7" selected="true" style="-fx-text-fill: #4a5568;"/>
+        </GridPane>
+        
+        <Separator styleClass="separator"/>
+        
+        <!-- Actions -->
+        <HBox spacing="15" alignment="CENTER_RIGHT">
+            <Label text="* Champs obligatoires" styleClass="note-text" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Retour" onAction="#handleShowList" styleClass="btn-secondary"/>
+            <Button text="Créer l'utilisateur" onAction="#handleAddUser" styleClass="btn-primary"/>
+        </HBox>
+    </VBox>
 </VBox>
