@@ -185,11 +185,6 @@
                     </VBox>
                 </HBox>
                 
-                <!-- Boutons d'action -->
-                <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 5 0 0 0;">
-                    <Button text="Modifier" onAction="#handleModifier" styleClass="btn-warning"/>
-                    <Button text="Supprimer" onAction="#handleSupprimer" styleClass="btn-danger"/>
-                </HBox>
             </VBox>
         </VBox>
     </center>

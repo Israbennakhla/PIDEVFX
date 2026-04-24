@@ -91,7 +91,19 @@ public class AfficherUserController {
                     
                     statusBox.getChildren().addAll(roleLbl, statusLbl);
                     
-                    card.getChildren().addAll(identity, spacer, statusBox);
+                    HBox actionBox = new HBox(10);
+                    actionBox.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
+                    Button btnModifier = new Button("Modifier");
+                    btnModifier.getStyleClass().add("btn-warning");
+                    btnModifier.setOnAction(e -> modifierUser(item));
+                    
+                    Button btnSupprimer = new Button("Supprimer");
+                    btnSupprimer.getStyleClass().add("btn-danger");
+                    btnSupprimer.setOnAction(e -> supprimerUser(item));
+                    
+                    actionBox.getChildren().addAll(btnModifier, btnSupprimer);
+                    
+                    card.getChildren().addAll(identity, spacer, statusBox, new Region() {{ setMinWidth(20); }}, actionBox);
                     
                     setGraphic(card);
                     setStyle("-fx-background-color: transparent; -fx-padding: 5;");
@@ -225,6 +237,10 @@ public class AfficherUserController {
             return;
         }
         
+        modifierUser(userSelectionne);
+    }
+
+    private void modifierUser(User userSelectionne) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sitmypet/fxml/ModifierUser.fxml"));
             Parent root = loader.load();
@@ -253,6 +269,10 @@ public class AfficherUserController {
             return;
         }
         
+        supprimerUser(userSelectionne);
+    }
+
+    private void supprimerUser(User userSelectionne) {
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
         confirmation.setTitle("Confirmation de suppression");
         confirmation.setHeaderText("Supprimer l'utilisateur ?");
