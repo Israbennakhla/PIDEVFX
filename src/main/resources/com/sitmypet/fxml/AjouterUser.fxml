@@ -4,7 +4,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.sitmypet.controllers.AjouterUserController" stylesheets="/style.css" style="-fx-background-color: linear-gradient(to right bottom, #f4f7f6, #e2e8f0);">
+<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.sitmypet.controllers.AjouterUserController" stylesheets="/style.css" fitToWidth="true" fitToHeight="true" style="-fx-background: linear-gradient(to right bottom, #f4f7f6, #e2e8f0); -fx-background-color: transparent;">
+    <VBox alignment="CENTER" style="-fx-background-color: linear-gradient(to right bottom, #f4f7f6, #e2e8f0);">
     <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
     
     <VBox styleClass="details-pane" spacing="25" maxWidth="750" style="-fx-effect: dropshadow(gaussian, rgba(142, 91, 214, 0.15), 30, 0, 0, 10); -fx-border-color: #e2e8f0; -fx-border-width: 1; -fx-border-radius: 20;">
@@ -85,4 +86,5 @@
             <Button text="Créer l'utilisateur" onAction="#handleAddUser" styleClass="btn-primary" style="-fx-padding: 15 35; -fx-font-size: 16px; -fx-background-radius: 30; -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 15, 0, 0, 5); -fx-font-weight: 900;"/>
         </HBox>
     </VBox>
-</VBox>
+    </VBox>
+</ScrollPane>

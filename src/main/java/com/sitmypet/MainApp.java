@@ -13,11 +13,12 @@ public class MainApp extends Application {
         // Charger la vue de Connexion d'abord
         Parent root = FXMLLoader.load(java.util.Objects.requireNonNull(getClass().getResource("/com/sitmypet/fxml/Login.fxml")));
 
-        Scene scene = new Scene(root, 900, 600);
+        javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+        Scene scene = new Scene(root, Math.min(bounds.getWidth() * 0.9, 1200), Math.min(bounds.getHeight() * 0.9, 800));
 
         primaryStage.setTitle("SitMyPet - Connexion");
         primaryStage.setScene(scene);
-        primaryStage.setResizable(false); // Le login a une taille fixe
+        primaryStage.setResizable(true);
         primaryStage.centerOnScreen();
         primaryStage.show();
     }

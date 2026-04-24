@@ -3,12 +3,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<HBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.sitmypet.controllers.InscriptionController"
-      stylesheets="/style.css"
-      prefHeight="650.0" prefWidth="900.0"
-      style="-fx-background-color: white;">
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.sitmypet.controllers.InscriptionController"
+            stylesheets="/style.css"
+            fitToWidth="true" fitToHeight="true"
+            style="-fx-background-color: white; -fx-padding: 0; -fx-background: white;">
+    <HBox style="-fx-background-color: white;">
 
     <!-- PARTIE GAUCHE (Dégradé / Branding) -->
     <VBox HBox.hgrow="ALWAYS" maxWidth="Infinity" alignment="CENTER" spacing="20"
@@ -85,4 +86,5 @@
             </HBox>
         </VBox>
     </VBox>
-</HBox>
+    </HBox>
+</ScrollPane>
