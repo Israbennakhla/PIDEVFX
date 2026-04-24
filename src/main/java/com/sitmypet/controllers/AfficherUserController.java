@@ -289,16 +289,50 @@ public class AfficherUserController {
     }
 
     private void supprimerUser(User userSelectionne) {
-        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmation.setTitle("Confirmation de suppression");
-        confirmation.setHeaderText("Supprimer l'utilisateur ?");
-        confirmation.setContentText("Êtes-vous sûr de vouloir supprimer " + 
-                                    userSelectionne.getPrenom() + " " + userSelectionne.getNom() + " ?");
-        styleAlert(confirmation);
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Confirmation de suppression");
         
-        Optional<ButtonType> resultat = confirmation.showAndWait();
+        DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.setStyle("-fx-background-color: white;");
+        try {
+            dialogPane.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        } catch (Exception e) {}
         
-        if (resultat.isPresent() && resultat.get() == ButtonType.OK) {
+        VBox content = new VBox(20);
+        content.setAlignment(javafx.geometry.Pos.CENTER);
+        content.setPadding(new javafx.geometry.Insets(30, 40, 10, 40));
+        
+        javafx.scene.layout.StackPane iconContainer = new javafx.scene.layout.StackPane();
+        iconContainer.setStyle("-fx-background-color: #fff5f5; -fx-background-radius: 50; -fx-padding: 20; -fx-max-width: 80; -fx-max-height: 80;");
+        Label iconLabel = new Label("⚠️");
+        iconLabel.setStyle("-fx-font-size: 40px; -fx-text-fill: #e53e3e;");
+        iconContainer.getChildren().add(iconLabel);
+        
+        Label titleLabel = new Label("Supprimer l'utilisateur ?");
+        titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: 900; -fx-text-fill: #2d3748;");
+        
+        Label descLabel = new Label("Êtes-vous sûr de vouloir supprimer définitivement\n" + 
+                                    userSelectionne.getPrenom() + " " + userSelectionne.getNom() + " ?\nCette action est irréversible.");
+        descLabel.setStyle("-fx-font-size: 15px; -fx-text-fill: #718096; -fx-text-alignment: center;");
+        descLabel.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        
+        content.getChildren().addAll(iconContainer, titleLabel, descLabel);
+        dialogPane.setContent(content);
+        
+        ButtonType btnAnnuler = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType btnSupprimer = new ButtonType("Oui, supprimer", ButtonBar.ButtonData.OK_DONE);
+        
+        dialogPane.getButtonTypes().addAll(btnAnnuler, btnSupprimer);
+        
+        Button cancelNode = (Button) dialogPane.lookupButton(btnAnnuler);
+        cancelNode.setStyle("-fx-background-color: transparent; -fx-text-fill: #a0aec0; -fx-font-weight: bold; -fx-font-size: 15px; -fx-cursor: hand;");
+        
+        Button deleteNode = (Button) dialogPane.lookupButton(btnSupprimer);
+        deleteNode.setStyle("-fx-background-color: #e53e3e; -fx-text-fill: white; -fx-padding: 12 25; -fx-font-size: 15px; -fx-background-radius: 30; -fx-font-weight: 900; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(229, 62, 62, 0.4), 15, 0, 0, 5);");
+        
+        Optional<ButtonType> resultat = dialog.showAndWait();
+        
+        if (resultat.isPresent() && resultat.get() == btnSupprimer) {
             serviceUser.supprimer(userSelectionne.getId());
             afficherSucces("Succès", "Utilisateur supprimé avec succès !");
             chargerUtilisateurs();
