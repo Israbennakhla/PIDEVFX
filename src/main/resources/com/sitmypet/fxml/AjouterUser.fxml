@@ -67,12 +67,12 @@
                     </HBox>
                 </VBox>
                 
-                <VBox spacing="8">
-                    <Label text="Statut du compte" style="-fx-font-weight: 800; -fx-text-fill: #2d3748;"/>
-                    <StackPane alignment="CENTER_LEFT" style="-fx-background-color: #f7fafc; -fx-padding: 12 15; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0;">
-                        <CheckBox fx:id="checkActif" text="Activer le compte immédiatement" selected="true" style="-fx-text-fill: #4a5568; -fx-font-size: 15px; -fx-font-weight: bold; -fx-cursor: hand;"/>
-                    </StackPane>
-                </VBox>
+
+
+
+
+
+
             </VBox>
         </HBox>
         

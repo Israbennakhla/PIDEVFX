@@ -32,9 +32,7 @@ public class ModifierUserController {
     @FXML
     private ComboBox<String> comboRole;
     
-    @FXML
-    private CheckBox checkActif;
-    
+
     @FXML
     private Button btnParcourir;
     
@@ -108,7 +106,6 @@ public class ModifierUserController {
             txtAdresse.setText(userAModifier.getAdresse());
             txtPhoto.setText(userAModifier.getPhoto());
             comboRole.setValue(userAModifier.getRole());
-            checkActif.setSelected(userAModifier.isActive());
         }
     }
 
@@ -141,7 +138,7 @@ public class ModifierUserController {
         userAModifier.setAdresse(txtAdresse.getText() != null ? txtAdresse.getText().trim() : "");
         userAModifier.setPhoto(txtPhoto.getText() != null ? txtPhoto.getText().trim() : "");
         userAModifier.setRole(comboRole.getValue());
-        userAModifier.setActive(checkActif.isSelected());
+        userAModifier.setActive(true); // Toujours actif
         
         // Enregistrer dans la base de données
         serviceUser.modifier(userAModifier);

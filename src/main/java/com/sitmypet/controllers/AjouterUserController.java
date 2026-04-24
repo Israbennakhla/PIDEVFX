@@ -27,7 +27,7 @@ public class AjouterUserController {
     @FXML private TextField txtAdresse;
     @FXML private TextField txtPhoto;
     @FXML private ComboBox<String> comboRole;
-    @FXML private CheckBox checkActif;
+
 
     private ServiceUser serviceUser = new ServiceUser();
 
@@ -98,7 +98,7 @@ public class AjouterUserController {
         String adresse = txtAdresse.getText().trim();
         String photo = txtPhoto.getText().trim();
         String role = comboRole.getValue();
-        boolean isActive = checkActif.isSelected();
+        boolean isActive = true; // Toujours actif par défaut
 
         if (!validerFormulaire()) {
             return;
@@ -114,7 +114,6 @@ public class AjouterUserController {
         txtAdresse.clear();
         txtPhoto.clear();
         comboRole.setValue("PROPRIETAIRE");
-        checkActif.setSelected(true);
         
         AlertHelper.showAlert(Alert.AlertType.INFORMATION, txtNom.getScene().getWindow(), "Succès", "Utilisateur ajouté avec succès !");
     }
