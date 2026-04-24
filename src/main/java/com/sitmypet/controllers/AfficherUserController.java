@@ -93,12 +93,14 @@ public class AfficherUserController {
                     
                     HBox actionBox = new HBox(10);
                     actionBox.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
-                    Button btnModifier = new Button("Modifier");
+                    Button btnModifier = new Button("✏️");
                     btnModifier.getStyleClass().add("btn-warning");
+                    btnModifier.setStyle("-fx-padding: 6 10; -fx-background-radius: 6; -fx-font-size: 16px; -fx-min-width: 36px; -fx-min-height: 36px;");
                     btnModifier.setOnAction(e -> modifierUser(item));
                     
-                    Button btnSupprimer = new Button("Supprimer");
+                    Button btnSupprimer = new Button("🗑️");
                     btnSupprimer.getStyleClass().add("btn-danger");
+                    btnSupprimer.setStyle("-fx-padding: 6 10; -fx-background-radius: 6; -fx-font-size: 16px; -fx-min-width: 36px; -fx-min-height: 36px;");
                     btnSupprimer.setOnAction(e -> supprimerUser(item));
                     
                     actionBox.getChildren().addAll(btnModifier, btnSupprimer);
