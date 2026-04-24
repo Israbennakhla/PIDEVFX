@@ -11,7 +11,7 @@
     <VBox styleClass="details-pane" spacing="20" maxWidth="600">
         <!-- En-tête du formulaire -->
         <HBox alignment="CENTER_LEFT" spacing="15">
-            <Label text="✎" style="-fx-font-size: 28px; -fx-text-fill: #f39c12;"/>
+            <Label text="✎" style="-fx-font-size: 28px; -fx-text-fill: #8e5bd6;"/>
             <VBox>
                 <Label text="Modifier l'utilisateur" styleClass="form-title"/>
                 <Label text="Mettez à jour les informations du compte sélectionné" styleClass="note-text"/>

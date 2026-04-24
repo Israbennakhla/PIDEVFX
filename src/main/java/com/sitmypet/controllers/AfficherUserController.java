@@ -280,12 +280,21 @@ public class AfficherUserController {
         supprimerUser(userSelectionne);
     }
 
+    private void styleAlert(Alert alert) {
+        DialogPane dialogPane = alert.getDialogPane();
+        try {
+            dialogPane.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        } catch (Exception e) {}
+        dialogPane.getStyleClass().add("custom-alert");
+    }
+
     private void supprimerUser(User userSelectionne) {
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
         confirmation.setTitle("Confirmation de suppression");
         confirmation.setHeaderText("Supprimer l'utilisateur ?");
         confirmation.setContentText("Êtes-vous sûr de vouloir supprimer " + 
                                     userSelectionne.getPrenom() + " " + userSelectionne.getNom() + " ?");
+        styleAlert(confirmation);
         
         Optional<ButtonType> resultat = confirmation.showAndWait();
         
@@ -326,6 +335,7 @@ public class AfficherUserController {
         alert.setTitle(titre);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        styleAlert(alert);
         alert.showAndWait();
     }
 
@@ -334,6 +344,7 @@ public class AfficherUserController {
         alert.setTitle(titre);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        styleAlert(alert);
         alert.showAndWait();
     }
 
@@ -342,6 +353,7 @@ public class AfficherUserController {
         alert.setTitle(titre);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        styleAlert(alert);
         alert.showAndWait();
     }
 

@@ -319,3 +319,30 @@
     -fx-alignment: center;
     -fx-effect: dropshadow(gaussian, rgba(142, 91, 214, 0.4), 10, 0, 0, 3);
 }
+
+/* ---- CUSTOM ALERTS (Suppression, Succès, Erreur) ---- */
+.custom-alert {
+    -fx-background-color: white;
+}
+.custom-alert .header-panel {
+    -fx-background-color: #f7f9fc;
+}
+.custom-alert .header-panel .label {
+    -fx-font-weight: 900;
+    -fx-font-size: 16px;
+    -fx-text-fill: #2d1354;
+}
+.custom-alert .content.label {
+    -fx-text-fill: #4a5568;
+    -fx-font-size: 14px;
+    -fx-padding: 20 10;
+}
+.custom-alert .button-bar {
+    -fx-padding: 15;
+}
+.custom-alert .button {
+    -fx-background-radius: 6;
+    -fx-padding: 8 20;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
