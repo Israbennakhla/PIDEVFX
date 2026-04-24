@@ -143,7 +143,10 @@ public class InscriptionController {
             Parent root = FXMLLoader.load(getClass().getResource("/com/sitmypet/fxml/Login.fxml"));
             Stage stage = (Stage) window;
             stage.setTitle("SitMyPet - Connexion");
-            stage.setScene(new Scene(root, 900, 600));
+            javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+            stage.setScene(new Scene(root, Math.min(bounds.getWidth() * 0.9, 900), Math.min(bounds.getHeight() * 0.9, 600)));
+            stage.setResizable(false);
+            stage.setMaximized(false);
             stage.centerOnScreen();
             stage.show();
         } catch (IOException e) {

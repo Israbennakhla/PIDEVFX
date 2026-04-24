@@ -51,7 +51,9 @@ public class LoginController {
                     Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     
                     stage.setTitle("SitMyPet - Dashboard Administrateur");
-                    stage.setScene(new Scene(root, 1300, 750));
+                    javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+                    stage.setScene(new Scene(root, bounds.getWidth() * 0.9, bounds.getHeight() * 0.9));
+                    stage.setMaximized(true);
                     stage.centerOnScreen();
                     stage.show();
                 } else if (role.contains("GARDIEN") || role.contains("PROPRIETAIRE") || role.contains("PROPRIÉTAIRE")) {
@@ -64,7 +66,9 @@ public class LoginController {
                     
                     Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     stage.setTitle("SitMyPet - Espace " + (role.contains("GARDIEN") ? "Gardien" : "Propriétaire"));
-                    stage.setScene(new Scene(root, 1200, 750));
+                    javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+                    stage.setScene(new Scene(root, bounds.getWidth() * 0.9, bounds.getHeight() * 0.9));
+                    stage.setMaximized(true);
                     stage.centerOnScreen();
                     stage.show();
                 } else {

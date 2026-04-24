@@ -78,7 +78,10 @@ public class DashboardController {
     private void handleAfficherUsers(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/com/sitmypet/fxml/AfficherUser.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 1200, 700));
+        javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+        stage.setScene(new Scene(root, bounds.getWidth() * 0.9, bounds.getHeight() * 0.9));
+        stage.setMaximized(true);
+        stage.centerOnScreen();
         stage.show();
     }
 
@@ -88,7 +91,8 @@ public class DashboardController {
             Parent root = FXMLLoader.load(getClass().getResource("/com/sitmypet/fxml/Login.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setTitle("SitMyPet - Connexion");
-            stage.setScene(new Scene(root, 900, 600));
+            javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+            stage.setScene(new Scene(root, Math.min(bounds.getWidth() * 0.9, 900), Math.min(bounds.getHeight() * 0.9, 600)));
             stage.setResizable(false);
             stage.setMaximized(false);
             stage.centerOnScreen();

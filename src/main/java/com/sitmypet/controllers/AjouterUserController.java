@@ -123,7 +123,10 @@ public class AjouterUserController {
     private void handleShowList(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/com/sitmypet/fxml/AfficherUser.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 1200, 700));
+        javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+        stage.setScene(new Scene(root, bounds.getWidth() * 0.9, bounds.getHeight() * 0.9));
+        stage.setMaximized(true);
+        stage.centerOnScreen();
         stage.show();
     }
 
