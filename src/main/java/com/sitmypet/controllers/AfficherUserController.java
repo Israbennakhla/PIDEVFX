@@ -93,14 +93,14 @@ public class AfficherUserController {
                     
                     HBox actionBox = new HBox(10);
                     actionBox.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
-                    Button btnModifier = new Button("✏️");
+                    Button btnModifier = new Button("✎");
                     btnModifier.getStyleClass().add("btn-warning");
-                    btnModifier.setStyle("-fx-padding: 6 10; -fx-background-radius: 6; -fx-font-size: 16px; -fx-min-width: 36px; -fx-min-height: 36px;");
+                    btnModifier.setStyle("-fx-padding: 5 0; -fx-background-radius: 8; -fx-font-size: 18px; -fx-min-width: 42px; -fx-pref-width: 42px; -fx-min-height: 38px; -fx-alignment: center;");
                     btnModifier.setOnAction(e -> modifierUser(item));
                     
-                    Button btnSupprimer = new Button("🗑️");
+                    Button btnSupprimer = new Button("✖");
                     btnSupprimer.getStyleClass().add("btn-danger");
-                    btnSupprimer.setStyle("-fx-padding: 6 10; -fx-background-radius: 6; -fx-font-size: 16px; -fx-min-width: 36px; -fx-min-height: 36px;");
+                    btnSupprimer.setStyle("-fx-padding: 5 0; -fx-background-radius: 8; -fx-font-size: 18px; -fx-min-width: 42px; -fx-pref-width: 42px; -fx-min-height: 38px; -fx-alignment: center;");
                     btnSupprimer.setOnAction(e -> supprimerUser(item));
                     
                     actionBox.getChildren().addAll(btnModifier, btnSupprimer);
