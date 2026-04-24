@@ -93,8 +93,7 @@ public class DashboardController {
             stage.setTitle("SitMyPet - Connexion");
             javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
             stage.setScene(new Scene(root, Math.min(bounds.getWidth() * 0.9, 900), Math.min(bounds.getHeight() * 0.9, 600)));
-            stage.setResizable(false);
-            stage.setMaximized(false);
+            stage.setResizable(true);
             stage.centerOnScreen();
             stage.show();
         } catch (IOException e) {

@@ -19,7 +19,7 @@
     </VBox>
 
     <!-- PARTIE DROITE (Formulaire) -->
-    <VBox prefWidth="550" alignment="CENTER" spacing="25" style="-fx-padding: 30 50;">
+    <VBox HBox.hgrow="ALWAYS" minWidth="450" maxWidth="700" alignment="CENTER" spacing="25" style="-fx-padding: 30 50;">
         <VBox alignment="CENTER" spacing="5">
             <Label text="Inscription" style="-fx-font-size: 32px; -fx-font-weight: 900; -fx-text-fill: #2d1354;"/>
             <Label text="Créez votre compte en quelques clics." style="-fx-text-fill: #718096; -fx-font-size: 14px;"/>

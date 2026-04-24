@@ -90,7 +90,9 @@ public class LoginController {
             Parent root = FXMLLoader.load(getClass().getResource("/com/sitmypet/fxml/Inscription.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setTitle("SitMyPet - Inscription");
-            stage.setScene(new Scene(root, 900, 650));
+            javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+            stage.setScene(new Scene(root, Math.min(bounds.getWidth() * 0.9, 1000), Math.min(bounds.getHeight() * 0.9, 700)));
+            stage.setResizable(true);
             stage.centerOnScreen();
             stage.show();
         } catch (IOException e) {

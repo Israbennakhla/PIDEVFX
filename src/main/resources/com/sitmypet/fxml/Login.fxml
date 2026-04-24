@@ -20,7 +20,7 @@
     </VBox>
 
     <!-- PARTIE DROITE (Formulaire de Connexion) -->
-    <VBox prefWidth="550" alignment="CENTER" spacing="40" style="-fx-background-color: white; -fx-padding: 60;">
+    <VBox HBox.hgrow="ALWAYS" minWidth="400" maxWidth="600" alignment="CENTER" spacing="40" style="-fx-background-color: white; -fx-padding: 60;">
         <VBox alignment="CENTER" spacing="10">
             <StackPane style="-fx-background-color: #f3e8ff; -fx-background-radius: 20; -fx-padding: 15; -fx-max-width: 60; -fx-max-height: 60;">
                 <Label text="👋" style="-fx-font-size: 30px;"/>
