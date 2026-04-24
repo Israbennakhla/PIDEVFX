@@ -135,7 +135,6 @@
                     <Button text="Rechercher" onAction="#handleRechercher" styleClass="btn-primary" style="-fx-padding: 8 15; -fx-font-size: 13px;"/>
                     <Button text="Reset" onAction="#handleReinitialiser" styleClass="btn-secondary" style="-fx-padding: 8 15; -fx-font-size: 13px;"/>
                     <Region HBox.hgrow="ALWAYS"/>
-                    <Button text="📄 Exporter PDF" onAction="#handleExportPDF" styleClass="btn-info" style="-fx-padding: 8 18; -fx-font-size: 14px;"/>
                     <Button text="+ Ajouter" onAction="#handleAjouter" styleClass="btn-success" style="-fx-padding: 8 20; -fx-font-size: 14px;"/>
                 </HBox>
                 

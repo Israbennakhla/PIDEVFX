@@ -18,21 +18,7 @@ import com.sitmypet.services.ServiceUser;
 import java.io.IOException;
 import java.util.Optional;
 
-// Imports externes pour iTextPDF
-import java.io.File;
-import java.io.FileOutputStream;
-import javafx.stage.FileChooser;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.BaseColor;
+// Imports externes supprimés
 
 public class AfficherUserController {
 
@@ -343,83 +329,6 @@ public class AfficherUserController {
         }
     }
 
-    @FXML
-    private void handleExportPDF(javafx.event.ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Enregistrer la liste au format PDF");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers PDF (*.pdf)", "*.pdf"));
-        
-        File file = fileChooser.showSaveDialog(((javafx.scene.Node) event.getSource()).getScene().getWindow());
-        
-        if (file != null) {
-            try {
-                Document document = new Document();
-                PdfWriter.getInstance(document, new FileOutputStream(file));
-                document.open();
-                
-                // Titre
-                Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 22, BaseColor.BLACK);
-                Paragraph title = new Paragraph("Liste des Utilisateurs de SitMyPet", titleFont);
-                title.setAlignment(Element.ALIGN_CENTER);
-                title.setSpacingAfter(30);
-                document.add(title);
-                
-                // Paramétrer la Table (4 colonnes, sans ID)
-                PdfPTable table = new PdfPTable(4);
-                table.setWidthPercentage(100);
-                table.setWidths(new float[]{3f, 4f, 3f, 2f});
-                table.setSpacingBefore(10f);
-                
-                // En-têtes
-                String[] headers = {"Nom complet", "Email", "Téléphone", "Rôle"};
-                Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.WHITE);
-                
-                for (String headerTitle : headers) {
-                    PdfPCell header = new PdfPCell();
-                    header.setBackgroundColor(new BaseColor(102, 126, 234)); // Correspondance de couleur primaire #667eea
-                    header.setBorderWidth(1);
-                    header.setPhrase(new Phrase(headerTitle, headerFont));
-                    header.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    header.setPadding(8);
-                    table.addCell(header);
-                }
-                
-                // Contenu dynamique
-                Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 11, BaseColor.DARK_GRAY);
-                for (User user : usersList) {
-                    // Retrait de la colonne ID
-                    
-                    PdfPCell cellName = new PdfPCell(new Phrase(user.getPrenom() + " " + user.getNom(), dataFont));
-                    cellName.setPadding(6);
-                    table.addCell(cellName);
-                    
-                    PdfPCell cellEmail = new PdfPCell(new Phrase(user.getEmail(), dataFont));
-                    cellEmail.setPadding(6);
-                    table.addCell(cellEmail);
-                    
-                    PdfPCell cellTel = new PdfPCell(new Phrase(user.getTelephone() != null ? user.getTelephone() : "-", dataFont));
-                    cellTel.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    cellTel.setPadding(6);
-                    table.addCell(cellTel);
-                    
-                    String role = user.getRole() != null ? user.getRole().replace("ROLE_", "") : "USER";
-                    PdfPCell cellRole = new PdfPCell(new Phrase(role, dataFont));
-                    cellRole.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    cellRole.setPadding(6);
-                    table.addCell(cellRole);
-                }
-                
-                document.add(table);
-                document.close();
-                
-                afficherSucces("Export PDF Réussi", "La liste affichée a été convenablement sauvegardée au format PDF \n(" + file.getName() + ").");
-                
-            } catch (Exception e) {
-                afficherErreur("⚠️ Erreur PDF", "Impossible de créer le fichier PDF.\n" + e.getMessage());
-                e.printStackTrace();
-            }
-        }
-    }
 
     @FXML
     private void handleLogout(javafx.event.ActionEvent event) {
