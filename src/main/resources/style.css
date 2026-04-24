@@ -253,7 +253,7 @@
 
 /* ---- SIDEBAR ---- */
 .sidebar {
-    -fx-background-color: #130e21; /* Beaucoup plus sombre */
+    -fx-background-color: #2d1354; /* Violet intense sombre */
 }
 
 .sidebar-logo-text {
@@ -271,7 +271,7 @@
 
 .sidebar-separator {
     -fx-background-color: transparent;
-    -fx-border-color: #241c3d; /* Séparateur plus sombre */
+    -fx-border-color: #4b2382; /* Séparateur violet vif */
     -fx-border-width: 1 0 0 0;
     -fx-border-style: solid;
 }
@@ -297,12 +297,12 @@
 }
 
 .sidebar-btn:hover {
-    -fx-background-color: #241c3d;
+    -fx-background-color: #4b2382;
     -fx-text-fill: white;
 }
 
 .sidebar-active {
-    -fx-background-color: #241c3d;
+    -fx-background-color: #4b2382;
     -fx-text-fill: white;
     -fx-border-color: transparent transparent transparent #8e5bd6;
     -fx-border-width: 0 0 0 4;
