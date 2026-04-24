@@ -93,12 +93,20 @@ public class AfficherUserController {
                     
                     HBox actionBox = new HBox(10);
                     actionBox.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
-                    Button btnModifier = new Button("✎");
-                    btnModifier.setStyle("-fx-background-color: transparent; -fx-text-fill: #f39c12; -fx-padding: 5 0; -fx-font-size: 20px; -fx-min-width: 42px; -fx-pref-width: 42px; -fx-min-height: 38px; -fx-alignment: center; -fx-cursor: hand;");
+                    Region iconModif = new Region();
+                    iconModif.setStyle("-fx-background-color: #f39c12; -fx-shape: \"M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z\"; -fx-min-width: 22px; -fx-min-height: 22px;");
+                    
+                    Button btnModifier = new Button();
+                    btnModifier.setGraphic(iconModif);
+                    btnModifier.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 5;");
                     btnModifier.setOnAction(e -> modifierUser(item));
                     
-                    Button btnSupprimer = new Button("✖");
-                    btnSupprimer.setStyle("-fx-background-color: transparent; -fx-text-fill: #e74c3c; -fx-padding: 5 0; -fx-font-size: 20px; -fx-min-width: 42px; -fx-pref-width: 42px; -fx-min-height: 38px; -fx-alignment: center; -fx-cursor: hand;");
+                    Region iconSupp = new Region();
+                    iconSupp.setStyle("-fx-background-color: #e74c3c; -fx-shape: \"M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z\"; -fx-min-width: 22px; -fx-min-height: 22px;");
+                    
+                    Button btnSupprimer = new Button();
+                    btnSupprimer.setGraphic(iconSupp);
+                    btnSupprimer.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 5;");
                     btnSupprimer.setOnAction(e -> supprimerUser(item));
                     
                     actionBox.getChildren().addAll(btnModifier, btnSupprimer);
