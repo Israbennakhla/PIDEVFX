@@ -168,4 +168,50 @@ public class InscriptionController {
         lblErreur.setText(msg);
         lblErreur.setVisible(true);
     }
+
+    @FXML
+    private void handleGoogleSignUp(ActionEvent event) {
+        com.sitmypet.services.GoogleOAuthService googleService = new com.sitmypet.services.GoogleOAuthService();
+        googleService.authenticate(new com.sitmypet.services.GoogleOAuthService.GoogleAuthCallback() {
+            @Override
+            public void onSuccess(com.sitmypet.services.GoogleOAuthService.GoogleUser googleUser) {
+                // On utilise le ServiceUser pour inscrire ou connecter
+                User user = serviceUser.authentifierOuInscrireGoogle(
+                        googleUser.email, 
+                        googleUser.familyName, 
+                        googleUser.givenName, 
+                        googleUser.picture
+                );
+                
+                if (user != null) {
+                    // Rediriger vers FrontAccueil
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sitmypet/fxml/FrontAccueil.fxml"));
+                        Parent root = loader.load();
+                        
+                        com.sitmypet.controllers.FrontAccueilController controller = loader.getController();
+                        controller.setUser(user);
+                        
+                        Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+                        stage.setTitle("SitMyPet - Espace Propriétaire");
+                        javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+                        stage.setScene(new Scene(root, bounds.getWidth() * 0.9, bounds.getHeight() * 0.9));
+                        stage.setMaximized(true);
+                        stage.centerOnScreen();
+                        stage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        afficherErreur("⚠️ Erreur lors de l'ouverture du Dashboard.");
+                    }
+                } else {
+                    afficherErreur("⚠️ Échec de la création du compte Google.");
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                afficherErreur(error);
+            }
+        });
+    }
 }

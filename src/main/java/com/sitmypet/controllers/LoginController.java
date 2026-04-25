@@ -99,4 +99,62 @@ public class LoginController {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void handleGoogleLogin(ActionEvent event) {
+        com.sitmypet.services.GoogleOAuthService googleService = new com.sitmypet.services.GoogleOAuthService();
+        googleService.authenticate(new com.sitmypet.services.GoogleOAuthService.GoogleAuthCallback() {
+            @Override
+            public void onSuccess(com.sitmypet.services.GoogleOAuthService.GoogleUser googleUser) {
+                // On utilise le ServiceUser pour inscrire ou connecter
+                User user = serviceUser.authentifierOuInscrireGoogle(
+                        googleUser.email, 
+                        googleUser.familyName, 
+                        googleUser.givenName, 
+                        googleUser.picture
+                );
+                
+                if (user != null) {
+                    try {
+                        String role = user.getRole() != null ? user.getRole().toUpperCase() : "";
+                        if (role.contains("ADMIN")) {
+                            Parent root = FXMLLoader.load(getClass().getResource("/com/sitmypet/fxml/AfficherUser.fxml"));
+                            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+                            stage.setTitle("SitMyPet - Dashboard Administrateur");
+                            javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+                            stage.setScene(new Scene(root, bounds.getWidth() * 0.9, bounds.getHeight() * 0.9));
+                            stage.setMaximized(true);
+                            stage.centerOnScreen();
+                            stage.show();
+                        } else {
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sitmypet/fxml/FrontAccueil.fxml"));
+                            Parent root = loader.load();
+                            com.sitmypet.controllers.FrontAccueilController controller = loader.getController();
+                            controller.setUser(user);
+                            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+                            stage.setTitle("SitMyPet - Espace Propriétaire/Gardien");
+                            javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+                            stage.setScene(new Scene(root, bounds.getWidth() * 0.9, bounds.getHeight() * 0.9));
+                            stage.setMaximized(true);
+                            stage.centerOnScreen();
+                            stage.show();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        lblErreur.setText("Erreur lors de l'ouverture du Dashboard.");
+                        lblErreur.setVisible(true);
+                    }
+                } else {
+                    lblErreur.setText("Échec de la connexion Google.");
+                    lblErreur.setVisible(true);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                lblErreur.setText(error);
+                lblErreur.setVisible(true);
+            }
+        });
+    }
 }

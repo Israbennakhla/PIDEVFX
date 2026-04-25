@@ -312,4 +312,52 @@ public class ServiceUser implements IService<User> {
         }
         return false;
     }
+
+    // Authentification ou Inscription via Google
+    public User authentifierOuInscrireGoogle(String email, String nom, String prenom, String photoUrl) {
+        // 1. Vérifier si l'utilisateur existe déjà
+        String checkQuery = "SELECT * FROM utilisateurs WHERE email = ? AND deleted_at IS NULL";
+        try (PreparedStatement pst = connection.prepareStatement(checkQuery)) {
+            pst.setString(1, email);
+            ResultSet rs = pst.executeQuery();
+            
+            if (rs.next()) {
+                // L'utilisateur existe, on le connecte
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setNom(rs.getString("nom"));
+                user.setPrenom(rs.getString("prenom"));
+                user.setEmail(rs.getString("email"));
+                user.setRole(rs.getString("role"));
+                user.setActive(rs.getBoolean("is_active"));
+                return user;
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur JDBC lors de la vérification Google : " + e.getMessage());
+        }
+
+        // 2. Si l'utilisateur n'existe pas, on le crée (rôle par défaut PROPRIETAIRE)
+        User newUser = new User(nom, prenom, email, "", "", photoUrl, "PROPRIETAIRE", true);
+        
+        // Générer un mot de passe très complexe et aléatoire pour ce compte Google
+        String randomPassword = java.util.UUID.randomUUID().toString() + java.util.UUID.randomUUID().toString();
+        
+        boolean isRegistered = inscrire(newUser, randomPassword);
+        
+        if (isRegistered) {
+            // On le récupère pour avoir son ID généré
+            try (PreparedStatement pst = connection.prepareStatement(checkQuery)) {
+                pst.setString(1, email);
+                ResultSet rs = pst.executeQuery();
+                if (rs.next()) {
+                    newUser.setId(rs.getInt("id"));
+                    return newUser;
+                }
+            } catch (SQLException e) {
+                System.err.println("❌ Erreur JDBC post-inscription Google : " + e.getMessage());
+            }
+        }
+        
+        return null;
+    }
 }
