@@ -38,6 +38,17 @@ public class InscriptionController {
         txtPassword.textProperty().addListener((observable, oldValue, newValue) -> {
             evaluerMotDePasse(newValue);
         });
+
+        // Validation visuelle en temps réel du numéro de téléphone
+        txtTelephone.textProperty().addListener((obs, oldV, newV) -> {
+            if (!newV.trim().isEmpty() && !newV.trim().matches("^\\d{8}$")) {
+                txtTelephone.setStyle("-fx-border-color: #e74c3c; -fx-border-width: 2px; -fx-border-radius: 5px;");
+            } else if (!newV.trim().isEmpty() && newV.trim().matches("^\\d{8}$")) {
+                txtTelephone.setStyle("-fx-border-color: #2ecc71; -fx-border-width: 2px; -fx-border-radius: 5px;");
+            } else {
+                txtTelephone.setStyle("");
+            }
+        });
     }
 
     private void evaluerMotDePasse(String password) {
@@ -95,9 +106,9 @@ public class InscriptionController {
             return;
         }
 
-        // 4. Validation du téléphone (optionnelle mais si remplie, format chiffré)
-        if (!tel.isEmpty() && !tel.matches("^[0-9\\s\\-\\+]{8,15}$")) {
-            afficherErreur("⚠️ Le format du numéro de téléphone est invalide.");
+        // 4. Validation du téléphone (obligatoire, 8 chiffres)
+        if (tel.isEmpty() || !tel.matches("^\\d{8}$")) {
+            afficherErreur("⚠️ Le numéro de téléphone doit contenir exactement 8 chiffres.");
             return;
         }
 
