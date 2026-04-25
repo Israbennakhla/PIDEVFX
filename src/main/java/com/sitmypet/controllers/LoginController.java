@@ -15,17 +15,25 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import com.sitmypet.utils.CaptchaGenerator;
+import javafx.scene.image.ImageView;
+
 public class LoginController {
 
     @FXML private TextField txtEmail;
     @FXML private PasswordField txtPassword;
     @FXML private Label lblErreur;
+    @FXML private ImageView imgCaptcha;
+    @FXML private TextField txtCaptcha;
+
+    private String currentCaptchaCode;
 
     private ServiceUser serviceUser;
 
     @FXML
     public void initialize() {
         serviceUser = new ServiceUser();
+        genererNouveauCaptcha();
     }
 
     @FXML
@@ -33,9 +41,17 @@ public class LoginController {
         String email = txtEmail.getText().trim();
         String password = txtPassword.getText();
 
-        if (email.isEmpty() || password.isEmpty()) {
-            lblErreur.setText("Veuillez remplir tous les champs.");
+        if (email.isEmpty() || password.isEmpty() || txtCaptcha.getText().trim().isEmpty()) {
+            lblErreur.setText("Veuillez remplir tous les champs, y compris le CAPTCHA.");
             lblErreur.setVisible(true);
+            return;
+        }
+
+        if (!txtCaptcha.getText().trim().equalsIgnoreCase(currentCaptchaCode)) {
+            lblErreur.setText("Le code CAPTCHA est incorrect.");
+            lblErreur.setVisible(true);
+            genererNouveauCaptcha();
+            txtCaptcha.clear();
             return;
         }
 
@@ -156,5 +172,15 @@ public class LoginController {
                 lblErreur.setVisible(true);
             }
         });
+    }
+
+    @FXML
+    private void genererNouveauCaptcha() {
+        com.sitmypet.utils.CaptchaGenerator.CaptchaResult captcha = com.sitmypet.utils.CaptchaGenerator.generateCaptcha();
+        this.currentCaptchaCode = captcha.getCode();
+        this.imgCaptcha.setImage(captcha.getImage());
+        if (this.txtCaptcha != null) {
+            this.txtCaptcha.clear();
+        }
     }
 }
