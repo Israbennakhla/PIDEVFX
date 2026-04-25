@@ -13,6 +13,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import com.sitmypet.utils.CaptchaGenerator;
+import javafx.scene.image.ImageView;
+
 public class InscriptionController {
 
     @FXML private TextField txtNom;
@@ -24,6 +27,10 @@ public class InscriptionController {
     @FXML private ComboBox<String> choiceRole;
     @FXML private Label lblErreur;
     @FXML private Label lblPasswordStrength;
+    @FXML private ImageView imgCaptcha;
+    @FXML private TextField txtCaptcha;
+
+    private String currentCaptchaCode;
 
     private ServiceUser serviceUser;
 
@@ -33,6 +40,8 @@ public class InscriptionController {
         // Peupler le choix de rôles
         choiceRole.getItems().addAll("GARDIEN", "PROPRIETAIRE");
         choiceRole.getSelectionModel().selectFirst();
+
+        genererNouveauCaptcha();
 
         // Évaluation en temps réel de la force du mot de passe
         txtPassword.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -89,8 +98,16 @@ public class InscriptionController {
         lblErreur.setVisible(false);
 
         // 1. Contrôle de saisie global
-        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || pass.isEmpty() || confPass.isEmpty()) {
-            afficherErreur("⚠️ Veuillez remplir tous les champs obligatoires.");
+        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || pass.isEmpty() || confPass.isEmpty() || txtCaptcha.getText().trim().isEmpty()) {
+            afficherErreur("⚠️ Veuillez remplir tous les champs obligatoires, y compris le CAPTCHA.");
+            return;
+        }
+
+        // 1.5 Vérification du CAPTCHA (insensible à la casse)
+        if (!txtCaptcha.getText().trim().equalsIgnoreCase(currentCaptchaCode)) {
+            afficherErreur("⚠️ Le code CAPTCHA est incorrect.");
+            genererNouveauCaptcha(); // On force un nouveau si erreur
+            txtCaptcha.clear();
             return;
         }
 
@@ -213,5 +230,15 @@ public class InscriptionController {
                 afficherErreur(error);
             }
         });
+    }
+
+    @FXML
+    private void genererNouveauCaptcha() {
+        com.sitmypet.utils.CaptchaGenerator.CaptchaResult captcha = com.sitmypet.utils.CaptchaGenerator.generateCaptcha();
+        this.currentCaptchaCode = captcha.getCode();
+        this.imgCaptcha.setImage(captcha.getImage());
+        if (this.txtCaptcha != null) {
+            this.txtCaptcha.clear();
+        }
     }
 }
