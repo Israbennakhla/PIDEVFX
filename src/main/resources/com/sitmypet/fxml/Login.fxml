@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
@@ -44,7 +45,7 @@
             </VBox>
             
             <HBox alignment="CENTER_RIGHT">
-                <Label text="Mot de passe oublié ?" style="-fx-text-fill: #8e5bd6; -fx-cursor: hand; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                <Label text="Mot de passe oublié ?" onMouseClicked="#handleForgotPassword" style="-fx-text-fill: #8e5bd6; -fx-cursor: hand; -fx-font-size: 14px; -fx-font-weight: bold;"/>
             </HBox>
         </VBox>
 

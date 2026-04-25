@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import com.sitmypet.utils.CaptchaGenerator;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 
 public class InscriptionController {
 
@@ -29,8 +30,11 @@ public class InscriptionController {
     @FXML private Label lblPasswordStrength;
     @FXML private ImageView imgCaptcha;
     @FXML private TextField txtCaptcha;
+    @FXML private VBox vboxCertificat;
+    @FXML private Label lblCertificatFile;
 
     private String currentCaptchaCode;
+    private java.io.File certificatFile;
 
     private ServiceUser serviceUser;
 
@@ -40,6 +44,20 @@ public class InscriptionController {
         // Peupler le choix de rôles
         choiceRole.getItems().addAll("GARDIEN", "PROPRIETAIRE");
         choiceRole.getSelectionModel().selectFirst();
+        
+        choiceRole.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if ("GARDIEN".equals(newVal)) {
+                vboxCertificat.setVisible(true);
+                vboxCertificat.setManaged(true);
+            } else {
+                vboxCertificat.setVisible(false);
+                vboxCertificat.setManaged(false);
+            }
+        });
+        
+        // Initialiser la visibilité au démarrage
+        vboxCertificat.setVisible(true);
+        vboxCertificat.setManaged(true);
 
         genererNouveauCaptcha();
 
@@ -87,77 +105,148 @@ public class InscriptionController {
 
     @FXML
     private void handleInscription(ActionEvent event) {
-        String nom = txtNom.getText().trim();
-        String prenom = txtPrenom.getText().trim();
-        String email = txtEmail.getText().trim();
-        String tel = txtTelephone.getText().trim();
-        String pass = txtPassword.getText();
-        String confPass = txtConfirmPassword.getText();
-        String role = choiceRole.getValue();
+        try {
+            String nom = txtNom.getText().trim();
+            String prenom = txtPrenom.getText().trim();
+            String email = txtEmail.getText().trim();
+            String tel = txtTelephone.getText().trim();
+            String pass = txtPassword.getText();
+            String confPass = txtConfirmPassword.getText();
+            String role = choiceRole.getValue();
 
-        lblErreur.setVisible(false);
+            lblErreur.setVisible(false);
 
-        // 1. Contrôle de saisie global
-        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || pass.isEmpty() || confPass.isEmpty() || txtCaptcha.getText().trim().isEmpty()) {
-            afficherErreur("⚠️ Veuillez remplir tous les champs obligatoires, y compris le CAPTCHA.");
-            return;
-        }
+            // 1. Contrôle de saisie global
+            if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || pass.isEmpty() || confPass.isEmpty() || txtCaptcha.getText().trim().isEmpty()) {
+                afficherErreur("⚠️ Veuillez remplir tous les champs obligatoires, y compris le CAPTCHA.");
+                return;
+            }
 
-        // 1.5 Vérification du CAPTCHA (insensible à la casse)
-        if (!txtCaptcha.getText().trim().equalsIgnoreCase(currentCaptchaCode)) {
-            afficherErreur("⚠️ Le code CAPTCHA est incorrect.");
-            genererNouveauCaptcha(); // On force un nouveau si erreur
-            txtCaptcha.clear();
-            return;
-        }
+            // 1.5 Vérification du CAPTCHA (insensible à la casse)
+            if (!txtCaptcha.getText().trim().equalsIgnoreCase(currentCaptchaCode)) {
+                afficherErreur("⚠️ Le code CAPTCHA est incorrect.");
+                genererNouveauCaptcha(); // On force un nouveau si erreur
+                txtCaptcha.clear();
+                return;
+            }
 
-        // 2. Format Nom / Prénom
-        if (nom.length() < 2 || prenom.length() < 2) {
-            afficherErreur("⚠️ Le nom et le prénom doivent contenir au moins 2 caractères.");
-            return;
-        }
+            // 2. Format Nom / Prénom
+            if (nom.length() < 2 || prenom.length() < 2) {
+                afficherErreur("⚠️ Le nom et le prénom doivent contenir au moins 2 caractères.");
+                return;
+            }
 
-        // 3. Validation de l'email correct
-        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            afficherErreur("⚠️ L'adresse email est invalide.");
-            return;
-        }
+            // 3. Validation de l'email correct
+            if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+                afficherErreur("⚠️ L'adresse email est invalide.");
+                return;
+            }
 
-        // 4. Validation du téléphone (obligatoire, 8 chiffres)
-        if (tel.isEmpty() || !tel.matches("^\\d{8}$")) {
-            afficherErreur("⚠️ Le numéro de téléphone doit contenir exactement 8 chiffres.");
-            return;
-        }
+            // 4. Validation du téléphone (obligatoire, 8 chiffres)
+            if (tel.isEmpty() || !tel.matches("^\\d{8}$")) {
+                afficherErreur("⚠️ Le numéro de téléphone doit contenir exactement 8 chiffres.");
+                return;
+            }
 
-        // 5. Validation sécuritaire des mots de passe
-        if (!pass.equals(confPass)) {
-            afficherErreur("⚠️ Les mots de passe ne correspondent pas.");
-            return;
-        }
+            // 5. Validation sécuritaire des mots de passe
+            if (!pass.equals(confPass)) {
+                afficherErreur("⚠️ Les mots de passe ne correspondent pas.");
+                return;
+            }
 
-        if (pass.length() < 6) {
-            afficherErreur("⚠️ Le mot de passe doit contenir au moins 6 caractères.");
-            return;
-        }
+            if (pass.length() < 6) {
+                afficherErreur("⚠️ Le mot de passe doit contenir au moins 6 caractères.");
+                return;
+            }
 
-        // 4. Création objet utilisateur
-        User newUser = new User(nom, prenom, email, tel, "", "default.png", role, true);
+            boolean isGardien = "GARDIEN".equals(role);
+            if (isGardien && certificatFile == null) {
+                afficherErreur("⚠️ Veuillez importer votre certificat pour continuer l'inscription.");
+                return;
+            }
 
-        // 5. Sauvegarde
-        boolean success = serviceUser.inscrire(newUser, pass);
-        
-        if (success) {
-            // Afficher une alerte de succès (optionnel) ou rediriger
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Inscription réussie");
-            alert.setHeaderText(null);
-            alert.setContentText("Votre compte a bien été créé ! Vous pouvez maintenant vous connecter.");
+            boolean isActive = true;
+            String certificatFileName = null;
+            if (isGardien) {
+                try {
+                    // Créer le dossier de destination
+                    java.io.File uploadDir = new java.io.File("SitMyPet-Desktop/src/main/resources/uploads/certificats");
+                    if (!uploadDir.exists() && !uploadDir.mkdirs()) {
+                        // Essayer le chemin sans le dossier parent si le CWD est différent
+                        uploadDir = new java.io.File("src/main/resources/uploads/certificats");
+                        uploadDir.mkdirs();
+                    }
+                    
+                    // Copie du fichier
+                    certificatFileName = java.util.UUID.randomUUID().toString() + "_" + certificatFile.getName();
+                    java.io.File destFile = new java.io.File(uploadDir, certificatFileName);
+                    java.nio.file.Files.copy(certificatFile.toPath(), destFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+
+                    net.sourceforge.tess4j.Tesseract tesseract = new net.sourceforge.tess4j.Tesseract();
+                    // Utiliser LoadLibs pour extraire correctement depuis le classpath
+                    java.io.File tessDataFolder = net.sourceforge.tess4j.util.LoadLibs.extractTessResources("tessdata");
+                    tesseract.setDatapath(tessDataFolder.getAbsolutePath());
+                    tesseract.setLanguage("fra"); 
+                    
+                    String ocrResult = tesseract.doOCR(certificatFile).toLowerCase();
+                    if (ocrResult.contains("certificat") || ocrResult.contains("diplôme") || ocrResult.contains("diplome") || ocrResult.contains("attestation")) {
+                        isActive = true;
+                    } else {
+                        isActive = false;
+                        System.out.println("OCR n'a pas validé le document. Statut : En attente.");
+                    }
+                } catch (Throwable e) {
+                    System.err.println("Erreur copie/OCR: " + e.getMessage());
+                    isActive = false;
+                }
+            }
+
+            // 4. Création objet utilisateur
+            User newUser = new User(nom, prenom, email, tel, "", "default.png", role, isActive);
+            if (isGardien && certificatFileName != null) {
+                newUser.setCertificat(certificatFileName);
+            }
+
+            // 5. Sauvegarde
+            boolean success = serviceUser.inscrire(newUser, pass);
+            
+            if (success) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Inscription réussie");
+                alert.setHeaderText(null);
+                
+                if (isGardien && !isActive) {
+                    alert.setContentText("Votre compte a été créé. Toutefois, la vérification automatique du certificat n'a pas pu aboutir. Votre compte est en attente d'activation manuelle par un administrateur.");
+                } else {
+                    alert.setContentText("Votre compte a bien été créé ! Vous pouvez maintenant vous connecter.");
+                }
+                alert.showAndWait();
+
+                retourLogin(((Node) event.getSource()).getScene().getWindow());
+            } else {
+                afficherErreur("Erreur lors de la création du compte (l'email existe peut-être déjà).");
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur Critique");
+            alert.setHeaderText("Une erreur est survenue lors de l'inscription");
+            alert.setContentText(t.toString());
             alert.showAndWait();
+        }
+    }
 
-            // Redirection vers le login
-            retourLogin(((Node) event.getSource()).getScene().getWindow());
-        } else {
-            afficherErreur("Erreur lors de la création du compte (l'email existe peut-être déjà).");
+    @FXML
+    private void handleUploadCertificat(ActionEvent event) {
+        javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
+        fileChooser.setTitle("Choisir un certificat (Image)");
+        fileChooser.getExtensionFilters().addAll(
+                new javafx.stage.FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg")
+        );
+        java.io.File selectedFile = fileChooser.showOpenDialog(((Node) event.getSource()).getScene().getWindow());
+        if (selectedFile != null) {
+            certificatFile = selectedFile;
+            lblCertificatFile.setText(selectedFile.getName());
         }
     }
 

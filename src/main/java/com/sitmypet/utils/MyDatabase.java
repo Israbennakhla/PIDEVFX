@@ -17,6 +17,16 @@ public class MyDatabase {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
             System.out.println("✅ Connexion à la base de données réussie !");
+            try {
+                connection.createStatement().executeUpdate("ALTER TABLE utilisateurs ADD COLUMN certificat VARCHAR(255) DEFAULT NULL");
+            } catch (Exception e) {}
+            try {
+                connection.createStatement().executeUpdate("ALTER TABLE utilisateurs ADD COLUMN failed_login_attempts INT DEFAULT 0");
+            } catch (Exception e) {}
+            try {
+                connection.createStatement().executeUpdate("ALTER TABLE utilisateurs ADD COLUMN lockout_time DATETIME DEFAULT NULL");
+            } catch (Exception e) {}
+            System.out.println("✅ Structure de la base de données vérifiée/mise à jour.");
         } catch (SQLException e) {
             System.err.println("❌ Erreur de connexion : " + e.getMessage());
         }

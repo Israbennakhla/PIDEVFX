@@ -200,6 +200,8 @@
                             <Label text="Inscrit le :" GridPane.columnIndex="0" GridPane.rowIndex="6" style="-fx-font-weight: bold;"/>
                             <Label fx:id="lblDetailDate" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
                         </GridPane>
+                        <Button fx:id="btnVoirCertificat" text="Voir le certificat" style="-fx-background-color: #8e5bd6; -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 20; -fx-font-weight: bold; -fx-cursor: hand;" maxWidth="Infinity" visible="false" managed="false" onAction="#handleVoirCertificat"/>
+                        <Button fx:id="btnDebloquer" text="🔓 Débloquer le compte" style="-fx-background-color: #e53e3e; -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 20; -fx-font-weight: bold; -fx-cursor: hand;" maxWidth="Infinity" visible="false" managed="false" onAction="#handleDebloquer"/>
                     </VBox>
                 </HBox>
                 

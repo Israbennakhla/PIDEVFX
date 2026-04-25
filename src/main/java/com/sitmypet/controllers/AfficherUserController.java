@@ -43,9 +43,12 @@ public class AfficherUserController {
     @FXML private Label lblDetailRole;
     @FXML private Label lblDetailStatut;
     @FXML private Label lblDetailDate;
+    @FXML private Button btnVoirCertificat;
+    @FXML private Button btnDebloquer;
     
     private ServiceUser serviceUser;
     private ObservableList<User> usersList;
+    private User currentUserDetails;
 
     public AfficherUserController() {
         serviceUser = new ServiceUser();
@@ -159,6 +162,7 @@ public class AfficherUserController {
     }
 
     private void afficherDetails(User user) {
+        currentUserDetails = user;
         paneDetails.setVisible(true);
         paneDetails.setManaged(true);
         
@@ -186,6 +190,33 @@ public class AfficherUserController {
             lblDetailDate.setText(user.getCreatedAt().format(formatter));
         } else {
             lblDetailDate.setText("Inconnue");
+        }
+        
+        if (user.getCertificat() != null && !user.getCertificat().isEmpty()) {
+            btnVoirCertificat.setVisible(true);
+            btnVoirCertificat.setManaged(true);
+        } else {
+            btnVoirCertificat.setVisible(false);
+            btnVoirCertificat.setManaged(false);
+        }
+        
+        boolean isBloque = serviceUser.estBloque(user.getId());
+        if (isBloque) {
+            btnDebloquer.setVisible(true);
+            btnDebloquer.setManaged(true);
+        } else {
+            btnDebloquer.setVisible(false);
+            btnDebloquer.setManaged(false);
+        }
+    }
+
+    @FXML
+    private void handleDebloquer() {
+        if (currentUserDetails != null) {
+            serviceUser.debloquerCompte(currentUserDetails.getId());
+            btnDebloquer.setVisible(false);
+            btnDebloquer.setManaged(false);
+            afficherSucces("Compte Débloqué", "Le compte de " + currentUserDetails.getPrenom() + " a été débloqué avec succès.");
         }
     }
 
@@ -403,6 +434,86 @@ public class AfficherUserController {
             stage.show();
         } catch (java.io.IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleVoirCertificat(javafx.event.ActionEvent event) {
+        if (currentUserDetails == null || currentUserDetails.getCertificat() == null) return;
+        try {
+            java.io.File file = new java.io.File("SitMyPet-Desktop/src/main/resources/uploads/certificats", currentUserDetails.getCertificat());
+            if (!file.exists()) {
+                file = new java.io.File("src/main/resources/uploads/certificats", currentUserDetails.getCertificat());
+            }
+            if (file.exists()) {
+                javafx.scene.image.Image image = new javafx.scene.image.Image(file.toURI().toString());
+                javafx.scene.image.ImageView imageView = new javafx.scene.image.ImageView(image);
+                imageView.setPreserveRatio(true);
+                imageView.setFitWidth(600);
+                
+                ScrollPane scrollPane = new ScrollPane(imageView);
+                scrollPane.setFitToWidth(true);
+                scrollPane.setFitToHeight(true);
+                scrollPane.setStyle("-fx-background-color: white;");
+                
+                VBox mainContainer = new VBox(10);
+                mainContainer.setStyle("-fx-background-color: white; -fx-padding: 10;");
+                VBox.setVgrow(scrollPane, Priority.ALWAYS);
+                
+                HBox buttonBox = new HBox(15);
+                buttonBox.setAlignment(javafx.geometry.Pos.CENTER);
+                buttonBox.setPadding(new javafx.geometry.Insets(10, 0, 10, 0));
+                
+                Button btnAccepter = new Button("✅ Accepter et Activer");
+                btnAccepter.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 20; -fx-background-radius: 5; -fx-cursor: hand;");
+                
+                Button btnRefuser = new Button("❌ Refuser et Supprimer");
+                btnRefuser.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 20; -fx-background-radius: 5; -fx-cursor: hand;");
+                
+                Stage stage = new Stage();
+                
+                btnAccepter.setOnAction(e -> {
+                    currentUserDetails.setActive(true);
+                    serviceUser.modifier(currentUserDetails);
+                    afficherSucces("Compte Activé", "Le compte de " + currentUserDetails.getPrenom() + " a été activé avec succès.");
+                    chargerUtilisateurs();
+                    afficherDetails(currentUserDetails);
+                    stage.close();
+                });
+                
+                btnRefuser.setOnAction(e -> {
+                    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirm.setTitle("Confirmer le refus");
+                    confirm.setHeaderText(null);
+                    confirm.setContentText("Êtes-vous sûr de vouloir refuser ce certificat ? Le compte sera supprimé.");
+                    styleAlert(confirm);
+                    
+                    Optional<ButtonType> result = confirm.showAndWait();
+                    if (result.isPresent() && result.get() == ButtonType.OK) {
+                        serviceUser.supprimer(currentUserDetails.getId());
+                        afficherSucces("Compte Supprimé", "Le compte a été refusé et supprimé.");
+                        chargerUtilisateurs();
+                        paneDetails.setVisible(false);
+                        paneDetails.setManaged(false);
+                        stage.close();
+                    }
+                });
+                
+                if (!currentUserDetails.isActive()) {
+                    buttonBox.getChildren().addAll(btnAccepter, btnRefuser);
+                    mainContainer.getChildren().addAll(scrollPane, buttonBox);
+                } else {
+                    mainContainer.getChildren().add(scrollPane);
+                }
+                
+                stage.setTitle("Certificat de " + currentUserDetails.getNom() + " " + currentUserDetails.getPrenom());
+                stage.setScene(new Scene(mainContainer, 650, 750));
+                stage.show();
+            } else {
+                afficherErreur("Fichier introuvable", "Le fichier du certificat est introuvable sur le disque.");
+            }
+        } catch (Exception e) {
+            afficherErreur("Erreur", "Impossible de charger l'image : " + e.getMessage());
         }
     }
 

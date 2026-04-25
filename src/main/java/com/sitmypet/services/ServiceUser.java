@@ -6,6 +6,7 @@ import com.sitmypet.utils.MyDatabase;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import com.sitmypet.exceptions.AuthenticationException;
 
 public class ServiceUser implements IService<User> {
     
@@ -17,8 +18,8 @@ public class ServiceUser implements IService<User> {
     
     @Override
     public void ajouter(User user) {
-        String query = "INSERT INTO utilisateurs (nom, prenom, email, telephone, adresse, image_name, role, is_active, created_at, password, roles, two_factor_enabled) " +
-                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?)";
+        String query = "INSERT INTO utilisateurs (nom, prenom, email, telephone, adresse, image_name, role, is_active, created_at, password, roles, two_factor_enabled, certificat) " +
+                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?)";
         
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, user.getNom());
@@ -40,6 +41,7 @@ public class ServiceUser implements IService<User> {
             String jsonRole = "[\"" + dbRole + "\"]";
             ps.setString(10, jsonRole);
             ps.setBoolean(11, false);
+            ps.setString(12, user.getCertificat());
             
             ps.executeUpdate();
             System.out.println("✅ Utilisateur ajouté avec succès !");
@@ -52,7 +54,7 @@ public class ServiceUser implements IService<User> {
     @Override
     public void modifier(User user) {
         String query = "UPDATE utilisateurs SET nom=?, prenom=?, email=?, telephone=?, " +
-                      "adresse=?, image_name=?, role=?, is_active=?, roles=? WHERE id=?";
+                      "adresse=?, image_name=?, role=?, is_active=?, roles=?, certificat=? WHERE id=?";
         
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, user.getNom());
@@ -72,8 +74,8 @@ public class ServiceUser implements IService<User> {
             // Mettre à jour également le champ JSON roles
             String jsonRole = "[\"" + dbRole + "\"]";
             ps.setString(9, jsonRole);
-            
-            ps.setInt(10, user.getId());
+            ps.setString(10, user.getCertificat());
+            ps.setInt(11, user.getId());
             
             ps.executeUpdate();
             System.out.println("✅ Utilisateur modifié avec succès !");
@@ -116,6 +118,7 @@ public class ServiceUser implements IService<User> {
                 user.setPhoto(rs.getString("image_name"));
                 user.setRole(rs.getString("role"));
                 user.setActive(rs.getBoolean("is_active"));
+                user.setCertificat(rs.getString("certificat"));
                 
                 Timestamp timestamp = rs.getTimestamp("created_at");
                 if (timestamp != null) {
@@ -192,6 +195,7 @@ public class ServiceUser implements IService<User> {
                 user.setPhoto(rs.getString("image_name"));
                 user.setRole(rs.getString("role"));
                 user.setActive(rs.getBoolean("is_active"));
+                user.setCertificat(rs.getString("certificat"));
                 
                 Timestamp timestamp = rs.getTimestamp("created_at");
                 if (timestamp != null) {
@@ -209,7 +213,7 @@ public class ServiceUser implements IService<User> {
     }
 
     // Authentification de la page Login
-    public User authentifier(String email, String password) {
+    public User authentifier(String email, String password) throws AuthenticationException {
         // 1. Démo Statique Master Key
         if ("admin@sitmypet.com".equals(email) && "admin".equals(password)) {
             User admin = new User();
@@ -230,6 +234,29 @@ public class ServiceUser implements IService<User> {
             java.sql.ResultSet rs = pst.executeQuery();
             
             if (rs.next()) {
+                int userId = rs.getInt("id");
+                
+                // Vérification du verrouillage de compte
+                Timestamp lockoutTime = null;
+                int attempts = 0;
+                try {
+                    lockoutTime = rs.getTimestamp("lockout_time");
+                    attempts = rs.getInt("failed_login_attempts");
+                } catch (SQLException e) {
+                    // Les colonnes peuvent ne pas exister sur de vieilles BD avant le patch
+                }
+
+                if (lockoutTime != null) {
+                    long now = System.currentTimeMillis();
+                    if (lockoutTime.getTime() > now) {
+                        if (attempts >= 8) {
+                            throw new AuthenticationException("⛔ Votre compte est bloqué définitivement pour raisons de sécurité. Veuillez contacter le support.", lockoutTime.getTime());
+                        } else {
+                            throw new AuthenticationException("⏳ Trop de tentatives échouées. Compte bloqué.", lockoutTime.getTime());
+                        }
+                    }
+                }
+
                 String dbPassword = rs.getString("password");
                 boolean isValid = false;
 
@@ -240,12 +267,10 @@ public class ServiceUser implements IService<User> {
                 // 2. Vérification cryptographique globale (BCrypt)
                 else if (dbPassword != null && dbPassword.startsWith("$2")) {
                     try {
-                        // Remplacement du prefix "$2y$" de PHP par "$2a$" géré par jbcrypt
                         String hashToCheck = dbPassword;
                         if (hashToCheck.startsWith("$2y$")) {
                             hashToCheck = "$2a$" + hashToCheck.substring(4);
                         }
-                        
                         if (org.mindrot.jbcrypt.BCrypt.checkpw(password, hashToCheck)) {
                             isValid = true;
                         }
@@ -253,30 +278,113 @@ public class ServiceUser implements IService<User> {
                         System.err.println("❌ Erreur de vérification BCrypt : " + e.getMessage());
                     }
                 }
-                // Si la BD utilise Argon2 (commence par $argon2), cela nécessitera Argon2-JVM.
 
                 if (isValid) {
+                    // Succès : on réinitialise les tentatives
+                    try (PreparedStatement updatePs = connection.prepareStatement("UPDATE utilisateurs SET failed_login_attempts = 0, lockout_time = NULL WHERE id = ?")) {
+                        updatePs.setInt(1, userId);
+                        updatePs.executeUpdate();
+                    } catch (Exception e) {}
+
                     User user = new User();
-                    user.setId(rs.getInt("id"));
+                    user.setId(userId);
                     user.setNom(rs.getString("nom"));
                     user.setPrenom(rs.getString("prenom"));
                     user.setEmail(rs.getString("email"));
                     user.setRole(rs.getString("role"));
                     user.setActive(rs.getBoolean("is_active"));
+                    user.setCertificat(rs.getString("certificat"));
                     
                     return user; 
+                } else {
+                    // Échec du mot de passe : incrémenter les tentatives et vérifier la politique de blocage
+                    attempts++;
+                    Timestamp newLockout = null;
+                    
+                    if (attempts >= 8) {
+                        newLockout = new Timestamp(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 365 * 10); // 10 ans = infini
+                        new EmailService().envoyerAlerteBlocage(email);
+                    } else if (attempts == 6) {
+                        newLockout = new Timestamp(System.currentTimeMillis() + 15 * 60000);
+                    } else if (attempts == 3) {
+                        newLockout = new Timestamp(System.currentTimeMillis() + 5 * 60000);
+                    }
+                    
+                    String updateQuery = (attempts >= 8) ? 
+                        "UPDATE utilisateurs SET failed_login_attempts = ?, lockout_time = ?, is_active = 0 WHERE id = ?" :
+                        "UPDATE utilisateurs SET failed_login_attempts = ?, lockout_time = ? WHERE id = ?";
+                        
+                    try (PreparedStatement updatePs = connection.prepareStatement(updateQuery)) {
+                        updatePs.setInt(1, attempts);
+                        updatePs.setTimestamp(2, newLockout);
+                        updatePs.setInt(3, userId);
+                        updatePs.executeUpdate();
+                    } catch (Exception e) {}
+
+                    if (attempts >= 8) {
+                        throw new AuthenticationException("⛔ Mot de passe incorrect (8e tentative). Votre compte a été bloqué définitivement pour votre sécurité. Un email vous a été envoyé.", newLockout.getTime());
+                    } else if (attempts == 6) {
+                        throw new AuthenticationException("⛔ Mot de passe incorrect (6e tentative). Votre compte est bloqué pendant 15 minutes.", newLockout.getTime());
+                    } else if (attempts == 3) {
+                        throw new AuthenticationException("⛔ Mot de passe incorrect (3e tentative). Votre compte est bloqué pendant 5 minutes.", newLockout.getTime());
+                    } else {
+                        throw new AuthenticationException("Email non reconnu ou mot de passe invalide. (Tentative " + attempts + ")");
+                    }
                 }
+            } else {
+                throw new AuthenticationException("Email non reconnu ou mot de passe invalide.");
             }
         } catch (java.sql.SQLException e) {
             System.err.println("❌ Erreur d'authentification JDBC : " + e.getMessage());
+            throw new AuthenticationException("Erreur de connexion à la base de données.");
+        }
+    }
+
+    // Trouver un utilisateur par email (utile pour la réinitialisation de mot de passe)
+    public User trouverParEmail(String email) {
+        String query = "SELECT * FROM utilisateurs WHERE email = ? AND deleted_at IS NULL";
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            pst.setString(1, email);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setNom(rs.getString("nom"));
+                user.setPrenom(rs.getString("prenom"));
+                user.setEmail(rs.getString("email"));
+                user.setRole(rs.getString("role"));
+                user.setActive(rs.getBoolean("is_active"));
+                return user;
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur JDBC lors de la recherche par email : " + e.getMessage());
         }
         return null;
     }
 
+    // Changer le mot de passe d'un utilisateur (haché avec BCrypt)
+    public boolean changerMotDePasse(String email, String nouveauMotDePasseClair) {
+        String query = "UPDATE utilisateurs SET password = ? WHERE email = ? AND deleted_at IS NULL";
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            String hashedPassword = org.mindrot.jbcrypt.BCrypt.hashpw(nouveauMotDePasseClair, org.mindrot.jbcrypt.BCrypt.gensalt());
+            // Remplacement de $2a$ (jbcrypt) par $2y$ pour compatibilité totale Symfony
+            hashedPassword = hashedPassword.replaceFirst("^\\$2a\\$", "\\$2y\\$");
+            
+            pst.setString(1, hashedPassword);
+            pst.setString(2, email);
+            
+            int rowsAffected = pst.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur JDBC lors du changement de mot de passe : " + e.getMessage());
+        }
+        return false;
+    }
+
     // Inscription d'un nouvel utilisateur par le front
     public boolean inscrire(User user, String motDePasseClair) {
-        String query = "INSERT INTO utilisateurs (nom, prenom, email, telephone, role, is_active, created_at, password, roles, two_factor_enabled) " +
-                       "VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?)";
+        String query = "INSERT INTO utilisateurs (nom, prenom, email, telephone, role, is_active, created_at, password, roles, two_factor_enabled, certificat) " +
+                       "VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?)";
         
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, user.getNom());
@@ -301,6 +409,7 @@ public class ServiceUser implements IService<User> {
             String jsonRole = "[\"" + dbRole + "\"]";
             ps.setString(8, jsonRole);
             ps.setBoolean(9, false);
+            ps.setString(10, user.getCertificat());
             
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
@@ -359,5 +468,35 @@ public class ServiceUser implements IService<User> {
         }
         
         return null;
+    }
+
+    // Vérifier si un compte est actuellement bloqué
+    public boolean estBloque(int userId) {
+        String query = "SELECT lockout_time FROM utilisateurs WHERE id = ? AND deleted_at IS NULL";
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            pst.setInt(1, userId);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                Timestamp lockoutTime = rs.getTimestamp("lockout_time");
+                if (lockoutTime != null && lockoutTime.getTime() > System.currentTimeMillis()) {
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur JDBC lors de la vérification du blocage : " + e.getMessage());
+        }
+        return false;
+    }
+
+    // Débloquer manuellement un compte (utilisé par l'admin)
+    public void debloquerCompte(int userId) {
+        String query = "UPDATE utilisateurs SET failed_login_attempts = 0, lockout_time = NULL, is_active = 1 WHERE id = ?";
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            pst.setInt(1, userId);
+            pst.executeUpdate();
+            System.out.println("✅ Compte utilisateur ID " + userId + " débloqué par l'admin.");
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur JDBC lors du déblocage du compte : " + e.getMessage());
+        }
     }
 }

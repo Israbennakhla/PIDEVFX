@@ -18,15 +18,15 @@ import java.nio.charset.StandardCharsets;
 public class GoogleOAuthService {
 
     // REMPLACEZ CES VALEURS PAR VOS VRAIES CLÉS GOOGLE CLOUD CONSOLE
-    private static final String CLIENT_ID = "VOTRE_CLIENT_ID_GOOGLE.apps.googleusercontent.com";
-    private static final String CLIENT_SECRET = "VOTRE_CLIENT_SECRET_GOOGLE";
-    private static final String REDIRECT_URI = "http://localhost:8080/Callback";
+    private static final String CLIENT_ID = "VOTRE_CLIENT_ID_ICI";
+    private static final String CLIENT_SECRET = "VOTRE_CLIENT_SECRET_ICI";
+    private static final String REDIRECT_URI = "http://localhost:8085/Callback";
     
     private static final String AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
     private static final String TOKEN_URL = "https://oauth2.googleapis.com/token";
     private static final String USER_INFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
 
-    private HttpServer server;
+    private static HttpServer server;
 
     public interface GoogleAuthCallback {
         void onSuccess(GoogleUser user);
@@ -56,7 +56,7 @@ public class GoogleOAuthService {
             server.stop(0);
         }
 
-        server = HttpServer.create(new InetSocketAddress(8080), 0);
+        server = HttpServer.create(new InetSocketAddress(8085), 0);
         server.createContext("/Callback", exchange -> {
             String query = exchange.getRequestURI().getQuery();
             
@@ -83,7 +83,7 @@ public class GoogleOAuthService {
         });
         server.setExecutor(null);
         server.start();
-        System.out.println("✅ Serveur local démarré sur le port 8080 en attente du callback Google...");
+        System.out.println("✅ Serveur local démarré sur le port 8085 en attente du callback Google...");
     }
 
     private void openBrowserForAuth() throws Exception {

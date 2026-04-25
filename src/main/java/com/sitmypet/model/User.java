@@ -13,6 +13,7 @@ public class User {
     private String role;
     private boolean isActive;
     private LocalDateTime createdAt;
+    private String certificat;
     
     // Constructeur vide
     public User() {
@@ -76,6 +77,9 @@ public class User {
     
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    
+    public String getCertificat() { return certificat; }
+    public void setCertificat(String certificat) { this.certificat = certificat; }
     
     @Override
     public String toString() {
