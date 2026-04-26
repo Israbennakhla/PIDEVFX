@@ -41,3 +41,16 @@ CREATE TABLE announcement (
                               CONSTRAINT fk_announcement_pet FOREIGN KEY (pet_id)
                                   REFERENCES pet(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS postulation (
+                                           id               INT AUTO_INCREMENT PRIMARY KEY,
+                                           announcement_id  INT         NOT NULL,
+                                           gardien_id       INT         NOT NULL,
+                                           date_postulation DATE        NOT NULL,
+                                           statut           VARCHAR(20) NOT NULL DEFAULT 'EN_ATTENTE',
+                                           FOREIGN KEY (announcement_id) REFERENCES announcement(id) ON DELETE CASCADE
+);
+
+
+

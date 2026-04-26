@@ -262,6 +262,10 @@ public class AfficherAnnoncesController {
     // ── Chargement image animal ───────────────────────────────
     private Image loadPetImage(String imageName) {
         if (imageName == null || imageName.isEmpty()) return null;
+        if (imageName.startsWith("http")) {
+            try { return new Image(imageName, 64, 64, false, true); }
+            catch (Exception ignored) { return null; }
+        }
         String[] paths = {
                 "images/" + imageName,
                 System.getProperty("user.dir") + "/images/" + imageName,
@@ -450,7 +454,8 @@ public class AfficherAnnoncesController {
     @FXML private void handleNavEvenements()   { naviguer("/AfficherEvenements.fxml",  "Evenements"); }
     @FXML private void handleNavAnimaux()      { naviguer("/AfficherAnimales.fxml",    "Mes Animaux"); }
     @FXML private void handleNavReclamations() { naviguer("/AfficherReclamations.fxml","Reclamations"); }
-
+    @FXML private void handleNavAccueil()      { naviguer("/Accueil.fxml",      "Accueil"); }
+    @FXML private void handleNavPostulations() { naviguer("/Postulations.fxml", "Mes Postulations"); }
     private void naviguer(String fxml, String titre) {
         try {
             var resource = getClass().getResource(fxml);

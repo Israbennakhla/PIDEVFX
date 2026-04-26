@@ -328,6 +328,9 @@ public class ListeAnimauxController {
     // ── Image ─────────────────────────────────────────────────
     private Image loadPetImage(String imageName) {
         if (imageName == null || imageName.isEmpty()) return null;
+        if (imageName.startsWith("http")) {
+            try { return new Image(imageName, 64, 64, false, true); }            catch (Exception ignored) { return null; }
+        }
         String[] filePaths = {
                 "images/" + imageName,
                 System.getProperty("user.dir") + "/images/" + imageName,
@@ -387,7 +390,8 @@ public class ListeAnimauxController {
     @FXML private void handleNavEvenements()   { naviguer("/AfficherEvenements.fxml",  "Événements"); }
     @FXML private void handleNavAnimaux()      { naviguer("/AfficherAnimales.fxml",    "Mes Animaux"); }
     @FXML private void handleNavReclamations() { naviguer("/AfficherReclamations.fxml","Réclamations"); }
-
+    @FXML private void handleNavAccueil()      { naviguer("/Accueil.fxml",      "Accueil"); }
+    @FXML private void handleNavPostulations() { naviguer("/Postulations.fxml", "Mes Postulations"); }
     private void naviguer(String fxml, String titre) {
         try {
             var resource = getClass().getResource(fxml);

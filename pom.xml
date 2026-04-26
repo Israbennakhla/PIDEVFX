@@ -35,6 +35,12 @@
         <artifactId>javafx-fxml</artifactId>
         <version>21.0.2</version>
     </dependency>
+        <!--  intégrer Cloudinary   -->
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http45</artifactId>
+            <version>1.36.0</version>
+        </dependency>
 
         <!--  intégrer OpenStreetMap via WebView  -->
         <dependency>

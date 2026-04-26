@@ -334,7 +334,8 @@ public class CreerAnnonceController {
     @FXML private void handleNavEvenements()    { naviguer("/AfficherEvenements.fxml",  "Evenements"); }
     @FXML private void handleNavAnimaux()       { naviguer("/AfficherAnimales.fxml",    "Mes Animaux"); }
     @FXML private void handleNavReclamations()  { naviguer("/AfficherReclamations.fxml","Reclamations"); }
-
+    @FXML private void handleNavAccueil()      { naviguer("/Accueil.fxml",      "Accueil"); }
+    @FXML private void handleNavPostulations() { naviguer("/Postulations.fxml", "Mes Postulations"); }
     private void naviguer(String fxml, String titre) {
         try {
             var resource = getClass().getResource(fxml);
