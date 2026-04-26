@@ -1,7 +1,5 @@
 package interfaces;
 
-import model.Personne;
-
 import java.util.List;
 
 public interface IService<T> {

@@ -1,7 +1,9 @@
 package services;
 
 import interfaces.IService;
+import model.Reclamation;
 import model.Reponse;
+import utils.EmailService;
 import utils.MyDataBase;
 
 import java.sql.*;
@@ -13,19 +15,41 @@ public class ServiceReponse implements IService<Reponse> {
     private final Connection cnx = MyDataBase.getInstance().getCnx();
 
     @Override
-    public void add(Reponse r) {
-        String sql = "INSERT INTO reponse (contenu, date_reponse, auteur, reclamation_id) " +
-                "VALUES (?, ?, ?, ?)";
+    public void add(Reponse reponse) {
+        if (reponse.getContenu() == null || reponse.getContenu().trim().isEmpty()) {
+            throw new IllegalArgumentException("Le contenu de la réponse ne peut pas être vide.");
+        }
+
         try {
-            PreparedStatement ps = cnx.prepareStatement(sql);
-            ps.setString(1, r.getContenu());
-            ps.setTimestamp(2, Timestamp.valueOf(r.getDateReponse()));
-            ps.setString(3, r.getAuteur());
-            ps.setInt(4, r.getReclamationId());
+            String req = "INSERT INTO reponse (contenu, date_reponse, auteur, reclamation_id) VALUES (?, ?, ?, ?)";
+            PreparedStatement ps = cnx.prepareStatement(req);
+            ps.setString(1, reponse.getContenu());
+            ps.setTimestamp(2, Timestamp.valueOf(reponse.getDateReponse()));
+            ps.setString(3, reponse.getAuteur());
+            ps.setInt(4, reponse.getReclamationId());
             ps.executeUpdate();
-            System.out.println("✅ Réponse ajoutée !");
+
+            ServiceReclamation sr = new ServiceReclamation();
+            Reclamation rec = sr.getById(reponse.getReclamationId());
+
+            if (rec != null && rec.getEmailClient() != null && !rec.getEmailClient().isEmpty()) {
+                new Thread(() -> {
+                    try {
+                        EmailService.envoyerReponse(
+                                rec.getEmailClient(),
+                                rec.getSujet(),
+                                reponse.getContenu()
+                        );
+                    } catch (RuntimeException e) {
+                        System.err.println("Email non envoyé : " + e.getMessage());
+                    }
+                }).start();
+            }
+
         } catch (SQLException e) {
-            System.out.println("Erreur ajout réponse : " + e.getMessage());
+            throw new RuntimeException("Erreur insertion réponse : " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur récupération réclamation : " + e.getMessage());
         }
     }
 
@@ -33,8 +57,7 @@ public class ServiceReponse implements IService<Reponse> {
     public List<Reponse> getAll() {
         List<Reponse> list = new ArrayList<>();
         try {
-            ResultSet rs = cnx.createStatement()
-                    .executeQuery("SELECT * FROM reponse");
+            ResultSet rs = cnx.createStatement().executeQuery("SELECT * FROM reponse");
             while (rs.next()) list.add(mapRow(rs));
         } catch (SQLException e) {
             System.out.println("Erreur getAll réponse : " + e.getMessage());
@@ -77,9 +100,7 @@ public class ServiceReponse implements IService<Reponse> {
     @Override
     public void delete(Reponse r) {
         try {
-            PreparedStatement ps = cnx.prepareStatement(
-                    "DELETE FROM reponse WHERE id = ?"
-            );
+            PreparedStatement ps = cnx.prepareStatement("DELETE FROM reponse WHERE id = ?");
             ps.setInt(1, r.getId());
             ps.executeUpdate();
             System.out.println("✅ Réponse supprimée !");

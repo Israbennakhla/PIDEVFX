@@ -12,9 +12,7 @@ public class ServiceReclamation implements IService<Reclamation> {
 
     private final Connection cnx = MyDataBase.getInstance().getCnx();
 
-    // ══════════════════════════════════════════
-    //              VALIDATION MÉTIER
-    // ══════════════════════════════════════════
+
     public String valider(Reclamation r) {
         if (r.getSujet() == null || r.getSujet().trim().isEmpty())
             return "❌ Le sujet est obligatoire.";
@@ -32,9 +30,7 @@ public class ServiceReclamation implements IService<Reclamation> {
         return "OK";
     }
 
-    // ══════════════════════════════════════════
-    //                   ADD
-    // ══════════════════════════════════════════
+
     @Override
     public void add(Reclamation r) {
         // Validation métier
@@ -44,7 +40,7 @@ public class ServiceReclamation implements IService<Reclamation> {
             return;
         }
 
-        // Vérification unicité : même sujet + même email
+        // Vérification unicité
         try {
             PreparedStatement check = cnx.prepareStatement(
                     "SELECT COUNT(*) FROM reclamation WHERE sujet = ? AND email_client = ?"
@@ -84,9 +80,7 @@ public class ServiceReclamation implements IService<Reclamation> {
         }
     }
 
-    // ══════════════════════════════════════════
-    //                  GET ALL
-    // ══════════════════════════════════════════
+
     @Override
     public List<Reclamation> getAll() {
         List<Reclamation> list = new ArrayList<>();
@@ -102,9 +96,7 @@ public class ServiceReclamation implements IService<Reclamation> {
         return list;
     }
 
-    // ══════════════════════════════════════════
-    //                  UPDATE
-    // ══════════════════════════════════════════
+
     @Override
     public void update(Reclamation r) {
         // Validation métier
@@ -134,9 +126,7 @@ public class ServiceReclamation implements IService<Reclamation> {
         }
     }
 
-    // ══════════════════════════════════════════
-    //                  DELETE
-    // ══════════════════════════════════════════
+
     @Override
     public void delete(Reclamation r) {
         try {
@@ -151,9 +141,7 @@ public class ServiceReclamation implements IService<Reclamation> {
         }
     }
 
-    // ══════════════════════════════════════════
-    //           MÉTHODES SUPPLÉMENTAIRES
-    // ══════════════════════════════════════════
+
 
     // Recherche par statut et/ou priorité
     public List<Reclamation> searchByStatutAndPriorite(String statut, String priorite) {
@@ -239,9 +227,6 @@ public class ServiceReclamation implements IService<Reclamation> {
         }
     }
 
-    // ══════════════════════════════════════════
-    //           MÉTHODE UTILITAIRE MAPPER
-    // ══════════════════════════════════════════
     private Reclamation mapRow(ResultSet rs) throws SQLException {
         Reclamation r = new Reclamation();
         r.setId(rs.getInt("id"));
@@ -288,5 +273,24 @@ public class ServiceReclamation implements IService<Reclamation> {
             System.out.println("Erreur searchByNomStatutPriorite : " + e.getMessage());
         }
         return list;
+    }
+    public Reclamation getById(int id) throws Exception {
+        PreparedStatement ps = cnx.prepareStatement("SELECT * FROM reclamation WHERE id = ?");
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            Reclamation rec = new Reclamation();
+            rec.setId(rs.getInt("id"));
+            rec.setSujet(rs.getString("sujet"));
+            rec.setDescription(rs.getString("description"));
+            rec.setDateReclamation(rs.getTimestamp("date_reclamation").toLocalDateTime());
+            rec.setStatut(rs.getString("statut"));
+            rec.setPriorite(rs.getString("priorite"));
+            rec.setNomClient(rs.getString("nom_client"));
+            rec.setEmailClient(rs.getString("email_client")); // ← colonne SQL
+            rec.setUserId(rs.getInt("user_id"));
+            return rec;
+        }
+        return null;
     }
 }
