@@ -1,7 +1,6 @@
 package controllers;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,8 +28,9 @@ import java.sql.Date;
 
 /**
  * ─────────────────────────────────────────────────────────────────────────────
- * EvenementFormController  –  Admin Event Form with Interactive Map
+ * EvenementFormController  –  Admin Event Form Overlay with Interactive Map
  * ─────────────────────────────────────────────────────────────────────────────
+ * Displayed as a modal overlay on top of the event list.
  * Two-way binding between the address TextField and an OpenStreetMap map:
  *   • Click on map  → reverse geocode via Nominatim → auto-fill address field
  *   • Type address  → forward geocode via Nominatim → move map marker
@@ -47,26 +47,36 @@ public class EvenementFormController {
     private ServiceEvenement service = new ServiceEvenement();
     private Evenement evenementEdition = null;
 
+    // ── IMPORTANT: Strong reference to prevent GC of the JS bridge ──────────
+    private JavaBridge javaBridgeRef;
+
     // Debounce timer for address text field changes
     private Timer debounceTimer;
     private boolean suppressAddressListener = false;
+
+    // Flag set to true after save so parent knows to refresh
+    private boolean saved = false;
+
+    public boolean isSaved() { return saved; }
 
     @FXML
     public void initialize() {
         if (EvenementController.evenementSelectionneToEdit != null) {
             evenementEdition = EvenementController.evenementSelectionneToEdit;
-            lblTitle.setText("📋 Modifier Événement");
+            lblTitle.setText("✏️ Modifier Événement");
             tfName.setText(evenementEdition.getName());
             if (evenementEdition.getDate() != null) dpDate.setValue(evenementEdition.getDate().toLocalDate());
             tfHeure.setText(evenementEdition.getHeure());
             tfAddresse.setText(evenementEdition.getAddresse());
             tfDescription.setText(evenementEdition.getDescription());
         } else {
-            lblTitle.setText("📋 Ajouter Événement");
+            lblTitle.setText("➕ Ajouter Événement");
         }
 
         // Initialize the map
-        Platform.runLater(this::loadAdminMap);
+        if (adminMapWebView != null) {
+            Platform.runLater(this::loadAdminMap);
+        }
 
         // Listen for address field changes → update map marker (debounced)
         tfAddresse.textProperty().addListener((obs, oldVal, newVal) -> {
@@ -99,7 +109,7 @@ public class EvenementFormController {
                 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
                 <style>
                     * { margin: 0; padding: 0; box-sizing: border-box; }
-                    html, body { width: 100%%; height: 100%%; background: #1e2d4a; }
+                    html, body { width: 100%%; height: 100%%; background: #1a1a2e; }
                     #map { width: 100%%; height: 100%%; border-radius: 10px; }
                     .leaflet-control-attribution { font-size: 9px !important; }
                 </style>
@@ -115,39 +125,58 @@ public class EvenementFormController {
                     }).addTo(map);
 
                     var marker = L.marker([36.8065, 10.1815], {draggable: true}).addTo(map);
-                    marker.bindPopup('📍 %s').openPopup();
 
                     // ── When user clicks on map ─────────────────────────────
                     map.on('click', function(e) {
                         var lat = e.latlng.lat;
                         var lng = e.latlng.lng;
                         marker.setLatLng([lat, lng]);
-                        marker.bindPopup('📍 Chargement...').openPopup();
 
-                        // Call Java bridge for reverse geocoding
-                        if (window.javaBridge) {
-                            window.javaBridge.onMapClick(lat, lng);
-                        }
+                        // Reverse geocode directly in JS using fetch
+                        fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng + '&zoom=18&addressdetails=1', {
+                            headers: { 'Accept-Language': 'fr' }
+                        })
+                        .then(function(r) { return r.json(); })
+                        .then(function(data) {
+                            if (data && data.display_name) {
+                                marker.bindPopup(data.display_name).openPopup();
+                                if (window.javaBridge) {
+                                    window.javaBridge.setAddress(data.display_name);
+                                }
+                            }
+                        })
+                        .catch(function(err) { console.log('Reverse geocode error:', err); });
                     });
 
                     // ── When marker is dragged ──────────────────────────────
                     marker.on('dragend', function(e) {
                         var pos = marker.getLatLng();
-                        marker.bindPopup('📍 Chargement...').openPopup();
-                        if (window.javaBridge) {
-                            window.javaBridge.onMapClick(pos.lat, pos.lng);
-                        }
+                        fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + pos.lat + '&lon=' + pos.lng + '&zoom=18&addressdetails=1', {
+                            headers: { 'Accept-Language': 'fr' }
+                        })
+                        .then(function(r) { return r.json(); })
+                        .then(function(data) {
+                            if (data && data.display_name) {
+                                marker.bindPopup(data.display_name).openPopup();
+                                if (window.javaBridge) {
+                                    window.javaBridge.setAddress(data.display_name);
+                                }
+                            }
+                        })
+                        .catch(function(err) { console.log('Reverse geocode error:', err); });
                     });
 
                     // ── JS function called by Java to move marker ───────────
                     function moveMarker(lat, lng, label) {
                         map.setView([lat, lng], 16);
                         marker.setLatLng([lat, lng]);
-                        marker.bindPopup('📍 ' + label).openPopup();
+                        marker.bindPopup(label).openPopup();
                     }
 
                     // ── Geocode initial address ─────────────────────────────
-                    fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent('%s'))
+                    fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent('%s'), {
+                        headers: { 'Accept-Language': 'fr' }
+                    })
                         .then(function(r) { return r.json(); })
                         .then(function(data) {
                             if (data && data.length > 0) {
@@ -155,23 +184,26 @@ public class EvenementFormController {
                                 var lon = parseFloat(data[0].lon);
                                 map.setView([lat, lon], 15);
                                 marker.setLatLng([lat, lon]);
-                                marker.bindPopup('📍 %s').openPopup();
+                                marker.bindPopup('%s').openPopup();
                             }
                         })
                         .catch(function(err) { console.log(err); });
                 </script>
             </body>
             </html>
-            """.formatted(safeAddress, safeAddress, safeAddress);
+            """.formatted(safeAddress, safeAddress);
 
         WebEngine engine = adminMapWebView.getEngine();
         engine.setJavaScriptEnabled(true);
+
+        // Create the bridge and keep a STRONG reference (prevents GC!)
+        javaBridgeRef = new JavaBridge();
 
         // Register Java→JS bridge once the page is loaded
         engine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
             if (newState == Worker.State.SUCCEEDED) {
                 JSObject window = (JSObject) engine.executeScript("window");
-                window.setMember("javaBridge", new JavaBridge());
+                window.setMember("javaBridge", javaBridgeRef);
             }
         });
 
@@ -180,50 +212,18 @@ public class EvenementFormController {
 
     /**
      * Java bridge object exposed to JavaScript.
-     * JavaScript calls javaBridge.onMapClick(lat, lng) when the map is clicked.
+     * JavaScript calls javaBridge.setAddress(address) after reverse geocoding.
      */
     public class JavaBridge {
         /**
-         * Called from JavaScript when user clicks on the map.
-         * Performs reverse geocoding via Nominatim and updates the address field.
+         * Called from JavaScript with the resolved address string.
          */
-        public void onMapClick(double lat, double lng) {
-            // Run HTTP request on background thread
-            Thread thread = new Thread(() -> {
-                try {
-                    String url = "https://nominatim.openstreetmap.org/reverse?format=json&lat="
-                            + lat + "&lon=" + lng + "&zoom=18&addressdetails=1";
-
-                    HttpClient client = HttpClient.newHttpClient();
-                    HttpRequest request = HttpRequest.newBuilder()
-                            .uri(URI.create(url))
-                            .header("User-Agent", "SitMyPet-JavaFX/1.0")
-                            .GET()
-                            .build();
-
-                    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                    String body = response.body();
-
-                    // Parse display_name from JSON response
-                    String displayName = parseDisplayName(body);
-
-                    Platform.runLater(() -> {
-                        suppressAddressListener = true;
-                        tfAddresse.setText(displayName);
-                        suppressAddressListener = false;
-
-                        // Update marker popup
-                        String safe = displayName.replace("'", "\\'").replace("\"", "\\\"");
-                        adminMapWebView.getEngine().executeScript(
-                                "marker.bindPopup('📍 " + safe + "').openPopup();");
-                    });
-
-                } catch (Exception e) {
-                    System.err.println("❌ Reverse geocoding error: " + e.getMessage());
-                }
+        public void setAddress(String address) {
+            Platform.runLater(() -> {
+                suppressAddressListener = true;
+                tfAddresse.setText(address);
+                suppressAddressListener = false;
             });
-            thread.setDaemon(true);
-            thread.start();
         }
     }
 
@@ -257,6 +257,7 @@ public class EvenementFormController {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .header("User-Agent", "SitMyPet-JavaFX/1.0")
+                    .header("Accept-Language", "fr")
                     .GET()
                     .build();
 
@@ -271,29 +272,21 @@ public class EvenementFormController {
                 if (lat != null && lon != null) {
                     String safeName = address.replace("'", "\\'").replace("\"", "\\\"");
                     Platform.runLater(() -> {
-                        adminMapWebView.getEngine().executeScript(
-                                "moveMarker(" + lat + ", " + lon + ", '" + safeName + "');");
+                        if (adminMapWebView != null) {
+                            adminMapWebView.getEngine().executeScript(
+                                    "moveMarker(" + lat + ", " + lon + ", '" + safeName + "');");
+                        }
                     });
                 }
             }
         } catch (Exception e) {
-            System.err.println("❌ Forward geocoding error: " + e.getMessage());
+            System.err.println("Forward geocoding error: " + e.getMessage());
         }
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    //  JSON HELPERS (lightweight, no external dependency needed)
+    //  JSON HELPERS
     // ═══════════════════════════════════════════════════════════════════════════
-
-    private String parseDisplayName(String json) {
-        String key = "\"display_name\"";
-        int idx = json.indexOf(key);
-        if (idx < 0) return "Adresse inconnue";
-        int start = json.indexOf("\"", idx + key.length()) + 1;
-        int end = json.indexOf("\"", start);
-        if (start <= 0 || end <= start) return "Adresse inconnue";
-        return json.substring(start, end);
-    }
 
     private String extractJsonValue(String json, String key) {
         String pattern = "\"" + key + "\"";
@@ -301,7 +294,6 @@ public class EvenementFormController {
         if (idx < 0) return null;
         int colon = json.indexOf(":", idx + pattern.length());
         if (colon < 0) return null;
-        // value is in quotes: "value"
         int start = json.indexOf("\"", colon) + 1;
         int end = json.indexOf("\"", start);
         if (start <= 0 || end <= start) return null;
@@ -309,7 +301,7 @@ public class EvenementFormController {
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    //  ORIGINAL FORM LOGIC (unchanged)
+    //  FORM LOGIC
     // ═══════════════════════════════════════════════════════════════════════════
 
     @FXML
@@ -326,23 +318,24 @@ public class EvenementFormController {
                 evenementEdition.setDescription(tfDescription.getText());
                 service.update(evenementEdition);
             }
-            retourListe(event);
+            saved = true;
+            fermerOverlay(event);
         }
     }
 
     @FXML
     public void retourListe(ActionEvent event) {
         EvenementController.evenementSelectionneToEdit = null;
+        fermerOverlay(event);
+    }
+
+    /**
+     * Closes this overlay stage.
+     */
+    private void fermerOverlay(ActionEvent event) {
         if (debounceTimer != null) debounceTimer.cancel();
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/EvenementView.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setTitle("PI-DEV : Gestion des Événements");
-            stage.setScene(new Scene(root, 1280, 720));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.close();
     }
 
     private boolean champsValides() {
@@ -379,33 +372,5 @@ public class EvenementFormController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    @FXML
-    public void ouvrirParticipants(ActionEvent event) {
-        if (debounceTimer != null) debounceTimer.cancel();
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/ParticipantView.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setTitle("PI-DEV : Gestion des Participants");
-            stage.setScene(new Scene(root, 1280, 720));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    public void ouvrirClient(ActionEvent event) {
-        if (debounceTimer != null) debounceTimer.cancel();
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/ClientView.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setTitle("PI-DEV : Espace Client (Front-Office)");
-            stage.setScene(new Scene(root, 1280, 720));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
