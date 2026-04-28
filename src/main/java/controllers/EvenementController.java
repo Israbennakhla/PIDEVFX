@@ -14,23 +14,18 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import model.Evenement;
 import services.ServiceEvenement;
-import java.sql.Date;
 
 public class EvenementController {
-    @FXML private TextField tfName;
-    @FXML private DatePicker dpDate;
-    @FXML private TextField tfHeure;
-    @FXML private TextField tfAddresse;
-    @FXML private TextField tfDescription;
-    @FXML private ListView<Evenement> listEvenements;
-    
+    public static Evenement evenementSelectionneToEdit = null;
+
     @FXML private TextField tfSearch;
     @FXML private ComboBox<String> cbSort;
+    @FXML private FlowPane gridPane;
 
     private ServiceEvenement service = new ServiceEvenement();
-    private Evenement evenementSelectionne = null;
     
     private ObservableList<Evenement> evenementsList = FXCollections.observableArrayList();
     private FilteredList<Evenement> filteredData;
@@ -58,12 +53,17 @@ public class EvenementController {
 
         sortedData = new SortedList<>(filteredData);
         if (cbSort != null) {
-            cbSort.valueProperty().addListener((obs, oldVal, newVal) -> actuateSort(newVal));
+            cbSort.valueProperty().addListener((obs, oldVal, newVal) -> {
+                actuateSort(newVal);
+                updateGridView();
+            });
             actuateSort(cbSort.getValue());
         }
+
+        sortedData.addListener((javafx.collections.ListChangeListener.Change<? extends Evenement> c) -> updateGridView());
         
-        listEvenements.setItems(sortedData);
         afficherEvenements();
+        updateGridView();
     }
     
     private void actuateSort(String newVal) {
@@ -90,60 +90,81 @@ public class EvenementController {
         evenementsList.setAll(service.getAll());
     }
 
-    @FXML
-    public void ajouterEvenement(ActionEvent event) {
-        if (champsValides()) {
-            Evenement e = new Evenement(0, tfName.getText(), Date.valueOf(dpDate.getValue()), tfHeure.getText(), tfAddresse.getText(), tfDescription.getText());
-            service.add(e);
-            afficherEvenements();
-            viderFormulaire();
+    private void updateGridView() {
+        if (gridPane == null) return;
+        gridPane.getChildren().clear();
+
+        for (Evenement ev : sortedData) {
+            VBox card = new VBox(10);
+            card.setStyle("-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12; -fx-border-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 4); -fx-border-color: #EDE9FF; -fx-border-width: 1px;");
+            card.setPrefWidth(280);
+            card.setMinHeight(220);
+            
+            Label lblName = new Label(ev.getName());
+            lblName.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1A1A2E;");
+            
+            Label lblDate = new Label("📅 " + ev.getDate() + " à " + ev.getHeure());
+            lblDate.setStyle("-fx-text-fill: #4B5563; -fx-font-size: 13px;");
+            
+            Label lblLocation = new Label("📍 " + ev.getAddresse());
+            lblLocation.setStyle("-fx-text-fill: #4B5563; -fx-font-size: 13px;");
+            
+            Label lblDesc = new Label(ev.getDescription());
+            lblDesc.setWrapText(true);
+            lblDesc.setMaxHeight(50);
+            lblDesc.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 12px; -fx-padding: 5 0;");
+
+            Button btnEdit = new Button("✎ Modifier");
+            btnEdit.getStyleClass().add("btn-edit");
+            btnEdit.setMaxWidth(Double.MAX_VALUE);
+            HBox.setHgrow(btnEdit, Priority.ALWAYS);
+            btnEdit.setOnAction(e -> {
+                evenementSelectionneToEdit = ev;
+                ouvrirVueFormulaire(e);
+            });
+
+            Button btnDelete = new Button("🗑 Supprimer");
+            btnDelete.getStyleClass().add("btn-delete");
+            btnDelete.setMaxWidth(Double.MAX_VALUE);
+            HBox.setHgrow(btnDelete, Priority.ALWAYS);
+            btnDelete.setOnAction(e -> {
+                service.delete(ev);
+                afficherEvenements();
+            });
+
+            HBox actionsBox = new HBox(10, btnEdit, btnDelete);
+            
+            Region spacer = new Region();
+            VBox.setVgrow(spacer, Priority.ALWAYS);
+
+            card.getChildren().addAll(lblName, new Separator(), lblDate, lblLocation, lblDesc, spacer, actionsBox);
+            gridPane.getChildren().add(card);
         }
     }
 
     @FXML
-    public void modifierEvenement(ActionEvent event) {
-        if (evenementSelectionne != null && champsValides()) {
-            evenementSelectionne.setName(tfName.getText());
-            evenementSelectionne.setDate(Date.valueOf(dpDate.getValue()));
-            evenementSelectionne.setHeure(tfHeure.getText());
-            evenementSelectionne.setAddresse(tfAddresse.getText());
-            evenementSelectionne.setDescription(tfDescription.getText());
-            service.update(evenementSelectionne);
-            afficherEvenements();
-            viderFormulaire();
+    public void allerVersAjout(ActionEvent event) {
+        evenementSelectionneToEdit = null;
+        ouvrirVueFormulaire(event);
+    }
+
+    private void ouvrirVueFormulaire(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/EvenementFormView.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 1280, 720));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    @FXML
-    public void supprimerEvenement(ActionEvent event) {
-        evenementSelectionne = listEvenements.getSelectionModel().getSelectedItem();
-        if (evenementSelectionne != null) {
-            service.delete(evenementSelectionne);
-            afficherEvenements();
-            viderFormulaire();
-        }
-    }
-
-    @FXML
-    public void remplirFormulaire() {
-        evenementSelectionne = listEvenements.getSelectionModel().getSelectedItem();
-        if (evenementSelectionne != null) {
-            tfName.setText(evenementSelectionne.getName());
-            if (evenementSelectionne.getDate() != null) dpDate.setValue(evenementSelectionne.getDate().toLocalDate());
-            tfHeure.setText(evenementSelectionne.getHeure());
-            tfAddresse.setText(evenementSelectionne.getAddresse());
-            tfDescription.setText(evenementSelectionne.getDescription());
-        }
-    }
-
-    @FXML
-    public void viderFormulaire() {
-        tfName.clear(); dpDate.setValue(null); tfHeure.clear(); tfAddresse.clear(); tfDescription.clear();
-        evenementSelectionne = null;
-    }
-
-    private boolean champsValides() {
-        return !tfName.getText().isEmpty() && dpDate.getValue() != null;
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML

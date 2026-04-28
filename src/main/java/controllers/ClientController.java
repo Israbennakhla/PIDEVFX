@@ -10,11 +10,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import java.io.IOException;
+
+import utils.QRCodeGenerator;
+import utils.EmailService;
 
 import model.Evenement;
 import model.EventParticipant;
@@ -29,20 +35,8 @@ public class ClientController {
     @FXML private TextField tfSearch;
 
     // View Components
-    @FXML private TableView<Evenement> tableEvenements;
     @FXML private ScrollPane gridScrollPane;
     @FXML private FlowPane gridPane;
-    @FXML private Button btnToggleView;
-    private boolean isGridView = false;
-
-    // Columns
-    @FXML private TableColumn<Evenement, String> colNom;
-    @FXML private TableColumn<Evenement, String> colDate;
-    @FXML private TableColumn<Evenement, String> colHeure;
-    @FXML private TableColumn<Evenement, String> colAdresse;
-    @FXML private TableColumn<Evenement, String> colDescription;
-    @FXML private TableColumn<Evenement, Void>   colParticipation;
-    @FXML private TableColumn<Evenement, Void>   colActions;
 
     // Services
     private final ServiceEvenement          serviceEvenement  = new ServiceEvenement();
@@ -59,10 +53,6 @@ public class ClientController {
         cbMockUser.setItems(users);
         if (!users.isEmpty()) cbMockUser.getSelectionModel().selectFirst();
 
-        tableEvenements.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-        setupColumns();
-
         filteredData = new FilteredList<>(evenementsList, b -> true);
         if (tfSearch != null) {
             tfSearch.textProperty().addListener((obs, oldVal, newVal) -> {
@@ -77,84 +67,14 @@ public class ClientController {
         }
 
         sortedData = new SortedList<>(filteredData);
-        sortedData.comparatorProperty().bind(tableEvenements.comparatorProperty());
-        
         // Listen to any changes in sortedData to rebuild Grid dynamically 
         sortedData.addListener((javafx.collections.ListChangeListener.Change<? extends Evenement> c) -> updateGridView());
 
-        tableEvenements.setItems(sortedData);
-
         loadData();
-    }
-
-    private void setupColumns() {
-        colNom.setCellValueFactory(new PropertyValueFactory<>("name"));
-        colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
-        colHeure.setCellValueFactory(new PropertyValueFactory<>("heure"));
-        colAdresse.setCellValueFactory(new PropertyValueFactory<>("addresse"));
-        colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
-
-        colParticipation.setCellFactory(col -> new TableCell<>() {
-            private final Label badge = new Label();
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
-                    setGraphic(null);
-                    return;
-                }
-                Evenement ev = (Evenement) getTableRow().getItem();
-                int userId = getCurrentUserId();
-                boolean enrolled = userId >= 0 && serviceParticipant.isEnrolled(ev.getId(), userId);
-
-                badge.setText(enrolled ? "✔ Inscrit" : "✖ Non inscrit");
-                badge.getStyleClass().setAll(enrolled ? "badge-enrolled" : "badge-not-enrolled");
-                setGraphic(badge);
-            }
-        });
-
-        colActions.setCellFactory(col -> new TableCell<>() {
-            private final Button btn = new Button();
-            {
-                btn.setOnAction(e -> {
-                    Evenement ev = (Evenement) getTableRow().getItem();
-                    if (ev != null) handleAction(ev, getCurrentUserId());
-                });
-            }
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
-                    setGraphic(null);
-                    return;
-                }
-                Evenement ev = (Evenement) getTableRow().getItem();
-                boolean enrolled = getCurrentUserId() >= 0 && serviceParticipant.isEnrolled(ev.getId(), getCurrentUserId());
-
-                btn.setText(enrolled ? "Se désinscrire" : "Participer");
-                btn.getStyleClass().setAll(enrolled ? "btn-unregister" : "btn-participate");
-                setGraphic(btn);
-            }
-        });
-    }
-
-    @FXML
-    public void toggleView(ActionEvent event) {
-        isGridView = !isGridView;
-        if (isGridView) {
-            btnToggleView.setText("📋");
-            tableEvenements.setVisible(false);
-            gridScrollPane.setVisible(true);
-            updateGridView();
-        } else {
-            btnToggleView.setText("🔲");
-            tableEvenements.setVisible(true);
-            gridScrollPane.setVisible(false);
-        }
+        updateGridView();
     }
 
     private void updateGridView() {
-        if (!isGridView) return; // Save resources if grid is hidden
         gridPane.getChildren().clear();
 
         for (Evenement ev : sortedData) {
@@ -204,13 +124,74 @@ public class ClientController {
         EventParticipant ep = new EventParticipant(ev.getId(), userId);
 
         if (serviceParticipant.isEnrolled(ev.getId(), userId)) {
+            // ── Désinscription (comportement inchangé) ────────────────────
             serviceParticipant.delete(ep);
-            showAlert(Alert.AlertType.INFORMATION, "Désinscription", "Vous êtes désinscrit de : " + ev.getName());
+            showAlert(Alert.AlertType.INFORMATION, "Désinscription",
+                    "Vous êtes désinscrit de : " + ev.getName());
         } else {
+            // ── Inscription ───────────────────────────────────────────────
             serviceParticipant.add(ep);
-            showAlert(Alert.AlertType.INFORMATION, "Inscription", "Félicitations, vous êtes inscrit à : " + ev.getName());
+
+            // Récupérer l'utilisateur sélectionné
+            User user = cbMockUser.getSelectionModel().getSelectedItem();
+            String fullName  = user.getPrenom() + " " + user.getNom();
+            String dateStr   = ev.getDate()  != null ? ev.getDate().toString()  : "N/A";
+            String heureStr  = ev.getHeure() != null ? ev.getHeure()            : "N/A";
+
+            // ── Étape 1 : Construire le JSON du billet ────────────────────
+            String ticketJson = QRCodeGenerator.buildTicketJson(
+                    user.getId(), user.getNom(), user.getPrenom(), user.getEmail(),
+                    ev.getId(), ev.getName(), dateStr, heureStr);
+
+            // ── Étape 2 : Générer le QR Code ──────────────────────────────
+            Image qrFXImage = null;
+            java.awt.image.BufferedImage qrBufferedImage = null;
+            try {
+                qrBufferedImage = QRCodeGenerator.generateQRCodeImage(ticketJson, 300, 300);
+                qrFXImage       = QRCodeGenerator.generateQRCodeFXImage(ticketJson, 300, 300);
+            } catch (Exception ex) {
+                System.err.println("❌ Erreur génération QR Code : " + ex.getMessage());
+            }
+
+            // ── Étape 3 : Ouvrir le popup TicketDialog ────────────────────
+            try {
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("/TicketDialog.fxml"));
+                Parent root = loader.load();
+
+                TicketDialogController ticketCtrl = loader.getController();
+                ticketCtrl.initData(
+                        ev.getName(), fullName, user.getEmail(),
+                        dateStr, heureStr, ev.getAddresse(),
+                        user.getId(), ev.getId(), qrFXImage);
+
+                Stage ticketStage = new Stage();
+                ticketStage.initModality(Modality.APPLICATION_MODAL);
+                ticketStage.initStyle(StageStyle.TRANSPARENT);
+                ticketStage.setTitle("🎟️ Billet Électronique");
+                ticketStage.setScene(new Scene(root));
+                ticketStage.getScene().setFill(null); // transparent background
+                ticketStage.show();
+
+                // ── Étape 4 : Envoyer l'email de façon asynchrone ─────────
+                final java.awt.image.BufferedImage finalQrImage = qrBufferedImage;
+                final TicketDialogController finalCtrl = ticketCtrl;
+                if (finalQrImage != null) {
+                    EmailService.sendTicketEmail(
+                            user.getEmail(), fullName,
+                            ev.getName(), dateStr, heureStr, ev.getAddresse(),
+                            user.getId(), ev.getId(), finalQrImage)
+                        .thenAccept(success -> finalCtrl.setEmailStatus(success));
+                } else {
+                    ticketCtrl.setEmailStatus(false);
+                }
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                showAlert(Alert.AlertType.INFORMATION, "Inscription",
+                        "Félicitations, vous êtes inscrit à : " + ev.getName());
+            }
         }
-        tableEvenements.refresh();
         updateGridView();
     }
 
@@ -225,7 +206,6 @@ public class ClientController {
 
     @FXML
     public void onUserChanged(ActionEvent event) {
-        tableEvenements.refresh();
         updateGridView();
     }
 

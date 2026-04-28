@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controllers.EvenementController"
+            fx:controller="controllers.EvenementFormController"
             stylesheets="@client.css"
             prefHeight="720.0" prefWidth="1280.0">
 
@@ -37,28 +37,23 @@
     </top>
 
     <center>
-        <VBox styleClass="page-content" VBox.vgrow="ALWAYS" spacing="16">
+        <VBox alignment="CENTER" style="-fx-padding: 40px;">
+            <VBox styleClass="form-card" maxWidth="600" alignment="CENTER" spacing="15" VBox.vgrow="NEVER">
 
-            <Label text="📅 Tous les Événements" styleClass="page-title"/>
+                <Label fx:id="lblTitle" text="📋 Formulaire Événement" styleClass="form-title"/>
 
-            <VBox styleClass="card" VBox.vgrow="ALWAYS" spacing="12">
-                
-                <!-- Search & Sort Bar -->
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <TextField fx:id="tfSearch" promptText="🔍 Rechercher (nom, lieu)..." 
-                               styleClass="text-field" HBox.hgrow="ALWAYS" />
-                    <ComboBox fx:id="cbSort" promptText="Trier par" 
-                              style="-fx-background-color: #F5F3FF; -fx-border-color: #DDD6FE; -fx-border-radius: 6; -fx-font-size: 13px;" />
-                    <Button text="✚ Nouvel Événement" onAction="#allerVersAjout" styleClass="btn-add"/>
+                <TextField fx:id="tfName"        promptText="Nom de l'événement"   styleClass="text-field"/>
+                <DatePicker fx:id="dpDate"        promptText="Date"                 maxWidth="Infinity"/>
+                <TextField fx:id="tfHeure"        promptText="Heure  (ex: 14:30)"   styleClass="text-field"/>
+                <TextField fx:id="tfAddresse"     promptText="Adresse (ex: Tunis)"  styleClass="text-field"/>
+                <TextField fx:id="tfDescription"  promptText="Description"           styleClass="text-field"/>
+
+                <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
+                    <Button text="✔ Enregistrer"  onAction="#enregistrerEvenement"  styleClass="btn-add"  HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                    <Button text="🔙 Annuler" onAction="#retourListe" styleClass="btn-clear" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
                 </HBox>
 
-                <!-- Event Grid (Grid View) -->
-                <ScrollPane fx:id="gridScrollPane" fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-padding: 0;">
-                    <FlowPane fx:id="gridPane" hgap="20" vgap="20" style="-fx-padding: 10;" />
-                </ScrollPane>
-
             </VBox>
-
         </VBox>
     </center>
 
