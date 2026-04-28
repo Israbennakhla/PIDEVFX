@@ -138,7 +138,7 @@ public class ClientController {
             Parent root = loader.load();
 
             EventDetailOverlayController ctrl = loader.getController();
-            ctrl.initData(ev);
+            ctrl.initData(ev, getCurrentUserId());
 
             Stage detailStage = new Stage();
             detailStage.initModality(Modality.APPLICATION_MODAL);
@@ -149,6 +149,13 @@ public class ClientController {
 
             // Force map resize AFTER the stage is visible on screen
             detailStage.setOnShown(e -> ctrl.forceMapResize());
+
+            // Refresh grid if user registered/unregistered
+            detailStage.setOnHidden(e -> {
+                if (ctrl.isActionTaken()) {
+                    updateGridView();
+                }
+            });
 
             detailStage.show();
         } catch (IOException ex) {

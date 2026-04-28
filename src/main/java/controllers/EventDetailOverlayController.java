@@ -2,20 +2,22 @@ package controllers;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 import model.Evenement;
+import model.EventParticipant;
+import services.ServiceEventParticipant;
 
 /**
  * ─────────────────────────────────────────────────────────────────────────────
  * EventDetailOverlayController  –  Client Event Detail Popup with Map
  * ─────────────────────────────────────────────────────────────────────────────
- * Displays full event details in a premium dark overlay.
- * At the bottom, an embedded OpenStreetMap (Leaflet.js) shows
- * the event's address using Nominatim geocoding (free, no API key).
+ * Displays full event details in a styled overlay.
+ * Includes a Participer / Se désinscrire button and an embedded map.
  */
 public class EventDetailOverlayController {
 
@@ -25,19 +27,69 @@ public class EventDetailOverlayController {
     @FXML private Label lblAddress;
     @FXML private Label lblDescription;
     @FXML private WebView mapWebView;
+    @FXML private Button btnAction;
+
+    private final ServiceEventParticipant serviceParticipant = new ServiceEventParticipant();
+
+    private Evenement currentEvent;
+    private int userId = -1;
+    private boolean enrolled = false;
+    private boolean actionTaken = false;
+
+    /** Returns true if the user registered/unregistered (so the grid should refresh). */
+    public boolean isActionTaken() { return actionTaken; }
 
     /**
      * Populates the overlay with event data and loads the map.
      */
-    public void initData(Evenement ev) {
+    public void initData(Evenement ev, int userId) {
+        this.currentEvent = ev;
+        this.userId = userId;
+
         lblEventName.setText(ev.getName());
         lblDate.setText(ev.getDate() != null ? ev.getDate().toString() : "N/A");
         lblHeure.setText(ev.getHeure() != null ? ev.getHeure() : "N/A");
         lblAddress.setText(ev.getAddresse() != null ? ev.getAddresse() : "N/A");
         lblDescription.setText(ev.getDescription() != null ? ev.getDescription() : "");
 
+        // Set initial button state
+        updateButtonState();
+
         // Load the map after the WebView is ready
         Platform.runLater(() -> loadMap(ev.getAddresse()));
+    }
+
+    /**
+     * Updates the button text and style based on enrollment status.
+     */
+    private void updateButtonState() {
+        enrolled = userId >= 0 && serviceParticipant.isEnrolled(currentEvent.getId(), userId);
+        if (enrolled) {
+            btnAction.setText("Se désinscrire");
+            btnAction.setStyle("-fx-background-color: #EF4444; -fx-text-fill: white; -fx-font-size: 13px; " +
+                    "-fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 28; -fx-cursor: hand;");
+        } else {
+            btnAction.setText("✔ Participer");
+            btnAction.setStyle("-fx-background-color: #22C55E; -fx-text-fill: white; -fx-font-size: 13px; " +
+                    "-fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 28; -fx-cursor: hand;");
+        }
+    }
+
+    /**
+     * Handles the Participer / Se désinscrire button click.
+     */
+    @FXML
+    private void handleParticipation() {
+        if (userId < 0) return;
+        EventParticipant ep = new EventParticipant(currentEvent.getId(), userId);
+
+        if (enrolled) {
+            serviceParticipant.delete(ep);
+        } else {
+            serviceParticipant.add(ep);
+        }
+        actionTaken = true;
+        updateButtonState();
     }
 
     /**

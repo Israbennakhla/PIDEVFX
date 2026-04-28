@@ -86,10 +86,14 @@
         <!-- ── FOOTER ─────────────────────────────────────────────────── -->
         <HBox alignment="CENTER" spacing="12"
               style="-fx-background-color: #EEF0FA; -fx-background-radius: 0 0 18 18; -fx-padding: 14 30;">
+            <Button fx:id="btnAction" text="Participer" onAction="#handleParticipation"
+                    style="-fx-background-color: #22C55E; -fx-text-fill: white; -fx-font-size: 13px;
+                           -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 28;
+                           -fx-cursor: hand;" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
             <Button text="✖  Fermer" onAction="#fermer"
                     style="-fx-background-color: #6C3CE1; -fx-text-fill: white; -fx-font-size: 13px;
                            -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 28;
-                           -fx-cursor: hand;"/>
+                           -fx-cursor: hand;" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
         </HBox>
     </VBox>
 </StackPane>
