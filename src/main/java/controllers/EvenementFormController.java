@@ -59,6 +59,23 @@ public class EvenementFormController {
 
     public boolean isSaved() { return saved; }
 
+    /**
+     * Forces the map to recalculate its size.
+     * Must be called AFTER the Stage is visible on screen.
+     */
+    public void forceMapResize() {
+        if (adminMapWebView != null) {
+            Platform.runLater(() -> {
+                try { Thread.sleep(300); } catch (InterruptedException ignored) {}
+                Platform.runLater(() -> {
+                    try {
+                        adminMapWebView.getEngine().executeScript("map.invalidateSize();");
+                    } catch (Exception ignored) {}
+                });
+            });
+        }
+    }
+
     @FXML
     public void initialize() {
         if (EvenementController.evenementSelectionneToEdit != null) {
@@ -215,6 +232,16 @@ public class EvenementFormController {
             if (newState == Worker.State.SUCCEEDED) {
                 JSObject window = (JSObject) engine.executeScript("window");
                 window.setMember("javaBridge", javaBridgeRef);
+
+                // Force resize AFTER rendering is complete
+                Platform.runLater(() -> {
+                    try { Thread.sleep(300); } catch (InterruptedException ignored) {}
+                    Platform.runLater(() -> {
+                        try {
+                            engine.executeScript("map.invalidateSize();");
+                        } catch (Exception ignored) {}
+                    });
+                });
             }
         });
 

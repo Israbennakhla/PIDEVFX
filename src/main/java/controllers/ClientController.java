@@ -146,6 +146,10 @@ public class ClientController {
             detailStage.setTitle("📅 " + ev.getName());
             detailStage.setScene(new Scene(root));
             detailStage.getScene().setFill(null);
+
+            // Force map resize AFTER the stage is visible on screen
+            detailStage.setOnShown(e -> ctrl.forceMapResize());
+
             detailStage.show();
         } catch (IOException ex) {
             ex.printStackTrace();

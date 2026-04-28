@@ -112,7 +112,39 @@ public class EventDetailOverlayController {
 
         WebEngine engine = mapWebView.getEngine();
         engine.setJavaScriptEnabled(true);
+
+        // Force resize AFTER rendering is complete
+        engine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
+            if (newState == javafx.concurrent.Worker.State.SUCCEEDED) {
+                Platform.runLater(() -> {
+                    try { Thread.sleep(300); } catch (InterruptedException ignored) {}
+                    Platform.runLater(() -> {
+                        try {
+                            engine.executeScript("map.invalidateSize();");
+                        } catch (Exception ignored) {}
+                    });
+                });
+            }
+        });
+
         engine.loadContent(html);
+    }
+
+    /**
+     * Forces the map to recalculate its size.
+     * Must be called AFTER the Stage is visible on screen.
+     */
+    public void forceMapResize() {
+        if (mapWebView != null) {
+            Platform.runLater(() -> {
+                try { Thread.sleep(300); } catch (InterruptedException ignored) {}
+                Platform.runLater(() -> {
+                    try {
+                        mapWebView.getEngine().executeScript("map.invalidateSize();");
+                    } catch (Exception ignored) {}
+                });
+            });
+        }
     }
 
     @FXML

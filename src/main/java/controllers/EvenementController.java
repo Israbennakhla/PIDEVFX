@@ -174,6 +174,9 @@ public class EvenementController {
                 }
             });
 
+            // Force map resize AFTER the stage is visible on screen
+            overlayStage.setOnShown(e -> formCtrl.forceMapResize());
+
             overlayStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
