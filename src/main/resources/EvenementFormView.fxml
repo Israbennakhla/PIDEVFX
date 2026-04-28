@@ -3,80 +3,97 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.web.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controllers.EvenementFormController"
-            stylesheets="@client.css"
-            prefHeight="720.0" prefWidth="1280.0">
+<StackPane xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="controllers.EvenementFormController"
+           stylesheets="@client.css"
+           prefWidth="720" prefHeight="620"
+           style="-fx-background-color: transparent;">
 
-    <top>
-        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="16">
+    <!-- Dark backdrop card (matching TicketDialog / EventDetail overlay style) -->
+    <VBox alignment="TOP_CENTER" spacing="0"
+          style="-fx-background-color: #0a0a1a; -fx-background-radius: 20;">
 
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label text="🐾 SitMyPet" styleClass="brand-label"/>
-                <Label text="ADMIN" styleClass="admin-badge"/>
-            </HBox>
+        <!-- ── HEADER ────────────────────────────────────────────────── -->
+        <VBox alignment="CENTER" spacing="4"
+              style="-fx-background-color: linear-gradient(to bottom right, #1a1a2e, #16213e, #0f3460);
+                     -fx-background-radius: 20 20 0 0; -fx-padding: 24 30 18 30;">
+            <Label text="🗺️" style="-fx-font-size: 36px;"/>
+            <Label fx:id="lblTitle" text="📋 Formulaire Événement"
+                   style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;"/>
+            <Label text="Remplissez les informations et sélectionnez l'emplacement sur la carte"
+                   style="-fx-font-size: 11px; -fx-text-fill: rgba(255,255,255,0.5);"/>
+        </VBox>
 
-            <Region HBox.hgrow="ALWAYS"/>
-
-            <!-- Navigation Links -->
-            <HBox alignment="CENTER" spacing="25">
-                <Label text="💼 Dashboard" styleClass="nav-link"/>
-                <Label text="📢 Annonces" styleClass="nav-link"/>
-                <Label text="📅 Événements" styleClass="nav-link-active"/>
-                <Label text="🐾 Animaux" styleClass="nav-link"/>
-                <Label text="📩 Réclamations" styleClass="nav-link"/>
-            </HBox>
-
-            <Region HBox.hgrow="ALWAYS"/>
-
-            <Button text="👥 Inscriptions" onAction="#ouvrirParticipants"
-                    styleClass="btn-participants"/>
-            <Button text="🌍 Mode Client" onAction="#ouvrirClient"
-                    styleClass="btn-client"/>
-
+        <!-- ── TEAR EDGE ─────────────────────────────────────────────── -->
+        <HBox style="-fx-background-color: #111827; -fx-padding: 0;" alignment="CENTER">
+            <Label style="-fx-font-size: 18px; -fx-text-fill: #0a0a1a;"
+                   text="◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦"/>
         </HBox>
-    </top>
 
-    <center>
-        <HBox alignment="CENTER" spacing="30" style="-fx-padding: 30 40;">
+        <!-- ── BODY: Form + Map side by side ─────────────────────────── -->
+        <HBox VBox.vgrow="ALWAYS" spacing="20"
+              style="-fx-background-color: #111827; -fx-padding: 18 24;">
 
-            <!-- ── LEFT: Form Card ──────────────────────────────────────── -->
-            <VBox styleClass="form-card" maxWidth="500" alignment="CENTER" spacing="15"
-                  VBox.vgrow="NEVER" HBox.hgrow="NEVER"
-                  style="-fx-max-width: 500; -fx-min-width: 400;">
+            <!-- LEFT: Form Fields -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-min-width: 280;">
 
-                <Label fx:id="lblTitle" text="📋 Formulaire Événement" styleClass="form-title"/>
+                <TextField fx:id="tfName" promptText="Nom de l'événement"
+                           style="-fx-background-color: #1e2d4a; -fx-border-color: #374151; -fx-border-radius: 8;
+                                  -fx-background-radius: 8; -fx-padding: 10 12; -fx-font-size: 13px;
+                                  -fx-text-fill: white; -fx-prompt-text-fill: #6B7280;"/>
 
-                <TextField fx:id="tfName"        promptText="Nom de l'événement"   styleClass="text-field"/>
-                <DatePicker fx:id="dpDate"        promptText="Date"                 maxWidth="Infinity"/>
-                <TextField fx:id="tfHeure"        promptText="Heure  (ex: 14:30)"   styleClass="text-field"/>
-                <TextField fx:id="tfAddresse"     promptText="Adresse (ex: Tunis)"  styleClass="text-field"/>
-                <TextField fx:id="tfDescription"  promptText="Description"           styleClass="text-field"/>
+                <DatePicker fx:id="dpDate" promptText="Date" maxWidth="Infinity"
+                            style="-fx-background-color: #1e2d4a; -fx-border-color: #374151; -fx-border-radius: 8;
+                                   -fx-background-radius: 8; -fx-font-size: 13px;"/>
 
-                <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
-                    <Button text="✔ Enregistrer"  onAction="#enregistrerEvenement"  styleClass="btn-add"  HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                    <Button text="🔙 Annuler" onAction="#retourListe" styleClass="btn-clear" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <TextField fx:id="tfHeure" promptText="Heure  (ex: 14:30)"
+                           style="-fx-background-color: #1e2d4a; -fx-border-color: #374151; -fx-border-radius: 8;
+                                  -fx-background-radius: 8; -fx-padding: 10 12; -fx-font-size: 13px;
+                                  -fx-text-fill: white; -fx-prompt-text-fill: #6B7280;"/>
+
+                <TextField fx:id="tfAddresse" promptText="📍 Adresse (ou cliquez sur la carte)"
+                           style="-fx-background-color: #1e2d4a; -fx-border-color: #6C3CE1; -fx-border-radius: 8;
+                                  -fx-background-radius: 8; -fx-padding: 10 12; -fx-font-size: 13px;
+                                  -fx-text-fill: white; -fx-prompt-text-fill: #6B7280;"/>
+
+                <TextField fx:id="tfDescription" promptText="Description"
+                           style="-fx-background-color: #1e2d4a; -fx-border-color: #374151; -fx-border-radius: 8;
+                                  -fx-background-radius: 8; -fx-padding: 10 12; -fx-font-size: 13px;
+                                  -fx-text-fill: white; -fx-prompt-text-fill: #6B7280;"/>
+
+                <Region VBox.vgrow="ALWAYS"/>
+
+                <HBox spacing="10" alignment="CENTER">
+                    <Button text="✔ Enregistrer" onAction="#enregistrerEvenement"
+                            style="-fx-background-color: #22C55E; -fx-text-fill: white; -fx-font-weight: bold;
+                                   -fx-font-size: 13px; -fx-padding: 10 24; -fx-background-radius: 8; -fx-cursor: hand;"
+                            HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                    <Button text="✖ Annuler" onAction="#retourListe"
+                            style="-fx-background-color: #374151; -fx-text-fill: white; -fx-font-weight: bold;
+                                   -fx-font-size: 13px; -fx-padding: 10 24; -fx-background-radius: 8; -fx-cursor: hand;"
+                            HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
                 </HBox>
-
             </VBox>
 
-            <!-- ── RIGHT: Interactive Map ───────────────────────────────── -->
-            <VBox HBox.hgrow="ALWAYS" spacing="10" alignment="TOP_CENTER"
-                  style="-fx-padding: 0;">
-
-                <VBox styleClass="card" VBox.vgrow="ALWAYS" spacing="10"
-                      style="-fx-min-width: 420;">
-
-                    <Label text="🗺️ Sélectionner la localisation" styleClass="form-title"/>
-                    <Label text="Cliquez sur la carte pour choisir l'adresse"
-                           style="-fx-text-fill: #6B7280; -fx-font-size: 12px;"/>
-
-                    <WebView fx:id="adminMapWebView" VBox.vgrow="ALWAYS" prefHeight="400"/>
-
+            <!-- RIGHT: Interactive Map (compact) -->
+            <VBox HBox.hgrow="ALWAYS" spacing="6" alignment="TOP_CENTER"
+                  style="-fx-min-width: 300;">
+                <Label text="Cliquez pour choisir l'emplacement"
+                       style="-fx-text-fill: #6B7280; -fx-font-size: 11px;"/>
+                <VBox VBox.vgrow="ALWAYS"
+                      style="-fx-background-color: #1e2d4a; -fx-background-radius: 10; -fx-padding: 4;">
+                    <WebView fx:id="adminMapWebView" VBox.vgrow="ALWAYS"
+                             prefHeight="280" maxHeight="300"/>
                 </VBox>
             </VBox>
 
         </HBox>
-    </center>
 
-</BorderPane>
+        <!-- ── FOOTER ─────────────────────────────────────────────────── -->
+        <HBox alignment="CENTER"
+              style="-fx-background-color: #0f1923; -fx-background-radius: 0 0 20 20; -fx-padding: 10 24;">
+            <Label text="🐾 SitMyPet — Gestion des événements"
+                   style="-fx-text-fill: #4a5568; -fx-font-size: 11px;"/>
+        </HBox>
+    </VBox>
+</StackPane>

@@ -10,7 +10,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.Node;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import java.io.IOException;
 
 import javafx.scene.control.*;
@@ -150,10 +152,29 @@ public class EvenementController {
 
     private void ouvrirVueFormulaire(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/EvenementFormView.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 1280, 720));
-            stage.show();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/EvenementFormView.fxml"));
+            Parent root = loader.load();
+
+            EvenementFormController formCtrl = loader.getController();
+
+            Stage overlayStage = new Stage();
+            overlayStage.initModality(Modality.APPLICATION_MODAL);
+            overlayStage.initStyle(StageStyle.TRANSPARENT);
+            overlayStage.setTitle("📋 Formulaire Événement");
+            Scene scene = new Scene(root);
+            scene.setFill(null);
+            overlayStage.setScene(scene);
+
+            // When the overlay closes, refresh data if something was saved
+            overlayStage.setOnHidden(e -> {
+                EvenementController.evenementSelectionneToEdit = null;
+                if (formCtrl.isSaved()) {
+                    afficherEvenements();
+                    updateGridView();
+                }
+            });
+
+            overlayStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
