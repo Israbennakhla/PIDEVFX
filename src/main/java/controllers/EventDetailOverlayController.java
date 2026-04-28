@@ -93,6 +93,12 @@ public class EventDetailOverlayController {
                             }
                         })
                         .catch(function(err) { console.log('Geocoding error:', err); });
+
+                    // Force Leaflet to recalculate container size (fixes grey tiles in WebView)
+                    setTimeout(function() { map.invalidateSize(); }, 200);
+                    setTimeout(function() { map.invalidateSize(); }, 500);
+                    setTimeout(function() { map.invalidateSize(); }, 1000);
+                    setTimeout(function() { map.invalidateSize(); }, 2000);
                 </script>
             </body>
             </html>

@@ -171,6 +171,7 @@ public class EvenementFormController {
                         map.setView([lat, lng], 16);
                         marker.setLatLng([lat, lng]);
                         marker.bindPopup(label).openPopup();
+                        setTimeout(function() { map.invalidateSize(); }, 300);
                     }
 
                     // ── Geocode initial address ─────────────────────────────
@@ -188,6 +189,12 @@ public class EvenementFormController {
                             }
                         })
                         .catch(function(err) { console.log(err); });
+
+                    // Force Leaflet to recalculate container size (fixes grey tiles in WebView)
+                    setTimeout(function() { map.invalidateSize(); }, 200);
+                    setTimeout(function() { map.invalidateSize(); }, 500);
+                    setTimeout(function() { map.invalidateSize(); }, 1000);
+                    setTimeout(function() { map.invalidateSize(); }, 2000);
                 </script>
             </body>
             </html>
