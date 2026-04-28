@@ -57,23 +57,22 @@ public class EventDetailOverlayController {
             <html>
             <head>
                 <meta charset="utf-8"/>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
                 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
                 <style>
-                    * { margin: 0; padding: 0; box-sizing: border-box; }
-                    html, body { width: 100%%; height: 100%%; }
-                    #map { width: 100%%; height: 100%%; border-radius: 12px; }
+                    * { margin: 0; padding: 0; }
+                    html, body { width: 100%%; height: 100%%; overflow: hidden; }
+                    #map { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
                     .leaflet-control-attribution { font-size: 9px !important; }
                 </style>
             </head>
             <body>
                 <div id="map"></div>
                 <script>
-                    var map = L.map('map').setView([36.8065, 10.1815], 13);
+                    var map = L.map('map', { zoomControl: true }).setView([36.8065, 10.1815], 13);
 
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; OpenStreetMap contributors',
+                        attribution: '&copy; OpenStreetMap',
                         maxZoom: 19
                     }).addTo(map);
 
@@ -89,16 +88,23 @@ public class EventDetailOverlayController {
                                 var lon = parseFloat(data[0].lon);
                                 map.setView([lat, lon], 15);
                                 marker.setLatLng([lat, lon]);
-                                marker.bindPopup('<b>📍 %s</b><br>' + data[0].display_name).openPopup();
+                                marker.bindPopup('<b>%s</b><br>' + data[0].display_name).openPopup();
+                                map.invalidateSize();
                             }
                         })
                         .catch(function(err) { console.log('Geocoding error:', err); });
 
-                    // Force Leaflet to recalculate container size (fixes grey tiles in WebView)
-                    setTimeout(function() { map.invalidateSize(); }, 200);
-                    setTimeout(function() { map.invalidateSize(); }, 500);
-                    setTimeout(function() { map.invalidateSize(); }, 1000);
-                    setTimeout(function() { map.invalidateSize(); }, 2000);
+                    // Continuously fix size until stable
+                    var resizeCount = 0;
+                    var resizeInterval = setInterval(function() {
+                        map.invalidateSize();
+                        resizeCount++;
+                        if (resizeCount > 20) clearInterval(resizeInterval);
+                    }, 200);
+
+                    // Also listen for any resize events
+                    window.addEventListener('resize', function() { map.invalidateSize(); });
+                    new ResizeObserver(function() { map.invalidateSize(); }).observe(document.getElementById('map'));
                 </script>
             </body>
             </html>

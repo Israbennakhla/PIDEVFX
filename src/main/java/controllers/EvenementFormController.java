@@ -104,20 +104,19 @@ public class EvenementFormController {
             <html>
             <head>
                 <meta charset="utf-8"/>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
                 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
                 <style>
-                    * { margin: 0; padding: 0; box-sizing: border-box; }
-                    html, body { width: 100%%; height: 100%%; background: #1a1a2e; }
-                    #map { width: 100%%; height: 100%%; border-radius: 10px; }
+                    * { margin: 0; padding: 0; }
+                    html, body { width: 100%%; height: 100%%; overflow: hidden; }
+                    #map { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
                     .leaflet-control-attribution { font-size: 9px !important; }
                 </style>
             </head>
             <body>
                 <div id="map"></div>
                 <script>
-                    var map = L.map('map').setView([36.8065, 10.1815], 13);
+                    var map = L.map('map', { zoomControl: true }).setView([36.8065, 10.1815], 13);
 
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         attribution: '&copy; OpenStreetMap',
@@ -132,7 +131,6 @@ public class EvenementFormController {
                         var lng = e.latlng.lng;
                         marker.setLatLng([lat, lng]);
 
-                        // Reverse geocode directly in JS using fetch
                         fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng + '&zoom=18&addressdetails=1', {
                             headers: { 'Accept-Language': 'fr' }
                         })
@@ -171,7 +169,7 @@ public class EvenementFormController {
                         map.setView([lat, lng], 16);
                         marker.setLatLng([lat, lng]);
                         marker.bindPopup(label).openPopup();
-                        setTimeout(function() { map.invalidateSize(); }, 300);
+                        map.invalidateSize();
                     }
 
                     // ── Geocode initial address ─────────────────────────────
@@ -186,15 +184,21 @@ public class EvenementFormController {
                                 map.setView([lat, lon], 15);
                                 marker.setLatLng([lat, lon]);
                                 marker.bindPopup('%s').openPopup();
+                                map.invalidateSize();
                             }
                         })
                         .catch(function(err) { console.log(err); });
 
-                    // Force Leaflet to recalculate container size (fixes grey tiles in WebView)
-                    setTimeout(function() { map.invalidateSize(); }, 200);
-                    setTimeout(function() { map.invalidateSize(); }, 500);
-                    setTimeout(function() { map.invalidateSize(); }, 1000);
-                    setTimeout(function() { map.invalidateSize(); }, 2000);
+                    // Continuously fix size until stable
+                    var resizeCount = 0;
+                    var resizeInterval = setInterval(function() {
+                        map.invalidateSize();
+                        resizeCount++;
+                        if (resizeCount > 20) clearInterval(resizeInterval);
+                    }, 200);
+
+                    window.addEventListener('resize', function() { map.invalidateSize(); });
+                    new ResizeObserver(function() { map.invalidateSize(); }).observe(document.getElementById('map'));
                 </script>
             </body>
             </html>
