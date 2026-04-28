@@ -90,15 +90,14 @@ public class QRCodeGenerator {
                                          String email, int eventId, String eventName,
                                          String eventDate, String eventHeure) {
         return "{"
+            + "\"statut\":\"✅ VALIDE\","
             + "\"ticket_id\":\"EVENT-" + eventId + "-USER-" + userId + "\","
             + "\"utilisateur\":{"
-            +   "\"id\":" + userId + ","
             +   "\"nom\":\"" + nom + "\","
             +   "\"prenom\":\"" + prenom + "\","
             +   "\"email\":\"" + email + "\""
             + "},"
             + "\"evenement\":{"
-            +   "\"id\":" + eventId + ","
             +   "\"nom\":\"" + eventName + "\","
             +   "\"date\":\"" + eventDate + "\","
             +   "\"heure\":\"" + eventHeure + "\""

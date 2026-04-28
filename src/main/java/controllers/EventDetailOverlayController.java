@@ -2,15 +2,26 @@ package controllers;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import model.Evenement;
 import model.EventParticipant;
+import model.User;
 import services.ServiceEventParticipant;
+import utils.EmailService;
+import utils.QRCodeGenerator;
+
+import java.io.IOException;
 
 /**
  * ─────────────────────────────────────────────────────────────────────────────
@@ -32,7 +43,7 @@ public class EventDetailOverlayController {
     private final ServiceEventParticipant serviceParticipant = new ServiceEventParticipant();
 
     private Evenement currentEvent;
-    private int userId = -1;
+    private User currentUser;
     private boolean enrolled = false;
     private boolean actionTaken = false;
 
@@ -42,9 +53,9 @@ public class EventDetailOverlayController {
     /**
      * Populates the overlay with event data and loads the map.
      */
-    public void initData(Evenement ev, int userId) {
+    public void initData(Evenement ev, User user) {
         this.currentEvent = ev;
-        this.userId = userId;
+        this.currentUser = user;
 
         lblEventName.setText(ev.getName());
         lblDate.setText(ev.getDate() != null ? ev.getDate().toString() : "N/A");
@@ -63,7 +74,7 @@ public class EventDetailOverlayController {
      * Updates the button text and style based on enrollment status.
      */
     private void updateButtonState() {
-        enrolled = userId >= 0 && serviceParticipant.isEnrolled(currentEvent.getId(), userId);
+        enrolled = currentUser != null && serviceParticipant.isEnrolled(currentEvent.getId(), currentUser.getId());
         if (enrolled) {
             btnAction.setText("Se désinscrire");
             btnAction.setStyle("-fx-background-color: #EF4444; -fx-text-fill: white; -fx-font-size: 13px; " +
@@ -77,20 +88,84 @@ public class EventDetailOverlayController {
 
     /**
      * Handles the Participer / Se désinscrire button click.
+     * On registration: shows the TicketDialog with QR code and sends the email.
      */
     @FXML
     private void handleParticipation() {
-        if (userId < 0) return;
-        EventParticipant ep = new EventParticipant(currentEvent.getId(), userId);
+        if (currentUser == null) return;
+        EventParticipant ep = new EventParticipant(currentEvent.getId(), currentUser.getId());
 
         if (enrolled) {
+            // ── Désinscription ────────────────────────────────────────────
             serviceParticipant.delete(ep);
         } else {
+            // ── Inscription + Ticket Dialog + Email ──────────────────────
             serviceParticipant.add(ep);
+            showTicketDialog();
         }
         actionTaken = true;
         updateButtonState();
     }
+
+    /**
+     * Opens the TicketDialog with QR code and sends the confirmation email.
+     */
+    private void showTicketDialog() {
+        String fullName = currentUser.getPrenom() + " " + currentUser.getNom();
+        String dateStr  = currentEvent.getDate()  != null ? currentEvent.getDate().toString() : "N/A";
+        String heureStr = currentEvent.getHeure() != null ? currentEvent.getHeure()           : "N/A";
+
+        // Build QR code with ticket JSON
+        String ticketJson = QRCodeGenerator.buildTicketJson(
+                currentUser.getId(), currentUser.getNom(), currentUser.getPrenom(),
+                currentUser.getEmail(), currentEvent.getId(), currentEvent.getName(),
+                dateStr, heureStr);
+
+        Image qrFXImage = null;
+        java.awt.image.BufferedImage qrBufferedImage = null;
+        try {
+            qrBufferedImage = QRCodeGenerator.generateQRCodeImage(ticketJson, 300, 300);
+            qrFXImage       = QRCodeGenerator.generateQRCodeFXImage(ticketJson, 300, 300);
+        } catch (Exception ex) {
+            System.err.println("❌ Erreur génération QR Code : " + ex.getMessage());
+        }
+
+        // Open TicketDialog
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/TicketDialog.fxml"));
+            Parent root = loader.load();
+
+            TicketDialogController ticketCtrl = loader.getController();
+            ticketCtrl.initData(
+                    currentEvent.getName(), fullName, currentUser.getEmail(),
+                    dateStr, heureStr, currentEvent.getAddresse(),
+                    currentUser.getId(), currentEvent.getId(), qrFXImage);
+
+            Stage ticketStage = new Stage();
+            ticketStage.initModality(Modality.APPLICATION_MODAL);
+            ticketStage.initStyle(StageStyle.TRANSPARENT);
+            ticketStage.setTitle("🎟️ Billet Électronique");
+            ticketStage.setScene(new Scene(root));
+            ticketStage.getScene().setFill(null);
+            ticketStage.show();
+
+            // Send email asynchronously
+            final java.awt.image.BufferedImage finalQrImage = qrBufferedImage;
+            if (finalQrImage != null) {
+                EmailService.sendTicketEmail(
+                        currentUser.getEmail(), fullName,
+                        currentEvent.getName(), dateStr, heureStr,
+                        currentEvent.getAddresse(),
+                        currentUser.getId(), currentEvent.getId(), finalQrImage)
+                    .thenAccept(success -> ticketCtrl.setEmailStatus(success));
+            } else {
+                ticketCtrl.setEmailStatus(false);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 
     /**
      * Generates an HTML page with Leaflet.js + OpenStreetMap tiles.

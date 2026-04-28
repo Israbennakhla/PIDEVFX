@@ -138,7 +138,7 @@ public class ClientController {
             Parent root = loader.load();
 
             EventDetailOverlayController ctrl = loader.getController();
-            ctrl.initData(ev, getCurrentUserId());
+            ctrl.initData(ev, cbMockUser.getSelectionModel().getSelectedItem());
 
             Stage detailStage = new Stage();
             detailStage.initModality(Modality.APPLICATION_MODAL);
