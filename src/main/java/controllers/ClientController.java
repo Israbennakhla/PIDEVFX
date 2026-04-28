@@ -115,8 +115,12 @@ public class ClientController {
 
             // ── Make card clickable → open event detail overlay ──────────
             card.setOnMouseClicked(mouseEvent -> {
-                // Don't trigger if a button was clicked
-                if (mouseEvent.getTarget() instanceof javafx.scene.control.ButtonBase) return;
+                // Don't trigger if a button was clicked (check the whole parent chain)
+                javafx.scene.Node target = mouseEvent.getPickResult().getIntersectedNode();
+                while (target != null) {
+                    if (target instanceof javafx.scene.control.ButtonBase) return;
+                    target = target.getParent();
+                }
                 showEventDetail(ev);
             });
             card.setCursor(javafx.scene.Cursor.HAND);

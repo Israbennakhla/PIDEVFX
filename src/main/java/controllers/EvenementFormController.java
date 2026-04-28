@@ -1,19 +1,40 @@
 package controllers;
 
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.Node;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import netscape.javascript.JSObject;
+
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.scene.control.*;
 import model.Evenement;
 import services.ServiceEvenement;
 import java.sql.Date;
 
+/**
+ * ─────────────────────────────────────────────────────────────────────────────
+ * EvenementFormController  –  Admin Event Form with Interactive Map
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Two-way binding between the address TextField and an OpenStreetMap map:
+ *   • Click on map  → reverse geocode via Nominatim → auto-fill address field
+ *   • Type address  → forward geocode via Nominatim → move map marker
+ */
 public class EvenementFormController {
     @FXML private Label lblTitle;
     @FXML private TextField tfName;
@@ -21,9 +42,14 @@ public class EvenementFormController {
     @FXML private TextField tfHeure;
     @FXML private TextField tfAddresse;
     @FXML private TextField tfDescription;
+    @FXML private WebView adminMapWebView;
 
     private ServiceEvenement service = new ServiceEvenement();
     private Evenement evenementEdition = null;
+
+    // Debounce timer for address text field changes
+    private Timer debounceTimer;
+    private boolean suppressAddressListener = false;
 
     @FXML
     public void initialize() {
@@ -38,7 +64,253 @@ public class EvenementFormController {
         } else {
             lblTitle.setText("📋 Ajouter Événement");
         }
+
+        // Initialize the map
+        Platform.runLater(this::loadAdminMap);
+
+        // Listen for address field changes → update map marker (debounced)
+        tfAddresse.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (suppressAddressListener) return;
+            if (newVal == null || newVal.trim().isEmpty()) return;
+            debounceGeocodeForward(newVal.trim());
+        });
     }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    //  MAP LOGIC
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /**
+     * Loads the Leaflet.js interactive map into the WebView.
+     * Clicking on the map triggers a JavaScript→Java callback for reverse geocoding.
+     */
+    private void loadAdminMap() {
+        String initialAddress = (tfAddresse.getText() != null && !tfAddresse.getText().trim().isEmpty())
+                ? tfAddresse.getText().trim() : "Tunis";
+        String safeAddress = initialAddress.replace("'", "\\'").replace("\"", "\\\"");
+
+        String html = """
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+                <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+                <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    html, body { width: 100%%; height: 100%%; background: #1e2d4a; }
+                    #map { width: 100%%; height: 100%%; border-radius: 10px; }
+                    .leaflet-control-attribution { font-size: 9px !important; }
+                </style>
+            </head>
+            <body>
+                <div id="map"></div>
+                <script>
+                    var map = L.map('map').setView([36.8065, 10.1815], 13);
+
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap',
+                        maxZoom: 19
+                    }).addTo(map);
+
+                    var marker = L.marker([36.8065, 10.1815], {draggable: true}).addTo(map);
+                    marker.bindPopup('📍 %s').openPopup();
+
+                    // ── When user clicks on map ─────────────────────────────
+                    map.on('click', function(e) {
+                        var lat = e.latlng.lat;
+                        var lng = e.latlng.lng;
+                        marker.setLatLng([lat, lng]);
+                        marker.bindPopup('📍 Chargement...').openPopup();
+
+                        // Call Java bridge for reverse geocoding
+                        if (window.javaBridge) {
+                            window.javaBridge.onMapClick(lat, lng);
+                        }
+                    });
+
+                    // ── When marker is dragged ──────────────────────────────
+                    marker.on('dragend', function(e) {
+                        var pos = marker.getLatLng();
+                        marker.bindPopup('📍 Chargement...').openPopup();
+                        if (window.javaBridge) {
+                            window.javaBridge.onMapClick(pos.lat, pos.lng);
+                        }
+                    });
+
+                    // ── JS function called by Java to move marker ───────────
+                    function moveMarker(lat, lng, label) {
+                        map.setView([lat, lng], 16);
+                        marker.setLatLng([lat, lng]);
+                        marker.bindPopup('📍 ' + label).openPopup();
+                    }
+
+                    // ── Geocode initial address ─────────────────────────────
+                    fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent('%s'))
+                        .then(function(r) { return r.json(); })
+                        .then(function(data) {
+                            if (data && data.length > 0) {
+                                var lat = parseFloat(data[0].lat);
+                                var lon = parseFloat(data[0].lon);
+                                map.setView([lat, lon], 15);
+                                marker.setLatLng([lat, lon]);
+                                marker.bindPopup('📍 %s').openPopup();
+                            }
+                        })
+                        .catch(function(err) { console.log(err); });
+                </script>
+            </body>
+            </html>
+            """.formatted(safeAddress, safeAddress, safeAddress);
+
+        WebEngine engine = adminMapWebView.getEngine();
+        engine.setJavaScriptEnabled(true);
+
+        // Register Java→JS bridge once the page is loaded
+        engine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
+            if (newState == Worker.State.SUCCEEDED) {
+                JSObject window = (JSObject) engine.executeScript("window");
+                window.setMember("javaBridge", new JavaBridge());
+            }
+        });
+
+        engine.loadContent(html);
+    }
+
+    /**
+     * Java bridge object exposed to JavaScript.
+     * JavaScript calls javaBridge.onMapClick(lat, lng) when the map is clicked.
+     */
+    public class JavaBridge {
+        /**
+         * Called from JavaScript when user clicks on the map.
+         * Performs reverse geocoding via Nominatim and updates the address field.
+         */
+        public void onMapClick(double lat, double lng) {
+            // Run HTTP request on background thread
+            Thread thread = new Thread(() -> {
+                try {
+                    String url = "https://nominatim.openstreetmap.org/reverse?format=json&lat="
+                            + lat + "&lon=" + lng + "&zoom=18&addressdetails=1";
+
+                    HttpClient client = HttpClient.newHttpClient();
+                    HttpRequest request = HttpRequest.newBuilder()
+                            .uri(URI.create(url))
+                            .header("User-Agent", "SitMyPet-JavaFX/1.0")
+                            .GET()
+                            .build();
+
+                    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                    String body = response.body();
+
+                    // Parse display_name from JSON response
+                    String displayName = parseDisplayName(body);
+
+                    Platform.runLater(() -> {
+                        suppressAddressListener = true;
+                        tfAddresse.setText(displayName);
+                        suppressAddressListener = false;
+
+                        // Update marker popup
+                        String safe = displayName.replace("'", "\\'").replace("\"", "\\\"");
+                        adminMapWebView.getEngine().executeScript(
+                                "marker.bindPopup('📍 " + safe + "').openPopup();");
+                    });
+
+                } catch (Exception e) {
+                    System.err.println("❌ Reverse geocoding error: " + e.getMessage());
+                }
+            });
+            thread.setDaemon(true);
+            thread.start();
+        }
+    }
+
+    /**
+     * Debounced forward geocoding: when the user types an address,
+     * wait 800ms after the last keystroke before geocoding.
+     */
+    private void debounceGeocodeForward(String address) {
+        if (debounceTimer != null) {
+            debounceTimer.cancel();
+        }
+        debounceTimer = new Timer();
+        debounceTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                geocodeForward(address);
+            }
+        }, 800);
+    }
+
+    /**
+     * Forward geocoding: converts an address string to lat/lng
+     * and moves the map marker to that location.
+     */
+    private void geocodeForward(String address) {
+        try {
+            String encoded = java.net.URLEncoder.encode(address, "UTF-8");
+            String url = "https://nominatim.openstreetmap.org/search?format=json&q=" + encoded + "&limit=1";
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("User-Agent", "SitMyPet-JavaFX/1.0")
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            String body = response.body();
+
+            // Parse lat/lon from JSON array response
+            if (body.contains("\"lat\"")) {
+                String lat = extractJsonValue(body, "lat");
+                String lon = extractJsonValue(body, "lon");
+
+                if (lat != null && lon != null) {
+                    String safeName = address.replace("'", "\\'").replace("\"", "\\\"");
+                    Platform.runLater(() -> {
+                        adminMapWebView.getEngine().executeScript(
+                                "moveMarker(" + lat + ", " + lon + ", '" + safeName + "');");
+                    });
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("❌ Forward geocoding error: " + e.getMessage());
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    //  JSON HELPERS (lightweight, no external dependency needed)
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    private String parseDisplayName(String json) {
+        String key = "\"display_name\"";
+        int idx = json.indexOf(key);
+        if (idx < 0) return "Adresse inconnue";
+        int start = json.indexOf("\"", idx + key.length()) + 1;
+        int end = json.indexOf("\"", start);
+        if (start <= 0 || end <= start) return "Adresse inconnue";
+        return json.substring(start, end);
+    }
+
+    private String extractJsonValue(String json, String key) {
+        String pattern = "\"" + key + "\"";
+        int idx = json.indexOf(pattern);
+        if (idx < 0) return null;
+        int colon = json.indexOf(":", idx + pattern.length());
+        if (colon < 0) return null;
+        // value is in quotes: "value"
+        int start = json.indexOf("\"", colon) + 1;
+        int end = json.indexOf("\"", start);
+        if (start <= 0 || end <= start) return null;
+        return json.substring(start, end);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    //  ORIGINAL FORM LOGIC (unchanged)
+    // ═══════════════════════════════════════════════════════════════════════════
 
     @FXML
     public void enregistrerEvenement(ActionEvent event) {
@@ -61,6 +333,7 @@ public class EvenementFormController {
     @FXML
     public void retourListe(ActionEvent event) {
         EvenementController.evenementSelectionneToEdit = null;
+        if (debounceTimer != null) debounceTimer.cancel();
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/EvenementView.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -110,6 +383,7 @@ public class EvenementFormController {
 
     @FXML
     public void ouvrirParticipants(ActionEvent event) {
+        if (debounceTimer != null) debounceTimer.cancel();
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/ParticipantView.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -123,6 +397,7 @@ public class EvenementFormController {
 
     @FXML
     public void ouvrirClient(ActionEvent event) {
+        if (debounceTimer != null) debounceTimer.cancel();
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/ClientView.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

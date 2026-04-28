@@ -399,3 +399,8 @@
     -fx-font-weight: bold;
 }
 
+/* ── Clickable Event Cards (Client View) ─────────────────────── */
+/* Smooth hover transition for event cards in the grid */
+
+/* ── Admin Form + Map layout ─────────────────────────────────── */
+/* Override form-card constraints for the 2-panel admin form */
