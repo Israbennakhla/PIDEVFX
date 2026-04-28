@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import model.Reclamation;
 import model.Reponse;
 import services.ServiceReponse;
+import utils.TraductionService;
 
 import java.net.URL;
 import java.util.List;
@@ -35,7 +36,6 @@ public class AfficherReponses implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {}
 
-    // Appelé depuis AfficherReclamations
     public void setReclamation(Reclamation r) {
         this.reclamation = r;
         titreReclamation.setText("💬 Réponses — " + r.getSujet());
@@ -70,7 +70,7 @@ public class AfficherReponses implements Initializable {
                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0, 0, 2);"
         );
 
-        // Auteur + date
+        // ── Header : auteur + date ──────────────────────────────
         HBox header = new HBox(10);
         header.setAlignment(Pos.CENTER_LEFT);
 
@@ -84,15 +84,80 @@ public class AfficherReponses implements Initializable {
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-
         header.getChildren().addAll(auteur, spacer, date);
 
-        // Contenu
+        // ── Contenu de la réponse ───────────────────────────────
         Label contenu = new Label(rep.getContenu());
         contenu.setStyle("-fx-text-fill: #555; -fx-font-size: 12px;");
         contenu.setWrapText(true);
 
-        // Boutons
+        // ── Zone traduction ─────────────────────────────────────
+        HBox zoneTraduction = new HBox(8);
+        zoneTraduction.setAlignment(Pos.CENTER_LEFT);
+
+        ComboBox<String> langueCombo = new ComboBox<>();
+        langueCombo.getItems().addAll("🇬🇧 Anglais", "🇸🇦 Arabe");
+        langueCombo.setPromptText("Langue...");
+        langueCombo.setStyle("-fx-font-size: 11px;");
+        langueCombo.setPrefWidth(130);
+
+        Button btnTraduire = new Button("🌐 Traduire");
+        btnTraduire.setStyle(
+                "-fx-background-color: #9b59b6; -fx-text-fill: white;" +
+                        "-fx-background-radius: 5; -fx-cursor: hand; -fx-font-size: 11px;"
+        );
+
+        Label labelChargement = new Label("");
+        labelChargement.setStyle("-fx-text-fill: #9b59b6; -fx-font-size: 11px;");
+
+        zoneTraduction.getChildren().addAll(langueCombo, btnTraduire, labelChargement);
+
+        // Label affichant le résultat de la traduction
+        Label labelTraduit = new Label("");
+        labelTraduit.setWrapText(true);
+        labelTraduit.setStyle(
+                "-fx-text-fill: #2c3e50; -fx-font-size: 12px;" +
+                        "-fx-background-color: #f0e6ff;" +
+                        "-fx-background-radius: 5; -fx-padding: 8;"
+        );
+        labelTraduit.setVisible(false);
+        labelTraduit.setManaged(false);
+
+        // ── Action bouton Traduire ──────────────────────────────
+        btnTraduire.setOnAction(e -> {
+            if (langueCombo.getValue() == null) {
+                labelChargement.setText("⚠ Choisis une langue !");
+                labelChargement.setStyle("-fx-text-fill: #e74c3c; -fx-font-size: 11px;");
+                return;
+            }
+
+            String langCode = langueCombo.getValue().contains("Anglais") ? "en" : "ar";
+            labelChargement.setText("⏳ Traduction en cours...");
+            labelChargement.setStyle("-fx-text-fill: #9b59b6; -fx-font-size: 11px;");
+            btnTraduire.setDisable(true);
+
+            new Thread(() -> {
+                try {
+                    String traduit = TraductionService.traduire(rep.getContenu(), langCode);
+                    javafx.application.Platform.runLater(() -> {
+                        labelTraduit.setText("🌐 " + traduit);
+                        labelTraduit.setVisible(true);
+                        labelTraduit.setManaged(true);
+                        labelChargement.setText("✔ Traduit !");
+                        labelChargement.setStyle("-fx-text-fill: #27ae60; -fx-font-size: 11px;");
+                        btnTraduire.setDisable(false);
+                    });
+                } catch (RuntimeException ex) {
+                    javafx.application.Platform.runLater(() -> {
+                        labelChargement.setText("❌ Erreur traduction");
+                        labelChargement.setStyle("-fx-text-fill: #e74c3c; -fx-font-size: 11px;");
+                        btnTraduire.setDisable(false);
+                    });
+                }
+            }).start();
+        });
+
+        // ── Boutons Modifier / Supprimer ────────────────────────
         HBox boutons = new HBox(8);
         boutons.setAlignment(Pos.CENTER_RIGHT);
 
@@ -112,7 +177,8 @@ public class AfficherReponses implements Initializable {
 
         boutons.getChildren().addAll(btnModifier, btnSupprimer);
 
-        carte.getChildren().addAll(header, contenu, boutons);
+        // ── Assemblage de la carte ──────────────────────────────
+        carte.getChildren().addAll(header, contenu, zoneTraduction, labelTraduit, boutons);
         return carte;
     }
 
