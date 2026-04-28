@@ -4,6 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.chart.*?>
+<?import com.sitmypet.components.SmallThemeToggle?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -21,6 +22,8 @@
                     <Label text="SitMyPet" styleClass="sidebar-logo-text"/>
                 </HBox>
                 <Label text="PANNEAU ADMIN" styleClass="sidebar-subtitle"/>
+                <Region prefHeight="10"/>
+                <SmallThemeToggle />
             </VBox>
             
             <Separator styleClass="sidebar-separator" />
@@ -48,6 +51,9 @@
             </VBox>
 
             <Region VBox.vgrow="ALWAYS" />
+            
+
+            
             <Separator styleClass="sidebar-separator" />
 
             <!-- Utilisateur Connecté en bas -->
@@ -87,13 +93,13 @@
                 
                 <VBox styleClass="user-card" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" alignment="CENTER" spacing="15" maxWidth="800">
                     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
-                    <Label text="Répartition par Rôles" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                    <Label text="Répartition par Rôles" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: -color-text-main;"/>
                     <PieChart fx:id="chartRoles" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" legendVisible="true" labelsVisible="true"/>
                 </VBox>
                 
                 <VBox styleClass="user-card" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" alignment="CENTER" spacing="15" maxWidth="800">
                     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
-                    <Label text="Taux d'Activité" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                    <Label text="Taux d'Activité" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: -color-text-main;"/>
                     <BarChart fx:id="chartStatut" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity" legendVisible="false">
                         <xAxis>
                             <CategoryAxis label="Statut"/>

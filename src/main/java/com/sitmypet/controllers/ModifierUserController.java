@@ -120,7 +120,20 @@ public class ModifierUserController {
         File file = fileChooser.showOpenDialog(btnParcourir.getScene().getWindow());
         
         if (file != null) {
-            txtPhoto.setText(file.getName());
+            try {
+                File uploadDir = new File("SitMyPet-Desktop/src/main/resources/uploads/profiles");
+                if (!uploadDir.exists() && !uploadDir.mkdirs()) {
+                    uploadDir = new File("src/main/resources/uploads/profiles");
+                    uploadDir.mkdirs();
+                }
+                String extension = file.getName().substring(file.getName().lastIndexOf("."));
+                String newFileName = java.util.UUID.randomUUID().toString() + extension;
+                File destFile = new File(uploadDir, newFileName);
+                java.nio.file.Files.copy(file.toPath(), destFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                txtPhoto.setText(newFileName);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

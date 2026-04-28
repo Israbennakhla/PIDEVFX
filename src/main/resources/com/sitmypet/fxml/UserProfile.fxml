@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
+
+<ScrollPane fitToWidth="true" style="-fx-background-color: -color-bg-main; -fx-border-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sitmypet.controllers.UserProfileController">
+    <VBox alignment="TOP_CENTER" spacing="0" style="-fx-background-color: -color-bg-main; -fx-padding: 0 0 50 0;">
+        
+        <!-- Conteneur principal (Cover + Avatar) -->
+        <StackPane alignment="TOP_CENTER">
+            
+            <!-- Cover Photo (Dégradé ou image de couverture) -->
+            <Region prefHeight="250.0" style="-fx-background-color: linear-gradient(to right bottom, #8e5bd6, #4c1d95);"/>
+            
+            <!-- Avatar Superposé -->
+            <VBox alignment="CENTER" spacing="10" StackPane.alignment="BOTTOM_CENTER">
+                <StackPane.margin>
+                    <Insets top="175.0"/> <!-- Fait descendre l'avatar pour chevaucher la bordure -->
+                </StackPane.margin>
+                
+                <StackPane maxWidth="160">
+                    <!-- Bordure blanche autour de l'avatar -->
+                    <Circle radius="80" fill="WHITE" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5);"/>
+                    <!-- Avatar par défaut -->
+                    <ImageView fx:id="imgAvatar" fitHeight="150.0" fitWidth="150.0">
+                        <image>
+                            <Image url="https://ui-avatars.com/api/?name=User&amp;background=random&amp;size=150" />
+                        </image>
+                    </ImageView>
+                    <!-- Bouton pour changer la photo -->
+                    <Button text="📷" onAction="#handleChangePhoto" style="-fx-background-radius: 50; -fx-background-color: white; -fx-text-fill: #8e5bd6; -fx-font-size: 18px; -fx-padding: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2); -fx-cursor: hand;" StackPane.alignment="BOTTOM_RIGHT">
+                        <StackPane.margin>
+                            <Insets bottom="5" right="5"/>
+                        </StackPane.margin>
+                        <tooltip>
+                            <Tooltip text="Changer ma photo de profil"/>
+                        </tooltip>
+                    </Button>
+                </StackPane>
+                
+                <!-- Noms et Rôle -->
+                <Label fx:id="lblFullName" text="Nom Prénom" style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: -color-text-main;"/>
+                <Label fx:id="lblRole" text="RÔLE" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #8e5bd6; -fx-background-color: #f3e8ff; -fx-padding: 5 15; -fx-background-radius: 20;"/>
+            </VBox>
+        </StackPane>
+
+        <!-- Contenu du profil (Cartes d'informations) -->
+        <VBox spacing="30" style="-fx-padding: 40 80;">
+            <VBox.margin>
+                <Insets top="20.0" />
+            </VBox.margin>
+            
+            <HBox spacing="30" alignment="TOP_CENTER">
+                
+                <!-- Colonne Gauche: Informations de Contact -->
+                <VBox spacing="20" style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5);" HBox.hgrow="ALWAYS" prefWidth="400">
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <Label text="Informations de Contact" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: -color-text-main;"/>
+                    </HBox>
+                    <Separator />
+                    
+                    <!-- Ligne Email -->
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <StackPane style="-fx-background-color: #ebf4ff; -fx-background-radius: 50; -fx-min-width: 40; -fx-min-height: 40;">
+                            <Label text="📧" style="-fx-font-size: 18px;"/>
+                        </StackPane>
+                        <VBox>
+                            <Label text="Email" style="-fx-font-size: 13px; -fx-text-fill: -color-text-muted;"/>
+                            <Label fx:id="lblEmail" text="email@example.com" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: -color-text-secondary;"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <!-- Ligne Téléphone -->
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <StackPane style="-fx-background-color: #e6fffa; -fx-background-radius: 50; -fx-min-width: 40; -fx-min-height: 40;">
+                            <Label text="📱" style="-fx-font-size: 18px;"/>
+                        </StackPane>
+                        <VBox>
+                            <Label text="Téléphone" style="-fx-font-size: 13px; -fx-text-fill: -color-text-muted;"/>
+                            <Label fx:id="lblPhone" text="+216 XX XXX XXX" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: -color-text-secondary;"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <!-- Ligne Adresse -->
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <StackPane style="-fx-background-color: #fff5f5; -fx-background-radius: 50; -fx-min-width: 40; -fx-min-height: 40;">
+                            <Label text="📍" style="-fx-font-size: 18px;"/>
+                        </StackPane>
+                        <VBox>
+                            <Label text="Adresse" style="-fx-font-size: 13px; -fx-text-fill: -color-text-muted;"/>
+                            <Label fx:id="lblAddress" text="Tunis, Tunisie" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: -color-text-secondary;" wrapText="true"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Colonne Droite: À propos et Actions -->
+                <VBox spacing="20" style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5);" HBox.hgrow="ALWAYS" prefWidth="400">
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <Label text="À propos" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: -color-text-main;"/>
+                    </HBox>
+                    <Separator />
+                    
+                    <Label fx:id="lblJoinDate" text="Membre depuis le 01 Janvier 2026" style="-fx-font-size: 15px; -fx-text-fill: -color-text-secondary;"/>
+                    <Label fx:id="lblStatus" text="Actif" style="-fx-font-size: 14px; -fx-text-fill: -color-text-main;"/>
+                    
+                    <Region VBox.vgrow="ALWAYS"/> <!-- Pousse le bouton vers le bas -->
+                    
+                    <Button text="Modifier le profil" onAction="#handleEditProfile" style="-fx-background-color: #8e5bd6; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-padding: 12 25; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(142, 91, 214, 0.4), 10, 0, 0, 3);" maxWidth="Infinity"/>
+                </VBox>
+
+            </HBox>
+        </VBox>
+    </VBox>
+</ScrollPane>

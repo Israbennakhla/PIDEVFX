@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+<?import com.sitmypet.components.SmallThemeToggle?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -21,6 +22,8 @@
                     <Label text="SitMyPet" styleClass="sidebar-logo-text"/>
                 </HBox>
                 <Label text="PANNEAU ADMIN" styleClass="sidebar-subtitle"/>
+                <Region prefHeight="10"/>
+                <SmallThemeToggle />
             </VBox>
             
             <Separator styleClass="sidebar-separator" />
@@ -71,14 +74,14 @@
     <center>
         <VBox>
             <!-- Nouveau En-tête Moderne -->
-            <VBox spacing="25" style="-fx-background-color: linear-gradient(to right bottom, #ffffff, #f8fafc); -fx-padding: 30 40 30 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 10, 0, 0, 5);">
+            <VBox spacing="25" style="-fx-background-color: -color-bg-surface; -fx-padding: 30 40 30 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 10, 0, 0, 5);">
                 <HBox alignment="CENTER_LEFT" spacing="20">
                     <VBox spacing="5" HBox.hgrow="ALWAYS">
                         <HBox spacing="10" alignment="CENTER_LEFT">
                             <Label text="👋" style="-fx-font-size: 32px;"/>
-                            <Label text="Gestion des Utilisateurs" style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: #2d1354;"/>
+                            <Label text="Gestion des Utilisateurs" style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: -color-text-main;"/>
                         </HBox>
-                        <Label text="Supervisez l'activité, ajoutez de nouveaux comptes et gérez les accès de la plateforme." style="-fx-font-size: 15px; -fx-text-fill: #718096;"/>
+                        <Label text="Supervisez l'activité, ajoutez de nouveaux comptes et gérez les accès de la plateforme." style="-fx-font-size: 15px; -fx-text-fill: -color-text-secondary;"/>
                     </VBox>
                     <Button text="+ Nouvel Utilisateur" onAction="#handleAjouter" styleClass="btn-primary" style="-fx-padding: 12 25; -fx-font-size: 15px; -fx-background-radius: 30; -fx-font-weight: 900; -fx-effect: dropshadow(gaussian, rgba(142, 91, 214, 0.4), 10, 0, 0, 4); -fx-cursor: hand;"/>
                 </HBox>
@@ -86,46 +89,46 @@
                 <!-- Statistiques Modernes -->
                 <HBox spacing="25" alignment="CENTER_LEFT">
                     <!-- Total -->
-                    <HBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: #f1f5f9; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
+                    <HBox style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: -color-border; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
                         <StackPane style="-fx-background-color: #ebf4ff; -fx-background-radius: 12; -fx-padding: 15;">
                             <Label text="👥" style="-fx-font-size: 24px;"/>
                         </StackPane>
                         <VBox alignment="CENTER_LEFT" spacing="2">
-                            <Label text="Total Utilisateurs" style="-fx-font-size: 13px; -fx-text-fill: #a0aec0; -fx-font-weight: bold;"/>
-                            <Label fx:id="lblTotal" text="0" style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: #2d3748;"/>
+                            <Label text="Total Utilisateurs" style="-fx-font-size: 13px; -fx-text-fill: -color-text-muted; -fx-font-weight: bold;"/>
+                            <Label fx:id="lblTotal" text="0" style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: -color-text-main;"/>
                         </VBox>
                     </HBox>
                     
                     <!-- Admins -->
-                    <HBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: #f1f5f9; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
+                    <HBox style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: -color-border; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
                         <StackPane style="-fx-background-color: #f3e8ff; -fx-background-radius: 12; -fx-padding: 15;">
                             <Label text="⭐" style="-fx-font-size: 24px;"/>
                         </StackPane>
                         <VBox alignment="CENTER_LEFT" spacing="2">
-                            <Label text="Administrateurs" style="-fx-font-size: 13px; -fx-text-fill: #a0aec0; -fx-font-weight: bold;"/>
-                            <Label fx:id="lblAdmin" text="0" style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: #2d3748;"/>
+                            <Label text="Administrateurs" style="-fx-font-size: 13px; -fx-text-fill: -color-text-muted; -fx-font-weight: bold;"/>
+                            <Label fx:id="lblAdmin" text="0" style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: -color-text-main;"/>
                         </VBox>
                     </HBox>
 
                     <!-- Propriétaires -->
-                    <HBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: #f1f5f9; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
+                    <HBox style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: -color-border; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
                         <StackPane style="-fx-background-color: #e6fffa; -fx-background-radius: 12; -fx-padding: 15;">
                             <Label text="🏠" style="-fx-font-size: 24px;"/>
                         </StackPane>
                         <VBox alignment="CENTER_LEFT" spacing="2">
-                            <Label text="Propriétaires" style="-fx-font-size: 13px; -fx-text-fill: #a0aec0; -fx-font-weight: bold;"/>
-                            <Label fx:id="lblProprietaire" text="0" style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: #2d3748;"/>
+                            <Label text="Propriétaires" style="-fx-font-size: 13px; -fx-text-fill: -color-text-muted; -fx-font-weight: bold;"/>
+                            <Label fx:id="lblProprietaire" text="0" style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: -color-text-main;"/>
                         </VBox>
                     </HBox>
 
                     <!-- Gardiens -->
-                    <HBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: #f1f5f9; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
+                    <HBox style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: -color-border; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
                         <StackPane style="-fx-background-color: #fffff0; -fx-background-radius: 12; -fx-padding: 15;">
                             <Label text="🐾" style="-fx-font-size: 24px;"/>
                         </StackPane>
                         <VBox alignment="CENTER_LEFT" spacing="2">
-                            <Label text="Gardiens" style="-fx-font-size: 13px; -fx-text-fill: #a0aec0; -fx-font-weight: bold;"/>
-                            <Label fx:id="lblGardien" text="0" style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: #2d3748;"/>
+                            <Label text="Gardiens" style="-fx-font-size: 13px; -fx-text-fill: -color-text-muted; -fx-font-weight: bold;"/>
+                            <Label fx:id="lblGardien" text="0" style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: -color-text-main;"/>
                         </VBox>
                     </HBox>
                 </HBox>
@@ -135,25 +138,25 @@
             <VBox spacing="20" VBox.vgrow="ALWAYS" style="-fx-padding: 20 40 30 40;">
                 
                 <!-- Barre de recherche moderne -->
-                <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 12 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 10, 0, 0, 4); -fx-border-color: #e2e8f0; -fx-border-radius: 15; -fx-border-width: 1;">
-                    <Label text="🔍" style="-fx-font-size: 18px; -fx-text-fill: #a0aec0;" minWidth="-Infinity"/>
-                    <TextField fx:id="txtRecherche" promptText="Rechercher par nom, prénom ou email..." HBox.hgrow="ALWAYS" style="-fx-background-color: transparent; -fx-font-size: 15px; -fx-prompt-text-fill: #a0aec0; -fx-border-width: 0;"/>
+                <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 12 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 10, 0, 0, 4); -fx-border-color: -color-border; -fx-border-radius: 15; -fx-border-width: 1;">
+                    <Label text="🔍" style="-fx-font-size: 18px; -fx-text-fill: -color-text-muted;" minWidth="-Infinity"/>
+                    <TextField fx:id="txtRecherche" promptText="Rechercher par nom, prénom ou email..." HBox.hgrow="ALWAYS" style="-fx-background-color: transparent; -fx-font-size: 15px; -fx-prompt-text-fill: -color-text-muted; -fx-border-width: 0; -fx-text-fill: -color-text-main;"/>
                     
                     <Separator orientation="VERTICAL"/>
-                    <Label text="Rôle:" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #718096;" minWidth="-Infinity"/>
-                    <ComboBox fx:id="comboRole" style="-fx-background-color: transparent; -fx-font-size: 14px;" minWidth="-Infinity"/>
+                    <Label text="Rôle:" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -color-text-secondary;" minWidth="-Infinity"/>
+                    <ComboBox fx:id="comboRole" style="-fx-background-color: transparent; -fx-font-size: 14px; -fx-text-fill: -color-text-main;" minWidth="-Infinity"/>
                     
                     <Separator orientation="VERTICAL"/>
-                    <Label text="Statut:" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #718096;" minWidth="-Infinity"/>
-                    <ComboBox fx:id="comboStatut" style="-fx-background-color: transparent; -fx-font-size: 14px;" minWidth="-Infinity"/>
+                    <Label text="Statut:" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -color-text-secondary;" minWidth="-Infinity"/>
+                    <ComboBox fx:id="comboStatut" style="-fx-background-color: transparent; -fx-font-size: 14px; -fx-text-fill: -color-text-main;" minWidth="-Infinity"/>
                     
                     <Separator orientation="VERTICAL"/>
-                    <Label text="Tri:" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #718096;" minWidth="-Infinity"/>
-                    <ComboBox fx:id="comboTri" style="-fx-background-color: transparent; -fx-font-size: 14px;" minWidth="-Infinity"/>
+                    <Label text="Tri:" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -color-text-secondary;" minWidth="-Infinity"/>
+                    <ComboBox fx:id="comboTri" style="-fx-background-color: transparent; -fx-font-size: 14px; -fx-text-fill: -color-text-main;" minWidth="-Infinity"/>
                     
                     <Region prefWidth="5"/>
-                    <Button text="Filtrer" onAction="#handleRechercher" style="-fx-background-color: #2d1354; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 20; -fx-cursor: hand;" minWidth="-Infinity"/>
-                    <Button text="↺" onAction="#handleReinitialiser" style="-fx-background-color: #edf2f7; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 15; -fx-font-size: 14px; -fx-cursor: hand;" minWidth="-Infinity"/>
+                    <Button text="Filtrer" onAction="#handleRechercher" style="-fx-background-color: #8e5bd6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 20; -fx-cursor: hand;" minWidth="-Infinity"/>
+                    <Button text="↺" onAction="#handleReinitialiser" style="-fx-background-color: -color-bg-surface-alt; -fx-text-fill: -color-text-main; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 15; -fx-font-size: 14px; -fx-cursor: hand;" minWidth="-Infinity"/>
                 </HBox>
                 
                 <!-- Conteneur Principal ListView + Menu Détails -->

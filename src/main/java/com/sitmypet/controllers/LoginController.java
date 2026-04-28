@@ -140,61 +140,74 @@ public class LoginController {
 
     @FXML
     private void handleGoogleLogin(ActionEvent event) {
+        System.out.println("Démarrage Google Login...");
         com.sitmypet.services.GoogleOAuthService googleService = new com.sitmypet.services.GoogleOAuthService();
         googleService.authenticate(new com.sitmypet.services.GoogleOAuthService.GoogleAuthCallback() {
             @Override
             public void onSuccess(com.sitmypet.services.GoogleOAuthService.GoogleUser googleUser) {
-                // On utilise le ServiceUser pour inscrire ou connecter
-                User user = serviceUser.authentifierOuInscrireGoogle(
-                        googleUser.email, 
-                        googleUser.familyName, 
-                        googleUser.givenName, 
-                        googleUser.picture
-                );
-                
-                if (user != null) {
-                    if (!user.isActive()) {
-                        lblErreur.setText("⛔ Votre compte est inactif ou en attente de validation par un administrateur.");
-                        lblErreur.setVisible(true);
-                        return;
-                    }
-                    try {
+                System.out.println("Google callback success: " + googleUser.email);
+                try {
+                    // On utilise le ServiceUser pour inscrire ou connecter
+                    User user = serviceUser.authentifierOuInscrireGoogle(
+                            googleUser.email, 
+                            googleUser.familyName, 
+                            googleUser.givenName, 
+                            googleUser.picture
+                    );
+                    
+                    System.out.println("Utilisateur DB: " + (user != null ? user.getEmail() : "null"));
+                    
+                    if (user != null) {
+                        if (!user.isActive()) {
+                            lblErreur.setText("⛔ Votre compte est inactif ou en attente de validation par un administrateur.");
+                            lblErreur.setVisible(true);
+                            return;
+                        }
+                        
                         String role = user.getRole() != null ? user.getRole().toUpperCase() : "";
+                        System.out.println("Rôle de l'utilisateur: " + role);
+                        
+                        Stage stage = (Stage) lblErreur.getScene().getWindow(); // Plus sûr que event.getSource()
+                        
                         if (role.contains("ADMIN")) {
                             Parent root = FXMLLoader.load(getClass().getResource("/com/sitmypet/fxml/AfficherUser.fxml"));
-                            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
                             stage.setTitle("SitMyPet - Dashboard Administrateur");
                             javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
                             stage.setScene(new Scene(root, bounds.getWidth() * 0.9, bounds.getHeight() * 0.9));
                             stage.setMaximized(true);
                             stage.centerOnScreen();
                             stage.show();
+                            stage.toFront();
+                            stage.requestFocus();
                         } else {
                             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sitmypet/fxml/FrontAccueil.fxml"));
                             Parent root = loader.load();
                             com.sitmypet.controllers.FrontAccueilController controller = loader.getController();
                             controller.setUser(user);
-                            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
                             stage.setTitle("SitMyPet - Espace Propriétaire/Gardien");
                             javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
                             stage.setScene(new Scene(root, bounds.getWidth() * 0.9, bounds.getHeight() * 0.9));
                             stage.setMaximized(true);
                             stage.centerOnScreen();
                             stage.show();
+                            stage.toFront();
+                            stage.requestFocus();
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        lblErreur.setText("Erreur lors de l'ouverture du Dashboard.");
+                    } else {
+                        lblErreur.setText("Échec de la connexion Google (Base de données).");
                         lblErreur.setVisible(true);
                     }
-                } else {
-                    lblErreur.setText("Échec de la connexion Google.");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.err.println("Exception dans onSuccess: " + e.getMessage());
+                    lblErreur.setText("Erreur inattendue: " + e.getMessage());
                     lblErreur.setVisible(true);
                 }
             }
 
             @Override
             public void onError(String error) {
+                System.err.println("Erreur Google callback: " + error);
                 lblErreur.setText(error);
                 lblErreur.setVisible(true);
             }

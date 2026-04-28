@@ -3,6 +3,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
+<?import com.sitmypet.components.SmallThemeToggle?>
 
 <ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.sitmypet.controllers.AjouterUserController" stylesheets="/style.css" fitToWidth="true" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
     <VBox alignment="CENTER" style="-fx-background-color: linear-gradient(to right bottom, #f4f7f6, #e2e8f0);">
@@ -15,9 +16,11 @@
                 <Label text="✨" style="-fx-font-size: 32px; -fx-text-fill: #8e5bd6;"/>
             </StackPane>
             <VBox>
-                <Label text="Ajouter un Utilisateur" styleClass="form-title" style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: #2d1354;"/>
-                <Label text="Remplissez les informations ci-dessous pour créer un nouveau compte" styleClass="note-text" style="-fx-font-size: 14px;"/>
+                <Label text="Ajouter un Utilisateur" styleClass="form-title" style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: -color-text-main;"/>
+                <Label text="Remplissez les informations ci-dessous pour créer un nouveau compte" styleClass="note-text" style="-fx-font-size: 14px; -fx-text-fill: -color-text-secondary;"/>
             </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <SmallThemeToggle />
         </HBox>
         
         <Separator styleClass="separator"/>

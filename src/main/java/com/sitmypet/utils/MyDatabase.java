@@ -40,6 +40,14 @@ public class MyDatabase {
     }
     
     public Connection getConnection() {
+        try {
+            if (connection == null || connection.isClosed()) {
+                System.out.println("Tentative de reconnexion à la base de données...");
+                connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur de reconnexion : " + e.getMessage());
+        }
         return connection;
     }
 }

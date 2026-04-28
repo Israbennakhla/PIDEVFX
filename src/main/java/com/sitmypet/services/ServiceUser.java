@@ -291,9 +291,17 @@ public class ServiceUser implements IService<User> {
                     user.setNom(rs.getString("nom"));
                     user.setPrenom(rs.getString("prenom"));
                     user.setEmail(rs.getString("email"));
+                    user.setTelephone(rs.getString("telephone"));
+                    user.setAdresse(rs.getString("adresse"));
+                    user.setPhoto(rs.getString("image_name"));
                     user.setRole(rs.getString("role"));
                     user.setActive(rs.getBoolean("is_active"));
                     user.setCertificat(rs.getString("certificat"));
+                    
+                    java.sql.Timestamp timestamp = rs.getTimestamp("created_at");
+                    if (timestamp != null) {
+                        user.setCreatedAt(timestamp.toLocalDateTime());
+                    }
                     
                     return user; 
                 } else {
@@ -352,8 +360,16 @@ public class ServiceUser implements IService<User> {
                 user.setNom(rs.getString("nom"));
                 user.setPrenom(rs.getString("prenom"));
                 user.setEmail(rs.getString("email"));
+                user.setTelephone(rs.getString("telephone"));
+                user.setAdresse(rs.getString("adresse"));
+                user.setPhoto(rs.getString("image_name"));
                 user.setRole(rs.getString("role"));
                 user.setActive(rs.getBoolean("is_active"));
+                user.setCertificat(rs.getString("certificat"));
+                java.sql.Timestamp timestamp = rs.getTimestamp("created_at");
+                if (timestamp != null) {
+                    user.setCreatedAt(timestamp.toLocalDateTime());
+                }
                 return user;
             }
         } catch (SQLException e) {
@@ -437,8 +453,16 @@ public class ServiceUser implements IService<User> {
                 user.setNom(rs.getString("nom"));
                 user.setPrenom(rs.getString("prenom"));
                 user.setEmail(rs.getString("email"));
+                user.setTelephone(rs.getString("telephone"));
+                user.setAdresse(rs.getString("adresse"));
+                user.setPhoto(rs.getString("image_name"));
                 user.setRole(rs.getString("role"));
                 user.setActive(rs.getBoolean("is_active"));
+                user.setCertificat(rs.getString("certificat"));
+                java.sql.Timestamp timestamp = rs.getTimestamp("created_at");
+                if (timestamp != null) {
+                    user.setCreatedAt(timestamp.toLocalDateTime());
+                }
                 return user;
             }
         } catch (SQLException e) {

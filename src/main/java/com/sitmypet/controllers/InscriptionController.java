@@ -167,6 +167,7 @@ public class InscriptionController {
 
             boolean isActive = true;
             String certificatFileName = null;
+            String finalAiMessage = "";
             if (isGardien) {
                 try {
                     // Créer le dossier de destination
@@ -182,22 +183,30 @@ public class InscriptionController {
                     java.io.File destFile = new java.io.File(uploadDir, certificatFileName);
                     java.nio.file.Files.copy(certificatFile.toPath(), destFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
-                    net.sourceforge.tess4j.Tesseract tesseract = new net.sourceforge.tess4j.Tesseract();
-                    // Utiliser LoadLibs pour extraire correctement depuis le classpath
-                    java.io.File tessDataFolder = net.sourceforge.tess4j.util.LoadLibs.extractTessResources("tessdata");
-                    tesseract.setDatapath(tessDataFolder.getAbsolutePath());
-                    tesseract.setLanguage("fra"); 
+                    // Appel à l'IA Gemini Vision
+                    com.sitmypet.services.GeminiVisionService visionService = new com.sitmypet.services.GeminiVisionService();
+                    com.sitmypet.services.GeminiVisionService.VisionResult aiResult = visionService.analyserCertificat(certificatFile, nom, prenom);
                     
-                    String ocrResult = tesseract.doOCR(certificatFile).toLowerCase();
-                    if (ocrResult.contains("certificat") || ocrResult.contains("diplôme") || ocrResult.contains("diplome") || ocrResult.contains("attestation")) {
+                    if (aiResult.isValid) {
                         isActive = true;
+                        finalAiMessage = "✅ Validation IA réussie (Note: " + aiResult.score + "/10)\nRaison : " + aiResult.reason;
                     } else {
                         isActive = false;
-                        System.out.println("OCR n'a pas validé le document. Statut : En attente.");
+                        finalAiMessage = "⚠️ Validation IA refusée (Note: " + aiResult.score + "/10)\nRaison : " + aiResult.reason;
                     }
+                    
+                    // Envoi de l'email généré par l'IA en arrière-plan
+                    new Thread(() -> {
+                        com.sitmypet.services.EmailService emailService = new com.sitmypet.services.EmailService();
+                        String nomPrenom = nom + " " + prenom;
+                        String htmlContent = aiResult.emailContent != null ? aiResult.emailContent : "<p>Aucun contenu supplémentaire généré.</p>";
+                        emailService.envoyerRapportIA(email, nomPrenom, aiResult.isValid, htmlContent);
+                    }).start();
+
                 } catch (Throwable e) {
-                    System.err.println("Erreur copie/OCR: " + e.getMessage());
+                    System.err.println("Erreur copie/IA: " + e.getMessage());
                     isActive = false;
+                    finalAiMessage = "Erreur technique lors de la validation IA.";
                 }
             }
 
@@ -215,8 +224,12 @@ public class InscriptionController {
                 alert.setTitle("Inscription réussie");
                 alert.setHeaderText(null);
                 
-                if (isGardien && !isActive) {
-                    alert.setContentText("Votre compte a été créé. Toutefois, la vérification automatique du certificat n'a pas pu aboutir. Votre compte est en attente d'activation manuelle par un administrateur.");
+                if (isGardien) {
+                    if (!isActive) {
+                        alert.setContentText("Votre compte a été créé mais mis en attente.\n\n" + finalAiMessage + "\n\nUn rapport détaillé vient de vous être envoyé par email. Un administrateur va vérifier votre certificat manuellement.");
+                    } else {
+                        alert.setContentText("Votre compte a bien été créé et activé automatiquement !\n\n" + finalAiMessage + "\n\nUn rapport et des conseils vous ont été envoyés par email. Vous pouvez maintenant vous connecter.");
+                    }
                 } else {
                     alert.setContentText("Votre compte a bien été créé ! Vous pouvez maintenant vous connecter.");
                 }
