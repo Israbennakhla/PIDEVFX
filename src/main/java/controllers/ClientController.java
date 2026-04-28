@@ -112,7 +112,40 @@ public class ClientController {
             VBox.setVgrow(spacer, Priority.ALWAYS);
 
             card.getChildren().addAll(lblName, lblBadge, new Separator(), lblDate, lblLocation, lblDesc, spacer, btnAction);
+
+            // ── Make card clickable → open event detail overlay ──────────
+            card.setOnMouseClicked(mouseEvent -> {
+                // Don't trigger if a button was clicked
+                if (mouseEvent.getTarget() instanceof javafx.scene.control.ButtonBase) return;
+                showEventDetail(ev);
+            });
+            card.setCursor(javafx.scene.Cursor.HAND);
+
             gridPane.getChildren().add(card);
+        }
+    }
+
+    /**
+     * Opens the premium Event Detail overlay with map for the given event.
+     */
+    private void showEventDetail(Evenement ev) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/EventDetailOverlay.fxml"));
+            Parent root = loader.load();
+
+            EventDetailOverlayController ctrl = loader.getController();
+            ctrl.initData(ev);
+
+            Stage detailStage = new Stage();
+            detailStage.initModality(Modality.APPLICATION_MODAL);
+            detailStage.initStyle(StageStyle.TRANSPARENT);
+            detailStage.setTitle("📅 " + ev.getName());
+            detailStage.setScene(new Scene(root));
+            detailStage.getScene().setFill(null);
+            detailStage.show();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir les détails de l'événement.");
         }
     }
 

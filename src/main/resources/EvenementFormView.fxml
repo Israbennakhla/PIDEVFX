@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.web.*?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controllers.EvenementFormController"
@@ -37,8 +38,12 @@
     </top>
 
     <center>
-        <VBox alignment="CENTER" style="-fx-padding: 40px;">
-            <VBox styleClass="form-card" maxWidth="600" alignment="CENTER" spacing="15" VBox.vgrow="NEVER">
+        <HBox alignment="CENTER" spacing="30" style="-fx-padding: 30 40;">
+
+            <!-- ── LEFT: Form Card ──────────────────────────────────────── -->
+            <VBox styleClass="form-card" maxWidth="500" alignment="CENTER" spacing="15"
+                  VBox.vgrow="NEVER" HBox.hgrow="NEVER"
+                  style="-fx-max-width: 500; -fx-min-width: 400;">
 
                 <Label fx:id="lblTitle" text="📋 Formulaire Événement" styleClass="form-title"/>
 
@@ -54,7 +59,24 @@
                 </HBox>
 
             </VBox>
-        </VBox>
+
+            <!-- ── RIGHT: Interactive Map ───────────────────────────────── -->
+            <VBox HBox.hgrow="ALWAYS" spacing="10" alignment="TOP_CENTER"
+                  style="-fx-padding: 0;">
+
+                <VBox styleClass="card" VBox.vgrow="ALWAYS" spacing="10"
+                      style="-fx-min-width: 420;">
+
+                    <Label text="🗺️ Sélectionner la localisation" styleClass="form-title"/>
+                    <Label text="Cliquez sur la carte pour choisir l'adresse"
+                           style="-fx-text-fill: #6B7280; -fx-font-size: 12px;"/>
+
+                    <WebView fx:id="adminMapWebView" VBox.vgrow="ALWAYS" prefHeight="400"/>
+
+                </VBox>
+            </VBox>
+
+        </HBox>
     </center>
 
 </BorderPane>
