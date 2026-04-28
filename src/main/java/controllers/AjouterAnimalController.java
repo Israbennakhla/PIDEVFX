@@ -53,6 +53,7 @@ public class AjouterAnimalController {
     @FXML private CheckBox    etatCritique;
     @FXML private Button      btnEnregistrer;
     @FXML private Button      btnPhoto;
+    @FXML private void handleNavMessages() { nav("/Messages.fxml", "Messages"); }
 
     // ── Preview (créés en Java) ───────────────────────────────
     private ImageView previewImage;

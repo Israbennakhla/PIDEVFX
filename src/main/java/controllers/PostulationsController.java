@@ -143,7 +143,13 @@ public class PostulationsController {
                 "-fx-background-color:#fff0f0;-fx-text-fill:#e87272;-fx-font-size:12px;" +
                         "-fx-font-weight:bold;-fx-background-radius:8px;-fx-padding:8 18;-fx-cursor:hand;" +
                         "-fx-border-color:#f5c5c5;-fx-border-radius:8px;");
-        btnAnnuler.setDisable("ANNULE".equals(p.getStatut()));
+        // Masquer le bouton si postulation ACCEPTE, REFUSE ou ANNULE
+        boolean nonAnnulable = "ACCEPTE".equals(p.getStatut())
+                || "REFUSE".equals(p.getStatut())
+                || "ANNULE".equals(p.getStatut());
+        btnAnnuler.setDisable(nonAnnulable);
+        btnAnnuler.setVisible(!nonAnnulable);
+        btnAnnuler.setManaged(!nonAnnulable);
         btnAnnuler.setOnAction(e -> {
             Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
             confirm.setTitle("Annuler la postulation");

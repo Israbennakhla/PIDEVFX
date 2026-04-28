@@ -174,6 +174,7 @@ public class ModifierAnimalController {
     @FXML private void handleNavEvenements()   { nav("/AfficherEvenements.fxml",   "Evenements"); }
     @FXML private void handleNavAnimaux()      { nav("/AfficherAnimales.fxml",     "Mes Animaux"); }
     @FXML private void handleNavReclamations() { nav("/AfficherReclamations.fxml", "Reclamations"); }
+    @FXML private void handleNavMessages() { nav("/Messages.fxml", "Messages"); }
 
     private void nav(String fxml, String titre) {
         try {

@@ -15,7 +15,6 @@ public class ServicePostulation {
         this.cnx = MyDataBase.getInstance().getCnx();
     }
 
-    // ── Créer la table si elle n'existe pas ──────────────────
     public void createTableIfNotExists() {
         String sql = "CREATE TABLE IF NOT EXISTS postulation ("
                 + "id               INT AUTO_INCREMENT PRIMARY KEY,"
@@ -27,44 +26,44 @@ public class ServicePostulation {
         try {
             Statement st = cnx.createStatement();
             st.executeUpdate(sql);
-            System.out.println("Table postulation OK");
         } catch (SQLException e) {
-            System.out.println("Erreur createTable : " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    // ── Ajouter une postulation ───────────────────────────────
-    public void add(Postulation p) {
+    // ── Ajouter et retourner l'ID généré ──────────────────────
+    public int add(Postulation p) {
         String req = "INSERT INTO postulation "
                 + "(announcement_id, gardien_id, date_postulation, statut) "
                 + "VALUES (?,?,?,?)";
         try {
-            PreparedStatement pstm = cnx.prepareStatement(req);
+            PreparedStatement pstm = cnx.prepareStatement(req, Statement.RETURN_GENERATED_KEYS);
             pstm.setInt(1, p.getAnnouncementId());
             pstm.setInt(2, p.getGardienId());
             pstm.setDate(3, p.getDatePostulation());
             pstm.setString(4, p.getStatut());
             pstm.executeUpdate();
-            System.out.println("Postulation ajoutee !");
+            ResultSet rs = pstm.getGeneratedKeys();
+            if (rs.next()) return rs.getInt(1);
         } catch (SQLException e) {
-            System.out.println("Erreur add postulation : " + e.getMessage());
+            e.printStackTrace();
         }
+        return -1;
     }
 
-    // ── Supprimer une postulation ─────────────────────────────
+    // ── Supprimer ─────────────────────────────────────────────
     public void delete(Postulation p) {
         String req = "DELETE FROM postulation WHERE id = ?";
         try {
             PreparedStatement pstm = cnx.prepareStatement(req);
             pstm.setInt(1, p.getId());
             pstm.executeUpdate();
-            System.out.println("Postulation supprimee (id=" + p.getId() + ")");
         } catch (SQLException e) {
-            System.out.println("Erreur delete postulation : " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    // ── Récupérer les postulations d'un gardien ───────────────
+    // ── Récupérer par gardien ─────────────────────────────────
     public List<Postulation> getByGardien(int gardienId) {
         List<Postulation> list = new ArrayList<>();
         String req = "SELECT * FROM postulation WHERE gardien_id = ? "
@@ -83,9 +82,31 @@ public class ServicePostulation {
                 list.add(post);
             }
         } catch (SQLException e) {
-            System.out.println("Erreur getByGardien : " + e.getMessage());
+            e.printStackTrace();
         }
         return list;
+    }
+
+    // ── Récupérer par ID ──────────────────────────────────────
+    public Postulation getById(int id) {
+        String req = "SELECT * FROM postulation WHERE id = ?";
+        try {
+            PreparedStatement pstm = cnx.prepareStatement(req);
+            pstm.setInt(1, id);
+            ResultSet rs = pstm.executeQuery();
+            if (rs.next()) {
+                Postulation post = new Postulation();
+                post.setId(rs.getInt("id"));
+                post.setAnnouncementId(rs.getInt("announcement_id"));
+                post.setGardienId(rs.getInt("gardien_id"));
+                post.setDatePostulation(rs.getDate("date_postulation"));
+                post.setStatut(rs.getString("statut"));
+                return post;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     // ── Vérifier si déjà postulé ──────────────────────────────
@@ -99,8 +120,22 @@ public class ServicePostulation {
             ResultSet rs = pstm.executeQuery();
             if (rs.next()) return rs.getInt(1) > 0;
         } catch (SQLException e) {
-            System.out.println("Erreur hasPostule : " + e.getMessage());
+            e.printStackTrace();
         }
         return false;
+    }
+
+    // ── Mettre à jour le statut ───────────────────────────────
+    public void updateStatut(int postulationId, String statut) {
+        String req = "UPDATE postulation SET statut = ? WHERE id = ?";
+        try {
+            PreparedStatement pstm = cnx.prepareStatement(req);
+            pstm.setString(1, statut);
+            pstm.setInt(2, postulationId);
+            pstm.executeUpdate();
+            System.out.println("Statut postulation #" + postulationId + " -> " + statut);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

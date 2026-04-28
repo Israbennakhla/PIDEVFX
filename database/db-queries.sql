@@ -52,6 +52,24 @@ CREATE TABLE IF NOT EXISTS postulation (
                                            FOREIGN KEY (announcement_id) REFERENCES announcement(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS notification (
+                                            id              INT AUTO_INCREMENT PRIMARY KEY,
+                                            destinataire_id INT          NOT NULL,  -- user qui reçoit la notif
+                                            expediteur_id   INT          NOT NULL,  -- user qui a déclenché l'action
+                                            postulation_id  INT          NOT NULL,
+                                            message         TEXT         NOT NULL,
+                                            type            VARCHAR(30)  NOT NULL,  -- 'NOUVELLE_POSTULATION' ou 'POSTULATION_ACCEPTEE'
+                                            lu              BOOLEAN      NOT NULL DEFAULT FALSE,
+                                            date_creation   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
 
-
+CREATE TABLE IF NOT EXISTS message (
+                                       id           INT AUTO_INCREMENT PRIMARY KEY,
+                                       expediteur_id   INT      NOT NULL,
+                                       destinataire_id INT      NOT NULL,
+                                       postulation_id  INT      NOT NULL,
+                                       contenu         TEXT     NOT NULL,
+                                       date_envoi      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                       lu              BOOLEAN  NOT NULL DEFAULT FALSE
+);

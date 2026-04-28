@@ -25,9 +25,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Announcement;
+import model.Notification;
 import model.Pet;
 import model.Postulation;
 import services.ServiceAnnouncement;
+import services.ServiceNotification;
 import services.ServicePet;
 import services.ServicePostulation;
 
@@ -38,33 +40,68 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class AccueilController {
 
+    @FXML private HBox                   navbarHBox;
     @FXML private TextField              searchField;
     @FXML private ListView<Announcement> listAnnonces;
     @FXML private Label                  labelCount;
 
-    private final ServiceAnnouncement  serviceAnn  = new ServiceAnnouncement();
-    private final ServicePet           servicePet  = new ServicePet();
-    private final ServicePostulation   servicePost = new ServicePostulation();
+    private final ServiceAnnouncement  serviceAnn   = new ServiceAnnouncement();
+    private final ServicePet           servicePet   = new ServicePet();
+    private final ServicePostulation   servicePost  = new ServicePostulation();
+    private final ServiceNotification  serviceNotif = new ServiceNotification();
 
     private final ObservableList<Announcement> allAnnonces = FXCollections.observableArrayList();
     private final ObservableList<Announcement> pageData    = FXCollections.observableArrayList();
     private final Map<Integer, Pet>            petById     = new HashMap<>();
     private final DateTimeFormatter            fmt         = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    private static final int CURRENT_GARDIEN_ID = 2;
+    // ── IDs utilisateurs ─────────────────────────────────────
+    private static final int CURRENT_GARDIEN_ID      = 2;
+    private static final int CURRENT_PROPRIETAIRE_ID = 1; // ← manquait
+
+    private NotificationBadge notifBadge;
 
     @FXML
     public void initialize() {
         servicePost.createTableIfNotExists();
+        serviceNotif.createTableIfNotExists();
         chargerPets();
         initListView();
         loadData();
+
         if (searchField != null)
             searchField.textProperty().addListener((obs, o, n) -> applySearch(n));
+
+        // ── Badge 🔔 gardien avec infos chat ──────────────────
+        notifBadge = new NotificationBadge(CURRENT_GARDIEN_ID, this::onNotifCliquee);
+        notifBadge.setChatInfo(
+                CURRENT_PROPRIETAIRE_ID,
+                "Gardien #" + CURRENT_GARDIEN_ID,
+                "Proprietaire #" + CURRENT_PROPRIETAIRE_ID
+        );
+        if (navbarHBox != null) {
+            int idx = navbarHBox.getChildren().size() - 1;
+            navbarHBox.getChildren().add(idx, notifBadge.getView());
+        }
+        notifBadge.startPolling();
+    }
+
+    // ── Callback : gardien clique OK ou "Ouvrir chat" ─────────
+    private void onNotifCliquee(Notification n) {
+        if ("POSTULATION_ACCEPTEE".equals(n.getType())) {
+            loadData(); // annonce disparaît
+            showAlert(Alert.AlertType.INFORMATION,
+                    "Postulation acceptee !",
+                    n.getMessage());
+        }
     }
 
     private void chargerPets() {
@@ -72,7 +109,16 @@ public class AccueilController {
     }
 
     private void loadData() {
-        allAnnonces.setAll(serviceAnn.getAll());
+        List<Announcement> toutes = serviceAnn.getAll();
+
+        Set<Integer> acceptees = new HashSet<>();
+        for (Postulation p : servicePost.getByGardien(CURRENT_GARDIEN_ID))
+            if ("ACCEPTE".equals(p.getStatut())) acceptees.add(p.getAnnouncementId());
+
+        allAnnonces.setAll(toutes.stream()
+                .filter(a -> !acceptees.contains(a.getId()))
+                .collect(Collectors.toList()));
+
         applySearch(searchField == null ? "" : searchField.getText());
         if (labelCount != null)
             labelCount.setText(allAnnonces.size() + " annonce(s) disponible(s)");
@@ -80,16 +126,12 @@ public class AccueilController {
 
     private void applySearch(String query) {
         String q = query == null ? "" : query.trim().toLowerCase();
-        if (q.isEmpty()) {
-            pageData.setAll(allAnnonces);
-        } else {
-            pageData.setAll(allAnnonces.filtered(a -> {
-                Pet p = petById.get(a.getPetId());
-                String petName = p != null ? p.getName().toLowerCase() : "";
-                String adr = a.getAddress() != null ? a.getAddress().toLowerCase() : "";
-                return petName.contains(q) || adr.contains(q);
-            }));
-        }
+        pageData.setAll(q.isEmpty() ? allAnnonces : allAnnonces.filtered(a -> {
+            Pet p = petById.get(a.getPetId());
+            String name = p != null ? p.getName().toLowerCase() : "";
+            String adr  = a.getAddress() != null ? a.getAddress().toLowerCase() : "";
+            return name.contains(q) || adr.contains(q);
+        }));
     }
 
     private void initListView() {
@@ -101,8 +143,7 @@ public class AccueilController {
                 super.updateItem(a, empty);
                 if (empty || a == null) {
                     setGraphic(null); setText(null);
-                    setStyle("-fx-background-color:transparent;");
-                    return;
+                    setStyle("-fx-background-color:transparent;"); return;
                 }
                 setGraphic(buildCard(a));
                 setText(null);
@@ -111,78 +152,89 @@ public class AccueilController {
         });
     }
 
-    // ── Carte annonce ─────────────────────────────────────────
     private HBox buildCard(Announcement a) {
         Pet pet = petById.get(a.getPetId());
         String petName = pet != null
                 ? pet.getName() + " (" + capitalize(pet.getTypePet()) + ")"
                 : "Animal #" + a.getPetId();
 
-        // ── Avatar profil par défaut (pas la photo de l'animal) ──
-        StackPane avatarPane = buildAvatarProfil(60);
-
-        // ── Infos ─────────────────────────────────────────────
+        StackPane avatarPane = buildAvatar(60);
         Label owner = new Label("Proprietaire #" + a.getUserId());
         owner.setStyle("-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#1a1a2e;");
 
-        Label petLabel    = new Label("Animal : " + petName);
-        String typeGarde  = "CHEZ_MOI".equals(a.getCareType()) ? "Chez proprietaire" : "En chenil";
-        Label typeLabel   = new Label("Type de garde : " + typeGarde);
-        String debutStr   = a.getDateDebut() != null ? a.getDateDebut().toLocalDate().format(fmt) : "—";
-        String finStr     = a.getDateFin()   != null ? a.getDateFin().toLocalDate().format(fmt)   : "—";
-        Label periodeLabel = new Label("Periode : " + debutStr + " - " + finStr);
-        Label prixLabel   = new Label("Prix : €" + (int) a.getRemunerationMin()
-                + ".00 - €" + (int) a.getRemunerationMax() + ".00");
-        String adr = a.getAddress() != null && !a.getAddress().isEmpty() ? a.getAddress() : "—";
-        Label adrLabel    = new Label("Adresse : " + adr);
-        adrLabel.setWrapText(true); adrLabel.setMaxWidth(420);
+        String typeGarde = "CHEZ_MOI".equals(a.getCareType()) ? "Chez proprietaire" : "En chenil";
+        String deb = a.getDateDebut() != null ? a.getDateDebut().toLocalDate().format(fmt) : "—";
+        String fin = a.getDateFin()   != null ? a.getDateFin().toLocalDate().format(fmt)   : "—";
+        String adr = a.getAddress()   != null && !a.getAddress().isEmpty() ? a.getAddress() : "—";
 
-        String infoStyle = "-fx-font-size:12px;-fx-text-fill:#5a5a8a;";
-        petLabel.setStyle(infoStyle); typeLabel.setStyle(infoStyle);
-        periodeLabel.setStyle(infoStyle); prixLabel.setStyle(infoStyle);
-        adrLabel.setStyle(infoStyle);
+        Label adrLabel = sl("Adresse : " + adr);
+        adrLabel.setWrapText(true);
+        adrLabel.setMaxWidth(420);
 
-        VBox infoBox = new VBox(4, owner, petLabel, typeLabel, periodeLabel, prixLabel, adrLabel);
+        VBox infoBox = new VBox(4, owner,
+                sl("Animal : " + petName),
+                sl("Type de garde : " + typeGarde),
+                sl("Periode : " + deb + " - " + fin),
+                sl("Prix : €" + (int) a.getRemunerationMin() + " - €" + (int) a.getRemunerationMax()),
+                adrLabel);
         infoBox.setAlignment(Pos.TOP_LEFT);
         HBox.setHgrow(infoBox, Priority.ALWAYS);
 
-        // ── Bouton 🐾 voir animal ─────────────────────────────
-        Button btnAnimal = new Button();
-        Label pawIcon = new Label("\uD83D\uDC3E");
-        pawIcon.setStyle("-fx-font-size:20px;");
-        btnAnimal.setGraphic(pawIcon);
+        // Bouton 🐾
+        Label pawI = new Label("\uD83D\uDC3E"); pawI.setStyle("-fx-font-size:20px;");
+        Button btnAnimal = new Button(); btnAnimal.setGraphic(pawI);
         btnAnimal.setStyle("-fx-background-color:#f0ebff;-fx-background-radius:50%;"
                 + "-fx-padding:8;-fx-cursor:hand;-fx-min-width:40;-fx-min-height:40;");
         btnAnimal.setOnAction(e -> ouvrirPopupAnimal(pet));
 
-        // ── Bouton ❤ postuler ─────────────────────────────────
+        // Bouton ❤
         boolean dejaPostule = servicePost.hasPostule(CURRENT_GARDIEN_ID, a.getId());
-        Button btnCoeur = new Button();
-        Label heartIcon = new Label(dejaPostule ? "\u2665" : "\u2661");
-        heartIcon.setStyle("-fx-font-size:20px;-fx-text-fill:" + (dejaPostule ? "#e87272" : "#aaaaaa") + ";");
-        btnCoeur.setGraphic(heartIcon);
-        btnCoeur.setStyle("-fx-background-color:" + (dejaPostule ? "#fff0f0" : "#f8f8f8") + ";"
-                + "-fx-background-radius:50%;-fx-padding:8;-fx-cursor:hand;"
+        Label heartI = new Label(dejaPostule ? "\u2665" : "\u2661");
+        heartI.setStyle("-fx-font-size:20px;-fx-text-fill:" + (dejaPostule ? "#e87272" : "#aaaaaa") + ";");
+        Button btnCoeur = new Button(); btnCoeur.setGraphic(heartI);
+        btnCoeur.setStyle("-fx-background-color:" + (dejaPostule ? "#fff0f0" : "#f8f8f8")
+                + ";-fx-background-radius:50%;-fx-padding:8;-fx-cursor:hand;"
                 + "-fx-min-width:40;-fx-min-height:40;");
+
         btnCoeur.setOnAction(e -> {
             if (servicePost.hasPostule(CURRENT_GARDIEN_ID, a.getId())) {
                 showAlert(Alert.AlertType.INFORMATION, "Deja postule",
                         "Vous avez deja postule sur cette annonce."); return;
             }
-            servicePost.add(new Postulation(a.getId(), CURRENT_GARDIEN_ID,
-                    Date.valueOf(LocalDate.now()), "EN_ATTENTE"));
-            heartIcon.setText("\u2665");
-            heartIcon.setStyle("-fx-font-size:20px;-fx-text-fill:#e87272;");
+
+            Postulation post = new Postulation(a.getId(), CURRENT_GARDIEN_ID,
+                    Date.valueOf(LocalDate.now()), "EN_ATTENTE");
+            int postulationId = servicePost.add(post);
+
+            if (postulationId < 0) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur creation postulation."); return;
+            }
+
+            String msg = "Le gardien #" + CURRENT_GARDIEN_ID
+                    + " a postule pour :\nAnimal : " + petName
+                    + "\nPeriode : " + deb + " -> " + fin
+                    + "\nPrix : €" + (int) a.getRemunerationMin() + " - €" + (int) a.getRemunerationMax();
+
+            serviceNotif.envoyer(new Notification(
+                    a.getUserId(),
+                    CURRENT_GARDIEN_ID,
+                    postulationId,
+                    msg,
+                    "NOUVELLE_POSTULATION"
+            ));
+
+            heartI.setText("\u2665");
+            heartI.setStyle("-fx-font-size:20px;-fx-text-fill:#e87272;");
             btnCoeur.setStyle("-fx-background-color:#fff0f0;-fx-background-radius:50%;"
                     + "-fx-padding:8;-fx-cursor:hand;-fx-min-width:40;-fx-min-height:40;");
             showAlert(Alert.AlertType.INFORMATION, "Postulation envoyee",
-                    "Votre postulation a ete enregistree !");
+                    "Votre postulation a ete envoyee !");
         });
 
-        VBox actionsBox = new VBox(10, btnAnimal, btnCoeur);
-        actionsBox.setAlignment(Pos.TOP_CENTER);
+        VBox actions = new VBox(10, btnAnimal, btnCoeur);
+        actions.setAlignment(Pos.TOP_CENTER);
 
-        HBox card = new HBox(14, avatarPane, infoBox, actionsBox);
+        HBox card = new HBox(14, avatarPane, infoBox, actions);
         card.setAlignment(Pos.TOP_LEFT);
         card.setPadding(new Insets(16, 18, 16, 18));
         card.setStyle("-fx-background-color:white;-fx-background-radius:16px;"
@@ -191,71 +243,58 @@ public class AccueilController {
         return card;
     }
 
-    // ── Avatar profil par défaut ──────────────────────────────
-    // Cercle avec fond violet clair + icône utilisateur unicode
-    private StackPane buildAvatarProfil(double size) {
-        StackPane pane = new StackPane();
-        pane.setPrefSize(size, size);
-        pane.setMinSize(size, size);
-        pane.setMaxSize(size, size);
-        pane.setStyle("-fx-background-color:#ede9f8;-fx-background-radius:" + (size / 2) + "px;");
-
-        // Icône personne unicode (U+1F464 = 👤)
-        Label icon = new Label("\uD83D\uDC64");
-        icon.setStyle("-fx-font-size:" + (size * 0.45) + "px;");
-
-        pane.getChildren().add(icon);
-        return pane;
+    private Label sl(String text) {
+        Label l = new Label(text);
+        l.setStyle("-fx-font-size:12px;-fx-text-fill:#5a5a8a;");
+        return l;
     }
 
-    // ── Popup détails animal ──────────────────────────────────
+    private StackPane buildAvatar(double size) {
+        StackPane p = new StackPane();
+        p.setPrefSize(size, size); p.setMinSize(size, size); p.setMaxSize(size, size);
+        p.setStyle("-fx-background-color:#ede9f8;-fx-background-radius:" + (size/2) + "px;");
+        Label i = new Label("\uD83D\uDC64");
+        i.setStyle("-fx-font-size:" + (size*0.45) + "px;");
+        p.getChildren().add(i);
+        return p;
+    }
+
     private void ouvrirPopupAnimal(Pet pet) {
         if (pet == null) { showAlert(Alert.AlertType.INFORMATION, "Animal", "Animal inconnu."); return; }
-
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.initStyle(StageStyle.UNDECORATED);
-
-        // Photo de l'animal dans le popup
-        StackPane photoPane = buildPhotoCircle(pet, 90);
-
+        StackPane photo = buildPhotoCircle(pet, 90);
         Label nom = new Label(pet.getName());
         nom.setStyle("-fx-font-size:18px;-fx-font-weight:bold;-fx-text-fill:#1a1a2e;");
-
         VBox details = new VBox(8,
-                detailLigne("Type",        capitalize(pet.getTypePet())),
-                detailLigne("Race",        pet.getBreed()),
-                detailLigne("Poids",       pet.getWeight() + " kg"),
-                detailLigne("Genre",       pet.getGender()),
-                detailLigne("Vaccine",     pet.isVaccinated() ? "Oui" : "Non"),
-                detailLigne("Maladie",     pet.isHasContagiousDisease() ? "Oui" : "Non"),
-                detailLigne("Dossier",     pet.isHasMedicalRecord() ? "Oui" : "Non"),
-                detailLigne("Critique",    pet.isHasCriticalCondition() ? "Oui" : "Non")
+                dl("Type",     capitalize(pet.getTypePet())),
+                dl("Race",     pet.getBreed()),
+                dl("Poids",    pet.getWeight() + " kg"),
+                dl("Genre",    pet.getGender()),
+                dl("Vaccine",  pet.isVaccinated() ? "Oui" : "Non"),
+                dl("Maladie",  pet.isHasContagiousDisease() ? "Oui" : "Non"),
+                dl("Dossier",  pet.isHasMedicalRecord() ? "Oui" : "Non"),
+                dl("Critique", pet.isHasCriticalCondition() ? "Oui" : "Non")
         );
-        if (pet.getDescription() != null && !pet.getDescription().isEmpty())
-            details.getChildren().add(detailLigne("Description", pet.getDescription()));
-
-        Button btnFermer = new Button("Fermer");
-        btnFermer.setStyle("-fx-background-color:#9b72e8;-fx-text-fill:white;-fx-font-size:13px;"
+        Button btnF = new Button("Fermer");
+        btnF.setStyle("-fx-background-color:#9b72e8;-fx-text-fill:white;-fx-font-size:13px;"
                 + "-fx-font-weight:bold;-fx-background-radius:10px;-fx-padding:9 30;-fx-cursor:hand;");
-        btnFermer.setOnAction(e -> popup.close());
-
-        VBox content = new VBox(14, photoPane, nom, details, btnFermer);
+        btnF.setOnAction(e -> popup.close());
+        VBox content = new VBox(14, photo, nom, details, btnF);
         content.setAlignment(Pos.TOP_CENTER);
         content.setPadding(new Insets(28, 32, 28, 32));
         content.setStyle("-fx-background-color:white;-fx-background-radius:20px;"
                 + "-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.18),20,0,0,6);");
         content.setMaxWidth(360);
-
         StackPane root = new StackPane(content);
         root.setStyle("-fx-background-color:rgba(0,0,0,0.4);");
         root.setPrefSize(420, 560);
-
         popup.setScene(new Scene(root, 420, 560));
         popup.show();
     }
 
-    private HBox detailLigne(String label, String value) {
+    private HBox dl(String label, String value) {
         Label lbl = new Label(label + " :");
         lbl.setStyle("-fx-font-size:13px;-fx-font-weight:bold;-fx-text-fill:#1a1a2e;-fx-min-width:110px;");
         Label val = new Label(value != null ? value : "—");
@@ -265,44 +304,43 @@ public class AccueilController {
         return row;
     }
 
-    // ── Photo circulaire (utilisée dans le popup animal) ──────
     private StackPane buildPhotoCircle(Pet pet, double size) {
         StackPane pane = new StackPane();
         pane.setPrefSize(size, size); pane.setMinSize(size, size); pane.setMaxSize(size, size);
-        pane.setStyle("-fx-background-color:#ede9f8;-fx-background-radius:" + (size / 2) + "px;");
+        pane.setStyle("-fx-background-color:#ede9f8;-fx-background-radius:" + (size/2) + "px;");
         if (pet != null && pet.getImageName() != null && !pet.getImageName().isEmpty()) {
             Image img = loadPetImage(pet.getImageName(), size);
             if (img != null && !img.isError()) {
                 ImageView iv = new ImageView(img);
                 iv.setFitWidth(size); iv.setFitHeight(size); iv.setPreserveRatio(false);
                 Rectangle clip = new Rectangle(size, size);
-                clip.setArcWidth(size); clip.setArcHeight(size);
-                iv.setClip(clip);
+                clip.setArcWidth(size); clip.setArcHeight(size); iv.setClip(clip);
                 pane.getChildren().add(iv);
                 return pane;
             }
         }
-        Label emoji = new Label("\uD83D\uDC3E");
-        emoji.setStyle("-fx-font-size:" + (size / 2.5) + "px;");
-        pane.getChildren().add(emoji);
+        Label e = new Label("\uD83D\uDC3E");
+        e.setStyle("-fx-font-size:" + (size/2.5) + "px;");
+        pane.getChildren().add(e);
         return pane;
     }
 
     private Image loadPetImage(String name, double size) {
         if (name == null || name.isEmpty()) return null;
-
-        // ← AJOUT 1 : si c'est une URL Cloudinary, charger directement
         if (name.startsWith("http")) {
             try { return new Image(name, size, size, false, true); }
             catch (Exception ignored) { return null; }
         }
-        String[] paths = {"images/" + name, System.getProperty("user.dir") + "/images/" + name,
-                "src/main/resources/images/" + name};
-        for (String path : paths) {
-            File f = new File(path);
-            if (f.exists()) { try { return new Image(f.toURI().toString(), size, size, false, true); } catch (Exception ignored) {} }
+        for (String p : new String[]{"images/"+name,
+                System.getProperty("user.dir")+"/images/"+name,
+                "src/main/resources/images/"+name}) {
+            File f = new File(p);
+            if (f.exists()) {
+                try { return new Image(f.toURI().toString(), size, size, false, true); }
+                catch (Exception ignored) {}
+            }
         }
-        for (String rp : new String[]{"/images/" + name, "/" + name}) {
+        for (String rp : new String[]{"/images/"+name, "/"+name}) {
             try (InputStream is = getClass().getResourceAsStream(rp)) {
                 if (is != null) return new Image(is, size, size, false, true);
             } catch (Exception ignored) {}
@@ -312,30 +350,32 @@ public class AccueilController {
 
     private String capitalize(String s) {
         if (s == null || s.isEmpty()) return s;
-        return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
+        return s.substring(0,1).toUpperCase() + s.substring(1).toLowerCase();
     }
 
-    private void showAlert(Alert.AlertType type, String title, String msg) {
-        Alert a = new Alert(type); a.setTitle(title); a.setHeaderText(null);
-        a.setContentText(msg); a.showAndWait();
+    private void showAlert(Alert.AlertType t, String title, String msg) {
+        Alert a = new Alert(t);
+        a.setTitle(title); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
     }
 
-    // ── Navigation ────────────────────────────────────────────
-    @FXML private void handleNavDashboard()    { nav("/Dashboard.fxml",           "Dashboard"); }
-    @FXML private void handleNavAccueil()      { nav("/Accueil.fxml",             "Accueil"); }
-    @FXML private void handleNavPostulations() { nav("/Postulations.fxml",        "Mes Postulations"); }
-    @FXML private void handleNavAnnonces()     { nav("/AfficherAnnonces.fxml",    "Mes Annonces"); }
-    @FXML private void handleNavEvenements()   { nav("/AfficherEvenements.fxml",  "Evenements"); }
-    @FXML private void handleNavAnimaux()      { nav("/AfficherAnimales.fxml",    "Mes Animaux"); }
-    @FXML private void handleNavReclamations() { nav("/AfficherReclamations.fxml","Reclamations"); }
+    private void stop() { if (notifBadge != null) notifBadge.stopPolling(); }
+
+    @FXML private void handleNavDashboard()    { stop(); nav("/Dashboard.fxml",           "Dashboard"); }
+    @FXML private void handleNavAccueil()      { stop(); nav("/Accueil.fxml",             "Accueil"); }
+    @FXML private void handleNavPostulations() { stop(); nav("/Postulations.fxml",        "Mes Postulations"); }
+    @FXML private void handleNavAnnonces()     { stop(); nav("/AfficherAnnonces.fxml",    "Mes Annonces"); }
+    @FXML private void handleNavEvenements()   { stop(); nav("/AfficherEvenements.fxml",  "Evenements"); }
+    @FXML private void handleNavAnimaux()      { stop(); nav("/AfficherAnimales.fxml",    "Mes Animaux"); }
+    @FXML private void handleNavReclamations() { stop(); nav("/AfficherReclamations.fxml","Reclamations"); }
+    @FXML private void handleNavMessages() { nav("/Messages.fxml", "Messages"); }
 
     private void nav(String fxml, String titre) {
         try {
             var resource = getClass().getResource(fxml);
             if (resource == null) { System.out.println("FXML introuvable : " + fxml); return; }
-            Parent root  = FXMLLoader.load(resource);
-            Stage  stage = (Stage) listAnnonces.getScene().getWindow();
-            stage.setScene(new Scene(root)); stage.setTitle(titre); stage.show();
+            Stage stage = (Stage) listAnnonces.getScene().getWindow();
+            stage.setScene(new Scene(FXMLLoader.load(resource)));
+            stage.setTitle(titre); stage.show();
         } catch (IOException e) { e.printStackTrace(); }
     }
 }
