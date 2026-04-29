@@ -21,17 +21,21 @@
                 style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
         <!-- Postulations actif -->
         <Button text="Postulations" onAction="#handleNavPostulations"
-                style="-fx-background-color:transparent;-fx-text-fill:#f5c518;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
+                style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
         <Button text="Annonces"     onAction="#handleNavAnnonces"
                 style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
         <Button text="Evenements"   onAction="#handleNavEvenements"
                 style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
         <Button text="Animaux"      onAction="#handleNavAnimaux"
-                style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
+                style="-fx-background-color:transparent;-fx-text-fill:#f5c518;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
         <Button text="Reclamations" onAction="#handleNavReclamations"
                 style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Button text="👤" style="-fx-background-color:#c084fc;-fx-text-fill:white;-fx-background-radius:50%;-fx-font-size:14px;-fx-cursor:hand;-fx-padding:8 10;-fx-min-width:36;"/>
+        <Button text="Messagerie" onAction="#handleNavMessages"
+                style="-fx-background-color:transparent;-fx-text-fill:#cccccc;
+               -fx-font-size:13px;-fx-font-weight:bold;
+               -fx-cursor:hand;-fx-padding:20 18;"/>
     </HBox>
 
     <!-- ===================== CONTENU ===================== -->

@@ -63,6 +63,26 @@ public class ServicePostulation {
         }
     }
 
+    // ── Récupérer toutes les postulations ────────────────────
+    public List<Postulation> getAll() {
+        List<Postulation> list = new ArrayList<>();
+        String req = "SELECT * FROM postulation ORDER BY date_postulation DESC";
+        try {
+            Statement st = cnx.createStatement();
+            ResultSet rs = st.executeQuery(req);
+            while (rs.next()) {
+                Postulation post = new Postulation();
+                post.setId(rs.getInt("id"));
+                post.setAnnouncementId(rs.getInt("announcement_id"));
+                post.setGardienId(rs.getInt("gardien_id"));
+                post.setDatePostulation(rs.getDate("date_postulation"));
+                post.setStatut(rs.getString("statut"));
+                list.add(post);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return list;
+    }
+
     // ── Récupérer par gardien ─────────────────────────────────
     public List<Postulation> getByGardien(int gardienId) {
         List<Postulation> list = new ArrayList<>();

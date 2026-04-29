@@ -299,14 +299,14 @@ public class MessagesController {
         arreterPolling();
     }
 
-    @FXML private void handleNavDashboard()    { stop(); nav("/Dashboard.fxml",           "Dashboard"); }
-    @FXML private void handleNavAccueil()      { stop(); nav("/Accueil.fxml",             "Accueil"); }
-    @FXML private void handleNavPostulations() { stop(); nav("/Postulations.fxml",        "Mes Postulations"); }
-    @FXML private void handleNavAnnonces()     { stop(); nav("/AfficherAnnonces.fxml",    "Mes Annonces"); }
-    @FXML private void handleNavEvenements()   { stop(); nav("/AfficherEvenements.fxml",  "Evenements"); }
-    @FXML private void handleNavAnimaux()      { stop(); nav("/AfficherAnimales.fxml",    "Mes Animaux"); }
-    @FXML private void handleNavMessages()     { stop(); nav("/Messages.fxml",            "Messages"); }
-    @FXML private void handleNavReclamations() { stop(); nav("/AfficherReclamations.fxml","Reclamations"); }
+    @FXML private void handleNavDashboard()    {  nav("/Dashboard.fxml",           "Dashboard"); }
+    @FXML private void handleNavAccueil()      {  nav("/Accueil.fxml",             "Accueil"); }
+    @FXML private void handleNavPostulations() {  nav("/Postulations.fxml",        "Mes Postulations"); }
+    @FXML private void handleNavAnnonces()     { nav("/AfficherAnnonces.fxml",    "Mes Annonces"); }
+    @FXML private void handleNavEvenements()   {  nav("/AfficherEvenements.fxml",  "Evenements"); }
+    @FXML private void handleNavAnimaux()      {  nav("/AfficherAnimales.fxml",    "Mes Animaux"); }
+    @FXML private void handleNavMessages()     {  nav("/Messages.fxml",            "Messages"); }
+    @FXML private void handleNavReclamations() {  nav("/AfficherReclamations.fxml","Reclamations"); }
 
     private void nav(String fxml, String titre) {
         try {

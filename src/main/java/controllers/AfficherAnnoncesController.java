@@ -443,11 +443,11 @@ public class AfficherAnnoncesController {
     @FXML private void handleNavDashboard()    { stop(); nav("/Dashboard.fxml",           "Dashboard"); }
     @FXML private void handleNavAccueil()      { stop(); nav("/Accueil.fxml",             "Accueil"); }
     @FXML private void handleNavPostulations() { stop(); nav("/Postulations.fxml",        "Mes Postulations"); }
+    @FXML private void handleNavMessagerie()   { stop(); nav("/Messagerie.fxml",          "Messagerie"); }
     @FXML private void handleNavAnnonces()     { stop(); nav("/AfficherAnnonces.fxml",    "Mes Annonces"); }
     @FXML private void handleNavEvenements()   { stop(); nav("/AfficherEvenements.fxml",  "Evenements"); }
     @FXML private void handleNavAnimaux()      { stop(); nav("/AfficherAnimales.fxml",    "Mes Animaux"); }
     @FXML private void handleNavReclamations() { stop(); nav("/AfficherReclamations.fxml","Reclamations"); }
-    @FXML private void handleNavMessages() { nav("/Messages.fxml", "Messages"); }
 
     private void nav(String fxml, String titre) {
         try {
