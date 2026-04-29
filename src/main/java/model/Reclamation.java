@@ -11,8 +11,8 @@ public class Reclamation {
     private String priorite;
     private String nomClient;               // nom_client
     private String emailClient;             // email_client
-    private int userId;                     // user_id
-
+    private int userId;
+    private String photoUrl;
     public Reclamation() {}
 
     public Reclamation(String sujet, String description, LocalDateTime dateReclamation,
@@ -26,6 +26,7 @@ public class Reclamation {
         this.nomClient = nomClient;
         this.emailClient = emailClient;
         this.userId = userId;
+        this.photoUrl = photoUrl;
     }
 
     public int getId() { return id; }
@@ -59,4 +60,6 @@ public class Reclamation {
     public String toString() {
         return "[" + id + "] " + sujet + " — " + priorite + " (" + statut + ")";
     }
+    public String getPhotoUrl() { return photoUrl; }
+    public void setPhotoUrl(String photoUrl) { this.photoUrl = photoUrl; }
 }

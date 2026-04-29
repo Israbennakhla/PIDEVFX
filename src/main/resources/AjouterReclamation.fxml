@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -58,12 +62,9 @@
          <Label styleClass="label-champ" text="Priorité" />
          <ComboBox fx:id="champPriorite" maxWidth="Infinity" styleClass="combo-style" />
          <Label fx:id="errPriorite" styleClass="label-erreur" />
-      </VBox>
-
-      <!-- Statut -->
-      <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
-         <Label styleClass="label-champ" text="Statut" />
-         <ComboBox fx:id="champStatut" maxWidth="Infinity" styleClass="combo-style" />
+          <Label fx:id="lblPrioriteAuto"
+                 text=""
+                 style="-fx-font-size: 11px; -fx-font-style: italic;"/>
       </VBox>
       <rowConstraints>
          <RowConstraints />
@@ -77,6 +78,32 @@
       <TextArea fx:id="champDescription" prefRowCount="4" promptText="Décrivez votre problème en détail..." styleClass="champ-textarea" wrapText="true" />
       <Label fx:id="errDescription" styleClass="label-erreur" />
    </VBox>
+    <!-- Section photo -->
+    <VBox spacing="8" style="-fx-padding: 0 0 10 0;">
+        <Label text="Photo (optionnelle)"
+               style="-fx-font-weight: bold; -fx-text-fill: #555;"/>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Button fx:id="btnChoisirPhoto"
+                    text="📎 Choisir une photo"
+                    onAction="#choisirPhoto"
+                    styleClass="btn-modifier"/>
+            <Button text="✕ Retirer"
+                    onAction="#supprimerPhoto"
+                    style="-fx-background-color: transparent; -fx-text-fill: #e74c3c;"/>
+        </HBox>
+
+        <Label fx:id="lblPhoto"
+               text="Aucune photo sélectionnée"
+               style="-fx-text-fill: #888888; -fx-font-size: 11px;"/>
+
+        <!-- Aperçu miniature -->
+        <ImageView fx:id="apercuPhoto"
+                   fitWidth="150" fitHeight="150"
+                   preserveRatio="true"
+                   visible="false"
+                   style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);"/>
+    </VBox>
 
    <!-- Bouton Enregistrer -->
    <HBox alignment="CENTER_RIGHT" style="-fx-padding-top: 20;">

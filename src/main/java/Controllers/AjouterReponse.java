@@ -15,7 +15,7 @@ public class AjouterReponse {
     @FXML private Label     errAuteur;
     @FXML private Label     errContenu;
 
-    private final ServiceReponse service = new ServiceReponse();
+    private final ServiceReponse serviceReponse = new ServiceReponse();
     private int reclamationId;
 
     public void setReclamationId(int id) {
@@ -24,41 +24,58 @@ public class AjouterReponse {
 
     @FXML
     private void enregistrer() {
+        // ── Réinitialiser les erreurs ─────────────────────────────────────────
         errAuteur.setText("");
         errContenu.setText("");
 
+        // ── Validation ────────────────────────────────────────────────────────
         boolean ok = true;
 
-        // Validation auteur
-        if (champAuteur.getText().trim().isEmpty()) {
-            errAuteur.setText("⚠️ Le nom de l'auteur est obligatoire.");
-            ok = false;
-        } else if (champAuteur.getText().trim().length() < 3) {
-            errAuteur.setText("⚠️ Minimum 3 caractères.");
+        String auteur  = champAuteur.getText().trim();
+        String contenu = champContenu.getText().trim();
+
+        if (auteur.isEmpty()) {
+            errAuteur.setText("⚠ Le nom de l'auteur est obligatoire.");
+            errAuteur.setStyle("-fx-text-fill: #e74c3c;");
             ok = false;
         }
 
-        // Validation contenu
-        if (champContenu.getText().trim().isEmpty()) {
-            errContenu.setText("⚠️ Le contenu est obligatoire.");
-            ok = false;
-        } else if (champContenu.getText().trim().length() < 10) {
-            errContenu.setText("⚠️ Minimum 10 caractères.");
+        if (contenu.isEmpty()) {
+            errContenu.setText("⚠ Le contenu de la réponse est obligatoire.");
+            errContenu.setStyle("-fx-text-fill: #e74c3c;");
             ok = false;
         }
 
         if (!ok) return;
 
+        // ── Construction + envoi ──────────────────────────────────────────────
         Reponse rep = new Reponse(
-                champContenu.getText().trim(),
+                contenu,
                 LocalDateTime.now(),
-                champAuteur.getText().trim(),
+                auteur,
                 reclamationId
         );
 
-        service.add(rep);
-        new Alert(Alert.AlertType.INFORMATION, "✅ Réponse ajoutée !").showAndWait();
-        fermer();
+        try {
+            serviceReponse.add(rep);  // ← met aussi à jour statut → 'resolue'
+
+            // Succès
+            errContenu.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
+            errContenu.setText("✅ Réponse envoyée.");
+            champContenu.clear();
+            champAuteur.clear();
+
+            new Alert(Alert.AlertType.INFORMATION,
+                    "✅ Réponse ajoutée avec succès !").showAndWait();
+            fermer();
+
+        } catch (IllegalArgumentException e) {
+            errContenu.setStyle("-fx-text-fill: #e74c3c;");
+            errContenu.setText(e.getMessage());
+        } catch (RuntimeException e) {
+            errContenu.setStyle("-fx-text-fill: #e74c3c;");
+            errContenu.setText("Erreur : " + e.getMessage());
+        }
     }
 
     @FXML

@@ -6,13 +6,15 @@ import utils.MyDataBase;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ServiceReclamation implements IService<Reclamation> {
 
     private final Connection cnx = MyDataBase.getInstance().getCnx();
 
-
+    // ── Validation métier ─────────────────────────────────────────────────────
     public String valider(Reclamation r) {
         if (r.getSujet() == null || r.getSujet().trim().isEmpty())
             return "❌ Le sujet est obligatoire.";
@@ -30,14 +32,12 @@ public class ServiceReclamation implements IService<Reclamation> {
         return "OK";
     }
 
-
+    // ── Add ───────────────────────────────────────────────────────────────────
     @Override
     public void add(Reclamation r) {
-        // Validation métier
         String validation = valider(r);
         if (!validation.equals("OK")) {
-            System.out.println(validation);
-            return;
+            throw new IllegalArgumentException(validation);
         }
 
         // Vérification unicité
@@ -50,18 +50,18 @@ public class ServiceReclamation implements IService<Reclamation> {
             ResultSet rs = check.executeQuery();
             rs.next();
             if (rs.getInt(1) > 0) {
-                System.out.println("❌ Réclamation identique déjà existante pour ce client !");
-                return;
+                throw new IllegalArgumentException(
+                        "❌ Une réclamation identique existe déjà pour ce client !");
             }
         } catch (SQLException e) {
-            System.out.println("Erreur vérification unicité : " + e.getMessage());
-            return;
+            throw new RuntimeException("Erreur vérification unicité : " + e.getMessage());
         }
 
         // Insertion
         String sql = "INSERT INTO reclamation " +
-                "(sujet, description, date_reclamation, statut, priorite, nom_client, email_client, user_id) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                "(sujet, description, date_reclamation, statut, priorite, " +
+                "nom_client, email_client, user_id, photo_url) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement ps = cnx.prepareStatement(sql);
             ps.setString(1, r.getSujet());
@@ -73,21 +73,23 @@ public class ServiceReclamation implements IService<Reclamation> {
             ps.setString(6, r.getNomClient());
             ps.setString(7, r.getEmailClient());
             ps.setInt(8, r.getUserId());
+            ps.setString(9, r.getPhotoUrl());   // null accepté par la DB
             ps.executeUpdate();
             System.out.println("✅ Réclamation ajoutée !");
         } catch (SQLException e) {
-            System.out.println("Erreur ajout : " + e.getMessage());
+            throw new RuntimeException("Erreur ajout : " + e.getMessage());
         }
     }
 
-
+    // ── GetAll ────────────────────────────────────────────────────────────────
     @Override
     public List<Reclamation> getAll() {
         List<Reclamation> list = new ArrayList<>();
         try {
-            Statement st = cnx.createStatement();
-            ResultSet rs = st.executeQuery(
-                    "SELECT * FROM reclamation ORDER BY date_reclamation DESC"
+            ResultSet rs = cnx.createStatement().executeQuery(
+                    "SELECT * FROM reclamation " +
+                            "ORDER BY FIELD(statut, 'en_attente', 'en_cours', 'resolue'), " +
+                            "date_reclamation DESC"
             );
             while (rs.next()) list.add(mapRow(rs));
         } catch (SQLException e) {
@@ -96,18 +98,16 @@ public class ServiceReclamation implements IService<Reclamation> {
         return list;
     }
 
-
+    // ── Update ────────────────────────────────────────────────────────────────
     @Override
     public void update(Reclamation r) {
-        // Validation métier
         String validation = valider(r);
         if (!validation.equals("OK")) {
-            System.out.println(validation);
-            return;
+            throw new IllegalArgumentException(validation);
         }
 
         String sql = "UPDATE reclamation SET sujet=?, description=?, date_reclamation=?, " +
-                "statut=?, priorite=?, nom_client=?, email_client=? WHERE id=?";
+                "statut=?, priorite=?, nom_client=?, email_client=?, photo_url=? WHERE id=?";
         try {
             PreparedStatement ps = cnx.prepareStatement(sql);
             ps.setString(1, r.getSujet());
@@ -118,15 +118,16 @@ public class ServiceReclamation implements IService<Reclamation> {
             ps.setString(5, r.getPriorite());
             ps.setString(6, r.getNomClient());
             ps.setString(7, r.getEmailClient());
-            ps.setInt(8, r.getId());
+            ps.setString(8, r.getPhotoUrl());
+            ps.setInt(9, r.getId());
             ps.executeUpdate();
             System.out.println("✅ Réclamation modifiée !");
         } catch (SQLException e) {
-            System.out.println("Erreur update : " + e.getMessage());
+            throw new RuntimeException("Erreur update : " + e.getMessage());
         }
     }
 
-
+    // ── Delete ────────────────────────────────────────────────────────────────
     @Override
     public void delete(Reclamation r) {
         try {
@@ -141,9 +142,33 @@ public class ServiceReclamation implements IService<Reclamation> {
         }
     }
 
+    // ── GetById ───────────────────────────────────────────────────────────────
+    public Reclamation getById(int id) throws Exception {
+        PreparedStatement ps = cnx.prepareStatement(
+                "SELECT * FROM reclamation WHERE id = ?"
+        );
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) return mapRow(rs);
+        return null;
+    }
 
+    // ── Recherches / Filtres ──────────────────────────────────────────────────
+    public List<Reclamation> searchByNom(String nom) {
+        List<Reclamation> list = new ArrayList<>();
+        try {
+            PreparedStatement ps = cnx.prepareStatement(
+                    "SELECT * FROM reclamation WHERE nom_client LIKE ?"
+            );
+            ps.setString(1, "%" + nom + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) list.add(mapRow(rs));
+        } catch (SQLException e) {
+            System.out.println("Erreur searchByNom : " + e.getMessage());
+        }
+        return list;
+    }
 
-    // Recherche par statut et/ou priorité
     public List<Reclamation> searchByStatutAndPriorite(String statut, String priorite) {
         List<Reclamation> list = new ArrayList<>();
         String sql = "SELECT * FROM reclamation WHERE 1=1";
@@ -155,12 +180,29 @@ public class ServiceReclamation implements IService<Reclamation> {
             ResultSet rs = cnx.createStatement().executeQuery(sql);
             while (rs.next()) list.add(mapRow(rs));
         } catch (SQLException e) {
-            System.out.println("Erreur search : " + e.getMessage());
+            System.out.println("Erreur searchByStatutAndPriorite : " + e.getMessage());
         }
         return list;
     }
 
-    // Réclamations par priorité
+    public List<Reclamation> searchByNomStatutPriorite(String nom, String statut, String priorite) {
+        List<Reclamation> list = new ArrayList<>();
+        String sql = "SELECT * FROM reclamation WHERE nom_client LIKE ?";
+        if (statut != null && !statut.equals("Tous"))
+            sql += " AND statut = '" + statut + "'";
+        if (priorite != null && !priorite.equals("Tous"))
+            sql += " AND priorite = '" + priorite + "'";
+        try {
+            PreparedStatement ps = cnx.prepareStatement(sql);
+            ps.setString(1, "%" + nom + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) list.add(mapRow(rs));
+        } catch (SQLException e) {
+            System.out.println("Erreur searchByNomStatutPriorite : " + e.getMessage());
+        }
+        return list;
+    }
+
     public List<Reclamation> getByPriorite(String priorite) {
         List<Reclamation> list = new ArrayList<>();
         try {
@@ -176,23 +218,7 @@ public class ServiceReclamation implements IService<Reclamation> {
         return list;
     }
 
-    // Réclamations par email client
-    public List<Reclamation> getByEmail(String email) {
-        List<Reclamation> list = new ArrayList<>();
-        try {
-            PreparedStatement ps = cnx.prepareStatement(
-                    "SELECT * FROM reclamation WHERE email_client = ?"
-            );
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) list.add(mapRow(rs));
-        } catch (SQLException e) {
-            System.out.println("Erreur getByEmail : " + e.getMessage());
-        }
-        return list;
-    }
-
-    // Changer le statut d'une réclamation
+    // ── Statut ────────────────────────────────────────────────────────────────
     public void changerStatut(int id, String nouveauStatut) {
         if (!List.of("en_attente", "en_cours", "resolue").contains(nouveauStatut)) {
             System.out.println("❌ Statut invalide : " + nouveauStatut);
@@ -205,13 +231,33 @@ public class ServiceReclamation implements IService<Reclamation> {
             ps.setString(1, nouveauStatut);
             ps.setInt(2, id);
             ps.executeUpdate();
-            System.out.println("✅ Statut mis à jour → " + nouveauStatut);
         } catch (SQLException e) {
             System.out.println("Erreur changerStatut : " + e.getMessage());
         }
     }
 
-    // Compter par statut
+    // ── Stats dashboard — clés minuscules = cohérentes avec la DB ─────────────
+    public Map<String, Integer> countByStatut() {
+        Map<String, Integer> stats = new LinkedHashMap<>();
+        stats.put("en_attente", 0);   // ← minuscules comme dans la DB
+        stats.put("en_cours",   0);
+        stats.put("resolue",    0);
+        try {
+            ResultSet rs = cnx.createStatement().executeQuery(
+                    "SELECT statut, COUNT(*) AS total FROM reclamation GROUP BY statut"
+            );
+            while (rs.next()) {
+                String statut = rs.getString("statut");
+                int count     = rs.getInt("total");
+                if (stats.containsKey(statut)) stats.put(statut, count);
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur countByStatut : " + e.getMessage());
+        }
+        return stats;
+    }
+
+    // ── Méthode count simple (garde pour compatibilité) ───────────────────────
     public int countByStatut(String statut) {
         try {
             PreparedStatement ps = cnx.prepareStatement(
@@ -227,6 +273,7 @@ public class ServiceReclamation implements IService<Reclamation> {
         }
     }
 
+    // ── MapRow ────────────────────────────────────────────────────────────────
     private Reclamation mapRow(ResultSet rs) throws SQLException {
         Reclamation r = new Reclamation();
         r.setId(rs.getInt("id"));
@@ -239,58 +286,29 @@ public class ServiceReclamation implements IService<Reclamation> {
         r.setNomClient(rs.getString("nom_client"));
         r.setEmailClient(rs.getString("email_client"));
         r.setUserId(rs.getInt("user_id"));
+        r.setPhotoUrl(rs.getString("photo_url"));
         return r;
     }
-    public List<Reclamation> searchByNom(String nom) {
-        List<Reclamation> list = new ArrayList<>();
-        String sql = "SELECT * FROM reclamation WHERE nom_client LIKE ?";
-        try {
-            PreparedStatement ps = cnx.prepareStatement(sql);
-            ps.setString(1, "%" + nom + "%"); // % = contient ce mot
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) list.add(mapRow(rs));
-        } catch (SQLException e) {
-            System.out.println("Erreur searchByNom : " + e.getMessage());
-        }
-        return list;
-    }
-    // Recherche par nom + statut + priorité combinés
-    public List<Reclamation> searchByNomStatutPriorite(String nom, String statut, String priorite) {
-        List<Reclamation> list = new ArrayList<>();
-        String sql = "SELECT * FROM reclamation WHERE nom_client LIKE ?";
+    public String detecterPriorite(String sujet, String description) {
+        String texte = (sujet + " " + description).toLowerCase();
 
-        if (statut != null && !statut.equals("Tous"))
-            sql += " AND statut = '" + statut + "'";
-        if (priorite != null && !priorite.equals("Tous"))
-            sql += " AND priorite = '" + priorite + "'";
+        List<String> motsHaute = List.of(
+                "urgence", "urgent", "danger", "blessé", "blessure",
+                "accident", "grave", "critique", "immédiat", "secours",
+                "mort", "décès", "sang", "fracture", "perdu", "disparu"
+        );
 
-        try {
-            PreparedStatement ps = cnx.prepareStatement(sql);
-            ps.setString(1, "%" + nom + "%");
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) list.add(mapRow(rs));
-        } catch (SQLException e) {
-            System.out.println("Erreur searchByNomStatutPriorite : " + e.getMessage());
+        List<String> motsMoyenne = List.of(
+                "problème", "souci", "plainte", "insatisfait",
+                "malade", "maladie", "inquiet", "retard", "refus"
+        );
+
+        for (String mot : motsHaute) {
+            if (texte.contains(mot)) return "haute";
         }
-        return list;
-    }
-    public Reclamation getById(int id) throws Exception {
-        PreparedStatement ps = cnx.prepareStatement("SELECT * FROM reclamation WHERE id = ?");
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            Reclamation rec = new Reclamation();
-            rec.setId(rs.getInt("id"));
-            rec.setSujet(rs.getString("sujet"));
-            rec.setDescription(rs.getString("description"));
-            rec.setDateReclamation(rs.getTimestamp("date_reclamation").toLocalDateTime());
-            rec.setStatut(rs.getString("statut"));
-            rec.setPriorite(rs.getString("priorite"));
-            rec.setNomClient(rs.getString("nom_client"));
-            rec.setEmailClient(rs.getString("email_client")); // ← colonne SQL
-            rec.setUserId(rs.getInt("user_id"));
-            return rec;
+        for (String mot : motsMoyenne) {
+            if (texte.contains(mot)) return "moyenne";
         }
-        return null;
+        return "basse";
     }
 }

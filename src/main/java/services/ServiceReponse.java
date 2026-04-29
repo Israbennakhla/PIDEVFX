@@ -28,6 +28,10 @@ public class ServiceReponse implements IService<Reponse> {
             ps.setString(3, reponse.getAuteur());
             ps.setInt(4, reponse.getReclamationId());
             ps.executeUpdate();
+            String updateStatut = "UPDATE reclamation SET statut = 'RESOLUE' WHERE id = ?";
+            PreparedStatement psUpdate = cnx.prepareStatement(updateStatut);
+            psUpdate.setInt(1, reponse.getReclamationId());
+            psUpdate.executeUpdate();
 
             ServiceReclamation sr = new ServiceReclamation();
             Reclamation rec = sr.getById(reponse.getReclamationId());
@@ -51,6 +55,7 @@ public class ServiceReponse implements IService<Reponse> {
         } catch (Exception e) {
             throw new RuntimeException("Erreur récupération réclamation : " + e.getMessage());
         }
+
     }
 
     @Override
@@ -117,5 +122,18 @@ public class ServiceReponse implements IService<Reponse> {
         r.setAuteur(rs.getString("auteur"));
         r.setReclamationId(rs.getInt("reclamation_id"));
         return r;
+    }
+    public boolean existsForReclamation(int reclamationId) {
+        try {
+            PreparedStatement ps = cnx.prepareStatement(
+                    "SELECT COUNT(*) FROM reponse WHERE reclamation_id = ?"
+            );
+            ps.setInt(1, reclamationId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1) > 0;
+        } catch (SQLException e) {
+            System.out.println("Erreur existsForReclamation : " + e.getMessage());
+        }
+        return false;
     }
 }

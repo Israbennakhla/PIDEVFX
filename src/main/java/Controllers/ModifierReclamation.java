@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Reclamation;
 import services.ServiceReclamation;
+import services.ServiceReponse;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -43,12 +44,37 @@ public class ModifierReclamation implements Initializable {
     // Appelé depuis AfficherReclamations pour pré-remplir
     public void setReclamation(Reclamation r) {
         this.reclamation = r;
+
+        // Remplir les champs
         champSujet.setText(r.getSujet());
         champDescription.setText(r.getDescription());
         champPriorite.setValue(r.getPriorite());
         champStatut.setValue(r.getStatut());
         champNom.setText(r.getNomClient());
         champEmail.setText(r.getEmailClient());
+
+        // ── Règle métier : verrouillage si une réponse existe ────────────────────
+        ServiceReponse serviceReponse = new ServiceReponse();
+        if (serviceReponse.existsForReclamation(r.getId())) {
+
+            // Désactiver tous les champs de saisie
+            champSujet.setDisable(true);
+            champDescription.setDisable(true);
+            champPriorite.setDisable(true);
+            champStatut.setDisable(true);
+            champNom.setDisable(true);
+            champEmail.setDisable(true);
+
+            // Afficher le message dans errSujet (label visible en haut)
+            errSujet.setText("🔒 Réclamation clôturée — aucune modification possible.");
+            errSujet.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold;");
+
+            // Vider les autres labels d'erreur pour ne pas polluer l'affichage
+            errDescription.setText("");
+            errPriorite.setText("");
+            errNom.setText("");
+            errEmail.setText("");
+        }
     }
 
     @FXML
