@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.AfficherAnnoncesController"
+      prefWidth="1280" prefHeight="760"
+      style="-fx-background-color: #f0f0f8;">
+
+    <!-- ===================== NAVBAR ===================== -->
+    <HBox alignment="CENTER_LEFT" spacing="0"
+          style="-fx-background-color: #1a0a2e; -fx-padding: 0 30px;
+                 -fx-min-height: 64px; -fx-max-height: 64px;">
+        <VBox alignment="CENTER_LEFT" spacing="0" style="-fx-padding: 0 30 0 0;">
+            <Label text="🐾🐾" style="-fx-font-size: 20px;"/>
+            <Label text="SitMyPet" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+        </VBox>
+        <Button text="🏠 Dashboard" onAction="#handleNavDashboard"
+                style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
+        <Button text="📣 Annonces" onAction="#handleNavAnnonces"
+                style="-fx-background-color:transparent;-fx-text-fill:#f5c518;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
+        <Button text="📅 Événements" onAction="#handleNavEvenements"
+                style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
+        <Button text="🐾 Animaux" onAction="#handleNavAnimaux"
+                style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
+        <Button text="📩 Réclamations" onAction="#handleNavReclamations"
+                style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="🔔" style="-fx-background-color:#2d1050;-fx-text-fill:white;-fx-background-radius:50%;-fx-font-size:14px;-fx-cursor:hand;-fx-padding:8 10;-fx-min-width:36;"/>
+        <Region style="-fx-min-width:8;"/>
+        <Button text="🌙" style="-fx-background-color:#2d1050;-fx-text-fill:white;-fx-background-radius:50%;-fx-font-size:14px;-fx-cursor:hand;-fx-padding:8 10;-fx-min-width:36;"/>
+        <Region style="-fx-min-width:8;"/>
+        <Button text="👤" style="-fx-background-color:#c084fc;-fx-text-fill:white;-fx-background-radius:50%;-fx-font-size:14px;-fx-cursor:hand;-fx-padding:8 10;-fx-min-width:36;"/>
+    </HBox>
+
+    <!-- ===================== CONTENU ===================== -->
+    <VBox VBox.vgrow="ALWAYS" spacing="20"
+          style="-fx-background-color:#f0f0f8;-fx-padding:25px 30px;">
+
+        <HBox alignment="CENTER_LEFT">
+            <Label text="📣 Mes Annonces" style="-fx-font-size:24px;-fx-font-weight:bold;-fx-text-fill:#2d2d2d;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="+ Nouvelle annonce" onAction="#handleNouvelle"
+                    style="-fx-background-color:#9b72e8;-fx-text-fill:white;-fx-font-size:13px;-fx-font-weight:bold;-fx-background-radius:8px;-fx-padding:10 20;-fx-cursor:hand;"/>
+        </HBox>
+
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <TextField fx:id="searchAdresse" promptText="🔍 Adresse" prefWidth="180"
+                       style="-fx-background-color:white;-fx-border-color:#cccccc;-fx-border-radius:6px;-fx-background-radius:6px;-fx-padding:7px 10px;"/>
+            <DatePicker fx:id="filterDateDebut" promptText="jj/mm/aaaa" prefWidth="150"
+                        style="-fx-background-color:white;-fx-border-color:#cccccc;-fx-border-radius:6px;-fx-background-radius:6px;"/>
+            <DatePicker fx:id="filterDateFin" promptText="jj/mm/aaaa" prefWidth="150"
+                        style="-fx-background-color:white;-fx-border-color:#cccccc;-fx-border-radius:6px;-fx-background-radius:6px;"/>
+            <Button text="Rechercher" onAction="#handleRechercher"
+                    style="-fx-background-color:#9b72e8;-fx-text-fill:white;-fx-font-size:13px;-fx-font-weight:bold;-fx-background-radius:6px;-fx-padding:8 18;-fx-cursor:hand;"/>
+            <Button text="Réinitialiser" onAction="#handleReinitialiser"
+                    style="-fx-background-color:#eeeeee;-fx-text-fill:#333333;-fx-font-size:13px;-fx-background-radius:6px;-fx-padding:8 18;-fx-cursor:hand;"/>
+        </HBox>
+
+        <TableView fx:id="tableAnnonces" VBox.vgrow="ALWAYS"
+                   style="-fx-background-color:white;-fx-border-color:#eeeeee;-fx-border-radius:8px;">
+            <columns>
+                <TableColumn fx:id="colAnimal"    text="Animal"/>
+                <TableColumn fx:id="colTypeGarde" text="Type garde"/>
+                <TableColumn fx:id="colVisites"   text="Visites"/>
+                <TableColumn fx:id="colHoraires"  text="Horaires"/>
+                <TableColumn fx:id="colDateDebut" text="Date début"/>
+                <TableColumn fx:id="colDateFin"   text="Date fin"/>
+                <TableColumn fx:id="colRemuMin"   text="Rému. min"/>
+                <TableColumn fx:id="colRemuMax"   text="Rému. max"/>
+                <TableColumn fx:id="colAdresse"   text="Adresse"/>
+                <TableColumn fx:id="colServices"  text="Services"/>
+                <TableColumn fx:id="colActions"   text="Actions"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+    <!-- ===================== FOOTER ===================== -->
+    <VBox spacing="0" style="-fx-background-color:#1a0a2e;">
+        <HBox spacing="0" style="-fx-padding:30px 40px 20px 40px;">
+            <VBox spacing="10" prefWidth="280">
+                <Label text="SITMYPET" style="-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                <Label text="L'application pour gérer la garde des animaux&#10;et connecter propriétaires et gardiens facilement."
+                       wrapText="true" style="-fx-font-size:12px;-fx-text-fill:#aaaacc;"/>
+            </VBox>
+            <VBox spacing="8" prefWidth="220">
+                <Label text="Liens rapides" style="-fx-font-size:13px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                <Hyperlink text="Accueil" onAction="#handleNavDashboard" style="-fx-text-fill:#9b72e8;-fx-font-size:12px;-fx-padding:0;"/>
+                <Hyperlink text="Publier une annonce" onAction="#handleNavAnnonces" style="-fx-text-fill:#9b72e8;-fx-font-size:12px;-fx-padding:0;"/>
+                <Hyperlink text="Voir les animaux" onAction="#handleNavAnimaux" style="-fx-text-fill:#9b72e8;-fx-font-size:12px;-fx-padding:0;"/>
+                <Hyperlink text="Réclamations" onAction="#handleNavReclamations" style="-fx-text-fill:#9b72e8;-fx-font-size:12px;-fx-padding:0;"/>
+            </VBox>
+            <VBox spacing="8" prefWidth="220">
+                <Label text="Support" style="-fx-font-size:13px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                <Label text="Centre d'aide" style="-fx-font-size:12px;-fx-text-fill:#aaaacc;"/>
+                <Hyperlink text="Contactez-nous" style="-fx-text-fill:#9b72e8;-fx-font-size:12px;-fx-padding:0;"/>
+                <Label text="FAQ" style="-fx-font-size:12px;-fx-text-fill:#aaaacc;"/>
+            </VBox>
+            <VBox spacing="8" prefWidth="220">
+                <Label text="Contact" style="-fx-font-size:13px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                <Label text="contact@sitmypet.com" style="-fx-font-size:12px;-fx-text-fill:#aaaacc;"/>
+                <Label text="+216 71 000 000" style="-fx-font-size:12px;-fx-text-fill:#aaaacc;"/>
+            </VBox>
+        </HBox>
+        <HBox style="-fx-padding:12px 40px;-fx-border-color:#2d1050 transparent transparent transparent;-fx-border-width:1;">
+            <Label text="© 2026 SITMYPET. Tous droits réservés." style="-fx-font-size:11px;-fx-text-fill:#888899;"/>
+        </HBox>
+    </VBox>
+
+</VBox>

@@ -1,13 +1,11 @@
 package interfaces;
 
-
 import java.util.List;
 
 public interface IService<T> {
 
-    void add(T p);
+    void add(T t);
     List<T> getAll();
-    void update(T p);
-    void delete(T p);
-    // getBy getByid etc..
+    void update(T t);
+    void delete(T t);
 }
