@@ -12,7 +12,7 @@ public class MainFX extends Application {
         Parent root = loader.load();
 
         // Configuration de la taille de la fenêtre
-        Scene scene = new Scene(root, 950, 550);
+        Scene scene = new Scene(root, 1280, 720);
 
         primaryStage.setTitle("PI-DEV : Gestion des Événements");
         primaryStage.setScene(scene);
