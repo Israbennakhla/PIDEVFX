@@ -17,9 +17,20 @@ import java.nio.charset.StandardCharsets;
 
 public class GoogleOAuthService {
 
-    // REMPLACEZ CES VALEURS PAR VOS VRAIES CLÉS GOOGLE CLOUD CONSOLE
-    private static final String CLIENT_ID = "660511218870-pb77u66es89eposulpr6p0drvp11p6jr.apps.googleusercontent.com";
-    private static final String CLIENT_SECRET = "VOTRE_CLIENT_SECRET"; // REMPLACEZ PAR VOTRE SECRET
+    private static String CLIENT_ID = "";
+    private static String CLIENT_SECRET = "";
+
+    static {
+        try (java.io.InputStream input = new java.io.FileInputStream("config.properties")) {
+            java.util.Properties prop = new java.util.Properties();
+            prop.load(input);
+            CLIENT_ID = prop.getProperty("GOOGLE_OAUTH_CLIENT_ID", "");
+            CLIENT_SECRET = prop.getProperty("GOOGLE_OAUTH_CLIENT_SECRET", "");
+        } catch (IOException ex) {
+            System.err.println("Erreur: impossible de charger config.properties. Assurez-vous que le fichier existe à la racine du projet.");
+            ex.printStackTrace();
+        }
+    }
     private static final String REDIRECT_URI = "http://localhost:8085/Callback";
     
     private static final String AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -65,18 +76,20 @@ public class GoogleOAuthService {
                 
                 // Réponse HTTP pour le navigateur
                 String response = "<html><body><h2>Authentification reussie !</h2><p>Vous pouvez fermer cette fenetre et retourner a SitMyPet.</p></body></html>";
-                exchange.sendResponseHeaders(200, response.length());
+                byte[] responseBytes = response.getBytes(StandardCharsets.UTF_8);
+                exchange.sendResponseHeaders(200, responseBytes.length);
                 OutputStream os = exchange.getResponseBody();
-                os.write(response.getBytes());
+                os.write(responseBytes);
                 os.close();
 
                 // Processer le token dans un thread séparé pour ne pas bloquer le serveur
                 new Thread(() -> processAuthCode(code, callback)).start();
             } else {
                 String response = "Erreur d'authentification ou requete annulee.";
-                exchange.sendResponseHeaders(400, response.length());
+                byte[] responseBytes = response.getBytes(StandardCharsets.UTF_8);
+                exchange.sendResponseHeaders(400, responseBytes.length);
                 OutputStream os = exchange.getResponseBody();
-                os.write(response.getBytes());
+                os.write(responseBytes);
                 os.close();
                 Platform.runLater(() -> callback.onError("Authentification annulée."));
             }
@@ -125,10 +138,10 @@ public class GoogleOAuthService {
 
     private String exchangeCodeForToken(String code) throws Exception {
         HttpClient client = HttpClient.newHttpClient();
-        String requestBody = "code=" + code +
-                "&client_id=" + CLIENT_ID +
-                "&client_secret=" + CLIENT_SECRET +
-                "&redirect_uri=" + REDIRECT_URI +
+        String requestBody = "code=" + java.net.URLEncoder.encode(code, StandardCharsets.UTF_8) +
+                "&client_id=" + java.net.URLEncoder.encode(CLIENT_ID, StandardCharsets.UTF_8) +
+                "&client_secret=" + java.net.URLEncoder.encode(CLIENT_SECRET, StandardCharsets.UTF_8) +
+                "&redirect_uri=" + java.net.URLEncoder.encode(REDIRECT_URI, StandardCharsets.UTF_8) +
                 "&grant_type=authorization_code";
 
         HttpRequest request = HttpRequest.newBuilder()
