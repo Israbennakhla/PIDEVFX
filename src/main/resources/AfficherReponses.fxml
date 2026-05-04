@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="0"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Controllers.AfficherReponses"
+      stylesheets="@style.css"
+      style="-fx-background-color: #f0eef8; -fx-min-width: 780; -fx-min-height: 620;">
+
+    <!-- ══ HEADER ══════════════════════════════════════════════════════════ -->
+    <HBox alignment="CENTER_LEFT" spacing="20"
+          style="-fx-background-color: #1a0a2e; -fx-padding: 22 30 22 30;">
+        <VBox spacing="6" HBox.hgrow="ALWAYS">
+            <Label text="💬 Gestion des Réponses"
+                   style="-fx-text-fill: #9b8ec4; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+            <Label fx:id="titreReclamation"
+                   style="-fx-text-fill: white; -fx-font-size: 19px; -fx-font-weight: bold;"/>
+            <HBox spacing="16">
+                <Label fx:id="lblClient"
+                       style="-fx-text-fill: #bbbbbb; -fx-font-size: 12px;"/>
+                <Label text="•" style="-fx-text-fill: #555;"/>
+                <Label fx:id="lblPriorite"
+                       style="-fx-text-fill: #bbbbbb; -fx-font-size: 12px;"/>
+                <Label text="•" style="-fx-text-fill: #555;"/>
+                <Label fx:id="lblStatut"
+                       style="-fx-text-fill: #bbbbbb; -fx-font-size: 12px;"/>
+            </HBox>
+        </VBox>
+        <Button text="➕  Ajouter une réponse"
+                onAction="#ouvrirAjoutReponse"
+                style="-fx-background-color: #9b8ec4; -fx-text-fill: white;
+                       -fx-font-weight: bold; -fx-font-size: 13px;
+                       -fx-background-radius: 10; -fx-padding: 13 24 13 24;
+                       -fx-cursor: hand;"/>
+    </HBox>
+
+    <!-- ══ SOUS-HEADER : compteur ══════════════════════════════════════════ -->
+    <HBox style="-fx-background-color: #e8e4f5; -fx-padding: 10 30 10 30;">
+        <Label fx:id="lblCompteur"
+               style="-fx-text-fill: #7c6fa0; -fx-font-size: 12px; -fx-font-style: italic;"/>
+    </HBox>
+
+    <!-- ══ LISTE ════════════════════════════════════════════════════════════ -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                style="-fx-background: transparent; -fx-background-color: transparent;
+                       -fx-border-color: transparent;">
+        <padding><Insets top="20" right="28" bottom="20" left="28"/></padding>
+        <VBox fx:id="listeReponses" spacing="16"/>
+    </ScrollPane>
+
+</VBox>
