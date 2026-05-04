@@ -10,14 +10,16 @@ public class EmailService {
     // ⚠️ IMPORTANT : Remplacez par une vraie adresse Gmail et un mot de passe d'application.
     // Le mot de passe d'application doit être généré depuis les paramètres de sécurité du compte Google (Authentification à deux facteurs).
     private static final String SMTP_USER = "radhouaniyassine17@gmail.com";
-    private static final String SMTP_PASSWORD = "YOUR_APP_PASSWORD";
+    private static final String SMTP_PASSWORD = "ytvgywyudoxxasbz";
 
     public boolean envoyerNouveauMotDePasse(String destinataire, String nouveauMdp) {
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
-        prop.put("mail.smtp.port", "587");
+        prop.put("mail.smtp.port", "465");
         prop.put("mail.smtp.auth", "true");
-        prop.put("mail.smtp.starttls.enable", "true"); //TLS
+        prop.put("mail.smtp.ssl.enable", "true"); //SSL
+        prop.put("mail.smtp.socketFactory.port", "465");
+        prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 
         Session session = Session.getInstance(prop,
                 new javax.mail.Authenticator() {
@@ -51,6 +53,15 @@ public class EmailService {
         } catch (Exception e) {
             System.err.println("❌ Erreur lors de l'envoi de l'email : " + e.getMessage());
             e.printStackTrace();
+            
+            javafx.application.Platform.runLater(() -> {
+                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                alert.setTitle("Erreur Technique SMTP");
+                alert.setHeaderText("L'envoi a échoué ! Voici l'erreur technique :");
+                alert.setContentText(e.toString() + "\n\nCause : " + (e.getCause() != null ? e.getCause().toString() : "Aucune"));
+                alert.showAndWait();
+            });
+            
             return false;
         }
     }
@@ -58,9 +69,11 @@ public class EmailService {
     public boolean envoyerAlerteBlocage(String destinataire) {
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
-        prop.put("mail.smtp.port", "587");
+        prop.put("mail.smtp.port", "465");
         prop.put("mail.smtp.auth", "true");
-        prop.put("mail.smtp.starttls.enable", "true");
+        prop.put("mail.smtp.ssl.enable", "true"); //SSL
+        prop.put("mail.smtp.socketFactory.port", "465");
+        prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 
         Session session = Session.getInstance(prop,
                 new javax.mail.Authenticator() {
@@ -101,9 +114,11 @@ public class EmailService {
     public boolean envoyerRapportIA(String destinataire, String nomPrenom, boolean estAccepte, String contenuHtmlIA) {
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
-        prop.put("mail.smtp.port", "587");
+        prop.put("mail.smtp.port", "465");
         prop.put("mail.smtp.auth", "true");
-        prop.put("mail.smtp.starttls.enable", "true");
+        prop.put("mail.smtp.ssl.enable", "true"); //SSL
+        prop.put("mail.smtp.socketFactory.port", "465");
+        prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 
         Session session = Session.getInstance(prop,
                 new javax.mail.Authenticator() {

@@ -303,14 +303,23 @@ public class LoginController {
                     alert.setContentText("Un nouveau mot de passe a été envoyé à votre adresse email. Veuillez vérifier votre boîte de réception.");
                     alert.showAndWait();
                 } else {
-                    // Fallback de développement : si l'email échoue, on affiche le mot de passe à l'écran
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Mode Développement - Email non configuré");
                     alert.setHeaderText("L'envoi de l'email a échoué");
-                    alert.setContentText("Le mot de passe a été réinitialisé en base de données.\n\n" +
-                                         "Étant donné que le service SMTP n'est pas encore configuré avec vos identifiants, " +
-                                         "voici le mot de passe généré pour vous permettre de tester :\n\n" +
-                                         "Nouveau mot de passe : " + tempPassword.toString());
+                    
+                    javafx.scene.layout.VBox dialogPaneContent = new javafx.scene.layout.VBox(10);
+                    Label label = new Label("Le mot de passe a été réinitialisé en base de données.\n" +
+                                            "Étant donné que le service SMTP n'est pas encore configuré avec vos identifiants, " +
+                                            "voici le mot de passe généré pour vous permettre de tester :");
+                    label.setWrapText(true);
+                    
+                    TextField passField = new TextField(tempPassword.toString());
+                    passField.setEditable(false);
+                    passField.setStyle("-fx-font-weight: bold; -fx-text-fill: #e53e3e;");
+                    
+                    dialogPaneContent.getChildren().addAll(label, passField);
+                    alert.getDialogPane().setContent(dialogPaneContent);
+                    
                     alert.showAndWait();
                 }
             } else {

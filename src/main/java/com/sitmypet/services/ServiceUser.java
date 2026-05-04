@@ -55,7 +55,7 @@ public class ServiceUser implements IService<User> {
     public void modifier(User user) {
         String query = "UPDATE utilisateurs SET nom=?, prenom=?, email=?, telephone=?, " +
                       "adresse=?, image_name=?, role=?, is_active=?, roles=?, certificat=? WHERE id=?";
-        
+
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, user.getNom());
             ps.setString(2, user.getPrenom());
