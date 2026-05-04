@@ -11,28 +11,26 @@
 
     <!-- ===================== NAVBAR ===================== -->
     <HBox alignment="CENTER_LEFT" spacing="0"
-          style="-fx-background-color: #1a0a2e; -fx-padding: 0 30px;
-                 -fx-min-height: 64px; -fx-max-height: 64px;">
-        <VBox alignment="CENTER_LEFT" spacing="0" style="-fx-padding: 0 30 0 0;">
-            <Label text="🐾🐾" style="-fx-font-size: 20px;"/>
-            <Label text="SitMyPet" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+          style="-fx-background-color:#1a0a2e;-fx-padding:0 30px;-fx-min-height:64px;-fx-max-height:64px;">
+        <VBox alignment="CENTER_LEFT" spacing="0" style="-fx-padding:0 30 0 0;">
+            <Label text="SitMyPet" style="-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:white;"/>
         </VBox>
-        <Button text="🏠 Dashboard" onAction="#handleNavDashboard"
+        <Button text="Dashboard"    onAction="#handleNavDashboard"
                 style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
-        <Button text="📣 Annonces" onAction="#handleNavAnnonces"
+        <Button text="Accueil"      onAction="#handleNavAccueil"
                 style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
-        <Button text="📅 Événements" onAction="#handleNavEvenements"
-                style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
-        <!-- Animaux actif -->
-        <Button text="🐾 Animaux" onAction="#handleNavAnimaux"
+        <!-- Postulations actif -->
+        <Button text="Postulations" onAction="#handleNavPostulations"
                 style="-fx-background-color:transparent;-fx-text-fill:#f5c518;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
-        <Button text="📩 Réclamations" onAction="#handleNavReclamations"
+        <Button text="Annonces"     onAction="#handleNavAnnonces"
+                style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
+        <Button text="Evenements"   onAction="#handleNavEvenements"
+                style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
+        <Button text="Animaux"      onAction="#handleNavAnimaux"
+                style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
+        <Button text="Reclamations" onAction="#handleNavReclamations"
                 style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button text="🔔" style="-fx-background-color:#2d1050;-fx-text-fill:white;-fx-background-radius:50%;-fx-font-size:14px;-fx-cursor:hand;-fx-padding:8 10;-fx-min-width:36;"/>
-        <Region style="-fx-min-width:8;"/>
-        <Button text="🌙" style="-fx-background-color:#2d1050;-fx-text-fill:white;-fx-background-radius:50%;-fx-font-size:14px;-fx-cursor:hand;-fx-padding:8 10;-fx-min-width:36;"/>
-        <Region style="-fx-min-width:8;"/>
         <Button text="👤" style="-fx-background-color:#c084fc;-fx-text-fill:white;-fx-background-radius:50%;-fx-font-size:14px;-fx-cursor:hand;-fx-padding:8 10;-fx-min-width:36;"/>
     </HBox>
 

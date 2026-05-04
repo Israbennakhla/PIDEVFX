@@ -171,6 +171,9 @@ public class ModifierAnnonceController {
     @FXML private void handleNavEvenements()   { naviguer("/AfficherEvenements.fxml", "Événements"); }
     @FXML private void handleNavAnimaux()      { naviguer("/AfficherAnimales.fxml",   "Mes Animaux"); }
     @FXML private void handleNavReclamations() { naviguer("/AfficherReclamations.fxml","Réclamations"); }
+    @FXML private void handleNavAccueil()      { naviguer("/Accueil.fxml",      "Accueil"); }
+    @FXML private void handleNavPostulations() { naviguer("/Postulations.fxml", "Mes Postulations"); }
+    @FXML private void handleNavMessages() { naviguer("/Messages.fxml", "Messages"); }
 
     private void naviguer(String fxml, String titre) {
         try {
