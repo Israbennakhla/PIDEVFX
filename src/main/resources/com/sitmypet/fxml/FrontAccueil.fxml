@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import com.sitmypet.components.ThemeToggle?>
+
+<BorderPane fx:id="mainContainer" prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sitmypet.controllers.FrontAccueilController" stylesheets="/style.css">
+    
+    <!-- TOP NAVBAR -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: white; -fx-padding: 15 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 4);">
+            
+            <!-- Logo -->
+            <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-cursor: hand;" minWidth="-Infinity">
+                <Label text="🐾" style="-fx-font-size: 28px; -fx-text-fill: #8e5bd6;"/>
+                <Label text="SitMyPet" style="-fx-font-size: 22px; -fx-font-weight: 900; -fx-text-fill: #2d1354;"/>
+            </HBox>
+            
+            <Region prefWidth="20"/> <!-- Espace après le logo -->
+            
+            <!-- Liens Généraux -->
+            <Button fx:id="btnAccueil" text="Accueil" onAction="#handleShowAccueil" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #8e5bd6; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: transparent transparent #8e5bd6 transparent; -fx-border-width: 0 0 3 0; -fx-padding: 5 10;"/>
+            <Button fx:id="btnProfil" text="Mon Profil" onAction="#handleShowProfil" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
+            
+            <!-- SECTION PROPRIETAIRE -->
+            <HBox fx:id="boxProprietaire" spacing="5" managed="false" visible="false" alignment="CENTER_LEFT" minWidth="-Infinity">
+                <Button fx:id="btnMesAnimaux" text="Mes Animaux" onAction="#handleMesAnimaux" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
+                <Button fx:id="btnMesAnnonces" text="Mes Annonces" onAction="#handleMesAnnonces" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
+            </HBox>
+
+            <!-- SECTION GARDIEN -->
+            <HBox fx:id="boxGardien" spacing="5" managed="false" visible="false" alignment="CENTER_LEFT" minWidth="-Infinity">
+                <Button fx:id="btnMesPostulations" text="Mes Postulations" onAction="#handleMesPostulations" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
+            </HBox>
+
+            <Button fx:id="btnMessagerie" text="Messagerie" onAction="#handleMessagerie" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
+            <Button fx:id="btnArticles" text="Blog" onAction="#handleBlog" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
+            
+            <!-- Espace flexible pour pousser la déconnexion à droite -->
+            <Region HBox.hgrow="ALWAYS" />
+            
+            <!-- Avatar et Déconnexion -->
+            <HBox alignment="CENTER" spacing="15" minWidth="-Infinity">
+                <ThemeToggle />
+                <HBox alignment="CENTER" spacing="8" style="-fx-cursor: hand; -fx-background-color: -color-bg-card; -fx-padding: 5 12; -fx-background-radius: 30; -fx-border-color: -color-border; -fx-border-radius: 30;" minWidth="-Infinity">
+                    <Label text="👤" style="-fx-font-size: 16px;"/>
+                    <Label text="Mon Compte" style="-fx-text-fill: -color-text-primary; -fx-font-weight: bold; -fx-font-size: 13px;"/>
+                </HBox>
+                <Button fx:id="btnDeconnexion" text="Déconnexion" minWidth="-Infinity" onAction="#handleDeconnexion" style="-fx-background-color: -color-bg-danger-light; -fx-text-fill: -color-text-danger; -fx-border-color: -color-border-danger; -fx-border-radius: 20; -fx-background-radius: 20; -fx-padding: 6 15; -fx-cursor: hand; -fx-font-weight: bold; -fx-font-size: 13px;"/>
+            </HBox>
+        </HBox>
+    </top>
+    
+    <!-- CENTER CONTENT (scroll : accès à tout le bloc annonces gardien + bas de page) -->
+    <center>
+        <ScrollPane fx:id="accueilScroll" fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;">
+        <VBox fx:id="accueilContent" style="-fx-background-color: -color-bg-main;">
+            <!-- Nouveau En-tête Moderne -->
+            <VBox spacing="15" style="-fx-background-color: -color-bg-surface; -fx-padding: 60 80 40 80; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.02), 10, 0, 0, 5);">
+                <HBox alignment="CENTER_LEFT" spacing="20">
+                    <VBox spacing="10" HBox.hgrow="ALWAYS">
+                        <Label fx:id="lblWelcomeTitle" text="Bienvenue sur votre espace !" style="-fx-font-size: 42px; -fx-font-weight: 900; -fx-text-fill: -color-text-primary;"/>
+                        <Label text="Gérez vos animaux, trouvez le gardien idéal et parcourez nos annonces facilement." style="-fx-font-size: 18px; -fx-text-fill: -color-text-secondary;"/>
+                        
+                        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 15 0 0 0;">
+                            <Label text="Votre profil actuel :" style="-fx-text-fill: -color-text-muted; -fx-font-size: 15px; -fx-font-weight: bold;"/>
+                            <Label fx:id="lblRoleDisplay" text="Rôle Non Défini" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: linear-gradient(to right bottom, #8e5bd6, #5a2cc9); -fx-padding: 6 18; -fx-background-radius: 20; -fx-effect: dropshadow(gaussian, rgba(142, 91, 214, 0.4), 10, 0, 0, 3);"/>
+                        </HBox>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Dashboard Cards Content -->
+            <VBox spacing="30" style="-fx-padding: 40 80;" VBox.vgrow="ALWAYS">
+                <Label text="Aperçu Rapide" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                
+                <HBox spacing="30">
+                    <!-- Card 1 -->
+                    <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: #f1f5f9; -fx-border-radius: 15; -fx-border-width: 1; -fx-cursor: hand;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
+                        <StackPane style="-fx-background-color: #ebf4ff; -fx-background-radius: 12; -fx-padding: 15; -fx-max-width: 70; -fx-max-height: 70;" alignment="CENTER_LEFT">
+                            <Label text="🐾" style="-fx-font-size: 32px;"/>
+                        </StackPane>
+                        <Label text="Gérer mes compagnons" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                        <Label text="Accédez rapidement à vos fiches animaux." style="-fx-font-size: 14px; -fx-text-fill: #a0aec0;" wrapText="true"/>
+                    </VBox>
+
+                    <!-- Card 2 -->
+                    <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: #f1f5f9; -fx-border-radius: 15; -fx-border-width: 1; -fx-cursor: hand;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
+                        <StackPane style="-fx-background-color: #f3e8ff; -fx-background-radius: 12; -fx-padding: 15; -fx-max-width: 70; -fx-max-height: 70;" alignment="CENTER_LEFT">
+                            <Label text="💬" style="-fx-font-size: 32px;"/>
+                        </StackPane>
+                        <Label text="Messagerie intégrée" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                        <Label text="Communiquez avec les gardiens ou propriétaires." style="-fx-font-size: 14px; -fx-text-fill: #a0aec0;" wrapText="true"/>
+                    </VBox>
+
+                    <!-- Card 3 -->
+                    <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: #f1f5f9; -fx-border-radius: 15; -fx-border-width: 1; -fx-cursor: hand;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
+                        <StackPane style="-fx-background-color: #e6fffa; -fx-background-radius: 12; -fx-padding: 15; -fx-max-width: 70; -fx-max-height: 70;" alignment="CENTER_LEFT">
+                            <Label text="📢" style="-fx-font-size: 32px;"/>
+                        </StackPane>
+                        <Label text="Explorer les annonces" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                        <Label text="Trouvez les meilleures offres de garde." style="-fx-font-size: 14px; -fx-text-fill: #a0aec0;" wrapText="true"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Feed annonces (gardien : annonces disponibles pour postuler) -->
+                <VBox fx:id="gardienFeedSection" spacing="16" visible="false" managed="false" style="-fx-padding: 10 0 0 0;" VBox.vgrow="ALWAYS">
+                    <Label text="Annonces disponibles" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                    <StackPane fx:id="announcementFeedHost" minHeight="440" prefHeight="520" VBox.vgrow="ALWAYS" style="-fx-background-color: #f6f7fb; -fx-background-radius: 12; -fx-padding: 8;"/>
+                </VBox>
+                
+                <!-- Bannière Promo ou Info -->
+                <HBox style="-fx-background-color: linear-gradient(to right, #8e5bd6, #633694); -fx-background-radius: 15; -fx-padding: 35; -fx-effect: dropshadow(gaussian, rgba(142, 91, 214, 0.4), 15, 0, 0, 5);" alignment="CENTER_LEFT" spacing="25">
+                    <Label text="🚀" style="-fx-font-size: 45px;"/>
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Découvrez notre nouveau blog !" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                        <Label text="Astuces de garde, conseils de santé pour vos animaux et bien plus encore." style="-fx-font-size: 15px; -fx-text-fill: #d1cadd;"/>
+                    </VBox>
+                    <Button text="Lire les articles" style="-fx-background-color: white; -fx-text-fill: #633694; -fx-padding: 12 30; -fx-font-weight: bold; -fx-background-radius: 30; -fx-font-size: 16px; -fx-cursor: hand;"/>
+                </HBox>
+            </VBox>
+        </VBox>
+        </ScrollPane>
+    </center>
+    
+</BorderPane>
