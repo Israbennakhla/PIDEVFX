@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sitmypet.controllers.AdminEvenementsController" stylesheets="/style.css">
+    <top>
+        <HBox style="-fx-background-color: #2d1354; -fx-padding: 15;" alignment="CENTER_LEFT" spacing="20">
+            <Button text="← Retour Dashboard" onAction="#handleRetour" style="-fx-background-color: white; -fx-text-fill: #2d1354; -fx-cursor: hand; -fx-font-weight: bold;"/>
+            <Label text="📅 Gestion des Événements" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+        </HBox>
+    </top>
+    <center>
+        <TableView fx:id="tableEvenements" style="-fx-padding: 10;">
+            <columns>
+                <TableColumn text="ID" prefWidth="50"><cellValueFactory><PropertyValueFactory property="id"/></cellValueFactory></TableColumn>
+                <TableColumn text="Nom" prefWidth="150"><cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory></TableColumn>
+                <TableColumn text="Date" prefWidth="100"><cellValueFactory><PropertyValueFactory property="date"/></cellValueFactory></TableColumn>
+                <TableColumn text="Heure" prefWidth="80"><cellValueFactory><PropertyValueFactory property="heure"/></cellValueFactory></TableColumn>
+                <TableColumn text="Adresse" prefWidth="150"><cellValueFactory><PropertyValueFactory property="addresse"/></cellValueFactory></TableColumn>
+                <TableColumn text="Description" prefWidth="250"><cellValueFactory><PropertyValueFactory property="description"/></cellValueFactory></TableColumn>
+            </columns>
+        </TableView>
+    </center>
+    <right>
+        <VBox spacing="10" style="-fx-padding: 20; -fx-background-color: #f8f9fa; -fx-border-color: #ddd; -fx-border-width: 0 0 0 1;" prefWidth="350">
+            <Label text="Formulaire Événement" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <TextField fx:id="txtNom" promptText="Nom de l'événement"/>
+            <DatePicker fx:id="dpDate" promptText="Date de l'événement" maxWidth="Infinity"/>
+            <TextField fx:id="txtHeure" promptText="Heure (ex: 14:00)"/>
+            <TextField fx:id="txtAdresse" promptText="Adresse"/>
+            <TextArea fx:id="txtDescription" promptText="Description" prefRowCount="4"/>
+            
+            <HBox spacing="10" style="-fx-padding: 10 0 0 0;">
+                <Button text="Vider" onAction="#handleClear" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="Ajouter" onAction="#handleAjouter" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+            <HBox spacing="10">
+                <Button text="Modifier" onAction="#handleModifier" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="Supprimer" onAction="#handleSupprimer" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+        </VBox>
+    </right>
+</BorderPane>

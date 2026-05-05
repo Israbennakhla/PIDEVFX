@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sitmypet.controllers.FrontEvenementsController" stylesheets="/style.css" style="-fx-background-color: #f4f7f6;">
+    <top>
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20; -fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0;" spacing="20">
+            <Label text="📅 Événements à venir" style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: #2d1354;"/>
+        </HBox>
+    </top>
+    
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-padding: 20;">
+            <TilePane fx:id="cardsContainer" hgap="25" vgap="25" prefColumns="3" alignment="TOP_LEFT" />
+        </ScrollPane>
+    </center>
+</BorderPane>

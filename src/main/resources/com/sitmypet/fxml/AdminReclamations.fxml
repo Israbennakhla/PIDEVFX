@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sitmypet.controllers.AdminReclamationsController" stylesheets="/style.css">
+    <top>
+        <HBox style="-fx-background-color: #2d1354; -fx-padding: 15;" alignment="CENTER_LEFT" spacing="20">
+            <Button text="← Retour Dashboard" onAction="#handleRetour" style="-fx-background-color: white; -fx-text-fill: #2d1354; -fx-cursor: hand; -fx-font-weight: bold;"/>
+            <Label text="⚠️ Gestion des Réclamations" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+        </HBox>
+    </top>
+    <center>
+        <TableView fx:id="tableReclamations" style="-fx-padding: 10;">
+            <columns>
+                <TableColumn text="ID" prefWidth="50"><cellValueFactory><PropertyValueFactory property="id"/></cellValueFactory></TableColumn>
+                <TableColumn text="Client" prefWidth="120"><cellValueFactory><PropertyValueFactory property="nomClient"/></cellValueFactory></TableColumn>
+                <TableColumn text="Email" prefWidth="150"><cellValueFactory><PropertyValueFactory property="emailClient"/></cellValueFactory></TableColumn>
+                <TableColumn text="Sujet" prefWidth="150"><cellValueFactory><PropertyValueFactory property="sujet"/></cellValueFactory></TableColumn>
+                <TableColumn text="Statut" prefWidth="100"><cellValueFactory><PropertyValueFactory property="statut"/></cellValueFactory></TableColumn>
+                <TableColumn text="Priorité" prefWidth="80"><cellValueFactory><PropertyValueFactory property="priorite"/></cellValueFactory></TableColumn>
+                <TableColumn text="Date" prefWidth="150"><cellValueFactory><PropertyValueFactory property="dateReclamation"/></cellValueFactory></TableColumn>
+            </columns>
+        </TableView>
+    </center>
+    <right>
+        <VBox spacing="10" style="-fx-padding: 20; -fx-background-color: #f8f9fa; -fx-border-color: #ddd; -fx-border-width: 0 0 0 1;" prefWidth="350">
+            <Label text="Détails de la Réclamation" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            
+            <Label text="Client:" style="-fx-font-weight: bold; -fx-text-fill: #555;"/>
+            <TextField fx:id="txtClient" editable="false" style="-fx-background-color: #e9ecef;"/>
+            
+            <Label text="Sujet:" style="-fx-font-weight: bold; -fx-text-fill: #555;"/>
+            <TextField fx:id="txtSujet" editable="false" style="-fx-background-color: #e9ecef;"/>
+            
+            <Label text="Description:" style="-fx-font-weight: bold; -fx-text-fill: #555;"/>
+            <TextArea fx:id="txtDescription" editable="false" prefRowCount="5" style="-fx-background-color: #e9ecef;" wrapText="true"/>
+            
+            <Label text="Statut actuel:" style="-fx-font-weight: bold; -fx-text-fill: #555; -fx-padding: 10 0 0 0;"/>
+            <ComboBox fx:id="cbStatut" maxWidth="Infinity"/>
+            
+            <Button text="Mettre à jour le statut" onAction="#handleUpdateStatut" style="-fx-background-color: #8e5bd6; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 10;" maxWidth="Infinity">
+                <VBox.margin>
+                    <Insets top="20" />
+                </VBox.margin>
+            </Button>
+            
+            <Button text="Supprimer" onAction="#handleSupprimer" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 10;" maxWidth="Infinity">
+                <VBox.margin>
+                    <Insets top="10" />
+                </VBox.margin>
+            </Button>
+        </VBox>
+    </right>
+</BorderPane>

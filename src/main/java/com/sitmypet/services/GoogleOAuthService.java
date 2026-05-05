@@ -17,21 +17,20 @@ import java.nio.charset.StandardCharsets;
 
 public class GoogleOAuthService {
 
-    private static String CLIENT_ID = "";
-    private static String CLIENT_SECRET = "";
+    private static String CLIENT_ID;
+    private static String CLIENT_SECRET;
+    private static final String REDIRECT_URI = "http://localhost:8085/Callback";
 
     static {
-        try (java.io.InputStream input = new java.io.FileInputStream("config.properties")) {
-            java.util.Properties prop = new java.util.Properties();
-            prop.load(input);
-            CLIENT_ID = prop.getProperty("GOOGLE_OAUTH_CLIENT_ID", "");
-            CLIENT_SECRET = prop.getProperty("GOOGLE_OAUTH_CLIENT_SECRET", "");
-        } catch (IOException ex) {
-            System.err.println("Erreur: impossible de charger config.properties. Assurez-vous que le fichier existe à la racine du projet.");
-            ex.printStackTrace();
+        java.util.Properties props = new java.util.Properties();
+        try (java.io.InputStream is = new java.io.FileInputStream("config.properties")) {
+            props.load(is);
+            CLIENT_ID = props.getProperty("GOOGLE_OAUTH_CLIENT_ID");
+            CLIENT_SECRET = props.getProperty("GOOGLE_OAUTH_CLIENT_SECRET");
+        } catch (Exception e) {
+            System.err.println("Erreur chargement config.properties : " + e.getMessage());
         }
     }
-    private static final String REDIRECT_URI = "http://localhost:8085/Callback";
     
     private static final String AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
     private static final String TOKEN_URL = "https://oauth2.googleapis.com/token";

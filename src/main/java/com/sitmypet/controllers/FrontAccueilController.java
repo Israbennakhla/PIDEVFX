@@ -31,6 +31,8 @@ public class FrontAccueilController {
     @FXML private Button btnRechercherAnnonces;
     @FXML private Button btnMesPostulations;
     @FXML private Button btnMessagerie;
+    @FXML private Button btnEvenements;
+    @FXML private Button btnReclamations;
     @FXML private Button btnArticles;
     @FXML private Button btnDeconnexion;
 
@@ -111,14 +113,69 @@ public class FrontAccueilController {
         }
     }
 
+    @FXML
+    private void handleShowAnimaux(ActionEvent event) {
+        System.out.println("Afficher les animaux");
+        loadCenterView("/com/sitmypet/fxml/FrontAnimaux.fxml");
+        updateNavStyles(btnMesAnimaux);
+    }
+
+    @FXML
+    private void handleShowEvenements(ActionEvent event) {
+        System.out.println("Afficher les événements");
+        loadCenterView("/com/sitmypet/fxml/FrontEvenements.fxml");
+        updateNavStyles(btnEvenements);
+    }
+
+    @FXML
+    private void handleShowReclamations(ActionEvent event) {
+        System.out.println("Afficher les réclamations");
+        loadCenterView("/com/sitmypet/fxml/FrontReclamations.fxml");
+        updateNavStyles(btnReclamations);
+    }
+
+    private void loadCenterView(String fxmlPath) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Node view = loader.load();
+            
+            Object controller = loader.getController();
+            if (controller instanceof FrontReclamationsController) {
+                ((FrontReclamationsController) controller).setUser(currentUser);
+            }
+            
+            mainContainer.setCenter(view);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Erreur lors du chargement de la vue: " + fxmlPath);
+            showAlert("Erreur", "Impossible de charger la vue demandée.");
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     private void updateNavStyles(Button activeBtn) {
         String activeStyle = "-fx-background-color: transparent; -fx-text-fill: #8e5bd6; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: transparent transparent #8e5bd6 transparent; -fx-border-width: 0 0 3 0; -fx-padding: 5 10;";
         String inactiveStyle = "-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;";
 
-        btnAccueil.setStyle(inactiveStyle);
-        btnProfil.setStyle(inactiveStyle);
-        // ... autres boutons si nécessaire
+        Button[] buttons = {btnAccueil, btnProfil, btnMesAnimaux, btnMesAnnonces, btnPostulationsRecues, 
+                            btnRechercherAnnonces, btnMesPostulations, btnMessagerie, btnEvenements, 
+                            btnReclamations, btnArticles};
 
-        activeBtn.setStyle(activeStyle);
+        for (Button btn : buttons) {
+            if (btn != null) {
+                btn.setStyle(inactiveStyle);
+            }
+        }
+
+        if (activeBtn != null) {
+            activeBtn.setStyle(activeStyle);
+        }
     }
 }

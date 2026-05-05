@@ -75,6 +75,53 @@ public class DashboardController {
     }
 
     @FXML
+    private void handleAfficherAnimaux(ActionEvent event) {
+        System.out.println("Navigation vers Animaux (Admin)");
+        loadAdminView(event, "/com/sitmypet/fxml/AdminAnimaux.fxml");
+    }
+    
+    @FXML
+    private void handleAfficherAnnonces(ActionEvent event) {
+        System.out.println("Navigation vers Annonces (Admin)");
+        showAlert("En développement", "Le module de gestion des annonces sera bientôt disponible !");
+    }
+
+    @FXML
+    private void handleAfficherEvenements(ActionEvent event) {
+        System.out.println("Navigation vers Événements (Admin)");
+        loadAdminView(event, "/com/sitmypet/fxml/AdminEvenements.fxml");
+    }
+
+    @FXML
+    private void handleAfficherReclamations(ActionEvent event) {
+        System.out.println("Navigation vers Réclamations (Admin)");
+        loadAdminView(event, "/com/sitmypet/fxml/AdminReclamations.fxml");
+    }
+
+    private void loadAdminView(ActionEvent event, String fxmlPath) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+            stage.setScene(new Scene(root, bounds.getWidth() * 0.9, bounds.getHeight() * 0.9));
+            stage.setMaximized(true);
+            stage.centerOnScreen();
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible de charger la vue demandée.");
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    @FXML
     private void handleAfficherUsers(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/com/sitmypet/fxml/AfficherUser.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

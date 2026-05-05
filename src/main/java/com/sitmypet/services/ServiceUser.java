@@ -227,6 +227,13 @@ public class ServiceUser implements IService<User> {
         }
 
         // 2. Vérification DB
+        if (connection == null) {
+            connection = MyDatabase.getInstance().getConnection();
+            if (connection == null) {
+                throw new AuthenticationException("❌ Impossible de se connecter à la base de données. Veuillez vérifier que XAMPP / MySQL est bien démarré.");
+            }
+        }
+
         String query = "SELECT * FROM utilisateurs WHERE email = ? AND deleted_at IS NULL";
         
         try (java.sql.PreparedStatement pst = connection.prepareStatement(query)) {
@@ -440,6 +447,14 @@ public class ServiceUser implements IService<User> {
 
     // Authentification ou Inscription via Google
     public User authentifierOuInscrireGoogle(String email, String nom, String prenom, String photoUrl) {
+        if (connection == null) {
+            connection = MyDatabase.getInstance().getConnection();
+            if (connection == null) {
+                System.err.println("❌ Impossible de se connecter à la base de données. Veuillez vérifier que XAMPP / MySQL est bien démarré.");
+                return null;
+            }
+        }
+
         // 1. Vérifier si l'utilisateur existe déjà
         String checkQuery = "SELECT * FROM utilisateurs WHERE email = ? AND deleted_at IS NULL";
         try (PreparedStatement pst = connection.prepareStatement(checkQuery)) {

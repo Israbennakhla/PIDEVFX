@@ -38,10 +38,10 @@
             <VBox spacing="5" style="-fx-padding: 5 15 5 15;">
                 <Label text="GESTION" styleClass="sidebar-section"/>
                 <Button text="👥 Utilisateurs" onAction="#handleAfficherUsers" styleClass="sidebar-btn"/>
-                <Button text="🐾 Animaux" styleClass="sidebar-btn"/>
-                <Button text="📢 Annonces" styleClass="sidebar-btn"/>
-                <Button text="📅 Événements" styleClass="sidebar-btn"/>
-                <Button text="📩 Réclamations" styleClass="sidebar-btn"/>
+                <Button text="🐾 Animaux" onAction="#handleAfficherAnimaux" styleClass="sidebar-btn"/>
+                <Button text="📢 Annonces" onAction="#handleAfficherAnnonces" styleClass="sidebar-btn"/>
+                <Button text="📅 Événements" onAction="#handleAfficherEvenements" styleClass="sidebar-btn"/>
+                <Button text="📩 Réclamations" onAction="#handleAfficherReclamations" styleClass="sidebar-btn"/>
             </VBox>
             
             <!-- Section Publique -->

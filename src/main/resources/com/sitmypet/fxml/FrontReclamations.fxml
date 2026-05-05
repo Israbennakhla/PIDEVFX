@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sitmypet.controllers.FrontReclamationsController" stylesheets="/style.css" style="-fx-background-color: #f4f7f6;">
+    <top>
+        <VBox spacing="10" style="-fx-padding: 30; -fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0;">
+            <Label text="✍️ Nous contacter" style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: #2d1354;"/>
+            <Label text="Un problème ? Une suggestion ? N'hésitez pas à nous en faire part." style="-fx-text-fill: #718096; -fx-font-size: 14px;"/>
+        </VBox>
+    </top>
+    
+    <center>
+        <SplitPane dividerPositions="0.4" style="-fx-background-color: transparent; -fx-padding: 20;">
+            <!-- Formulaire -->
+            <VBox spacing="15" style="-fx-padding: 25; -fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+                <Label text="Nouvelle réclamation" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2d1354;"/>
+                <VBox spacing="5">
+                    <Label text="Sujet" style="-fx-text-fill: #4a5568; -fx-font-weight: bold;"/>
+                    <TextField fx:id="txtSujet" promptText="Ex: Problème avec une réservation" style="-fx-padding: 10; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #cbd5e0;"/>
+                </VBox>
+                <VBox spacing="5" VBox.vgrow="ALWAYS">
+                    <Label text="Description" style="-fx-text-fill: #4a5568; -fx-font-weight: bold;"/>
+                    <TextArea fx:id="txtDescription" promptText="Décrivez votre problème en détail..." wrapText="true" VBox.vgrow="ALWAYS" style="-fx-padding: 5; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #cbd5e0;"/>
+                </VBox>
+                <Button text="Envoyer la réclamation" onAction="#handleEnvoyer" style="-fx-background-color: #8e5bd6; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-padding: 12; -fx-background-radius: 8; -fx-cursor: hand;" maxWidth="Infinity"/>
+            </VBox>
+            
+            <!-- Historique -->
+            <VBox spacing="15" style="-fx-padding: 25; -fx-background-color: transparent;">
+                <Label text="Mes Réclamations" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2d1354;"/>
+                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                    <VBox fx:id="historiqueContainer" spacing="10" />
+                </ScrollPane>
+            </VBox>
+        </SplitPane>
+    </center>
+</BorderPane>
