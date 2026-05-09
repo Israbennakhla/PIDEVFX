@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.sitmypet.controllers.MessagerieController"
+      prefWidth="1100" prefHeight="650"
+      style="-fx-background-color:#f0f0f8;">
+
+    <HBox VBox.vgrow="ALWAYS" spacing="0">
+
+        <VBox prefWidth="300" minWidth="280" maxWidth="320"
+              style="-fx-background-color:white;-fx-border-color:#e8e0f5 transparent transparent transparent;-fx-border-width:0 1 0 0;">
+
+            <HBox style="-fx-background-color:#f8f5ff;-fx-padding:16 18;
+                         -fx-border-color:transparent transparent #e8e0f5 transparent;-fx-border-width:0 0 1 0;">
+                <Label text="Conversations"
+                       style="-fx-font-size:15px;-fx-font-weight:bold;-fx-text-fill:#1a1a2e;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <ListView fx:id="listConversations" VBox.vgrow="ALWAYS"
+                      style="-fx-background-color:transparent;-fx-border-color:transparent;
+                             -fx-focus-color:transparent;-fx-faint-focus-color:transparent;"/>
+        </VBox>
+
+        <VBox HBox.hgrow="ALWAYS" style="-fx-background-color:#f0f0f8;">
+
+            <HBox alignment="CENTER_LEFT"
+                  style="-fx-background-color:white;-fx-padding:14 20;
+                         -fx-border-color:#e8e0f5 transparent #e8e0f5 transparent;
+                         -fx-border-width:1 0 1 0;-fx-min-height:60;-fx-max-height:60;">
+                <Label fx:id="labelInterlocuteur" text="Sélectionnez une conversation"
+                       style="-fx-font-size:15px;-fx-font-weight:bold;-fx-text-fill:#1a1a2e;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="labelStatut" text=""
+                       style="-fx-font-size:11px;-fx-text-fill:#4caf50;-fx-font-weight:bold;"/>
+            </HBox>
+
+            <ScrollPane fx:id="scrollMessages" fitToWidth="true" VBox.vgrow="ALWAYS"
+                        style="-fx-background-color:#f0f0f8;-fx-border-color:transparent;
+                               -fx-focus-color:transparent;">
+                <VBox fx:id="messagesBox" spacing="10"
+                      style="-fx-background-color:#f0f0f8;-fx-padding:16;"/>
+            </ScrollPane>
+
+            <HBox spacing="0" alignment="CENTER"
+                  style="-fx-background-color:white;
+                         -fx-border-color:#e8e0f5 transparent transparent transparent;
+                         -fx-border-width:1 0 0 0;-fx-min-height:70;-fx-max-height:70;">
+                <TextArea fx:id="inputField"
+                          promptText="Votre message… (Entrée pour envoyer)"
+                          prefRowCount="2" wrapText="true"
+                          style="-fx-background-color:transparent;-fx-border-color:transparent;
+                                 -fx-font-size:13px;-fx-padding:12 16;"/>
+                <Button fx:id="btnEnvoyer" text="Envoyer" onAction="#handleEnvoyer"
+                        style="-fx-background-color:#9b72e8;-fx-text-fill:white;
+                               -fx-font-size:13px;-fx-font-weight:bold;
+                               -fx-background-radius:0;-fx-cursor:hand;
+                               -fx-padding:0 24;-fx-min-height:70;-fx-max-height:70;"/>
+            </HBox>
+        </VBox>
+    </HBox>
+</VBox>

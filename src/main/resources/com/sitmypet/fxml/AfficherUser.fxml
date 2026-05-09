@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import com.sitmypet.components.SmallThemeToggle?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.sitmypet.controllers.AfficherUserController"
+            stylesheets="/style.css"
+            prefHeight="750.0" prefWidth="1300.0">
+
+    <!-- SIDEBAR GAUCHE -->
+    <left>
+        <VBox styleClass="sidebar" prefWidth="260" spacing="10">
+            <!-- Logo Section -->
+            <VBox alignment="CENTER_LEFT" spacing="5" style="-fx-padding: 25 20 15 20;">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="🐾" style="-fx-font-size: 26px; -fx-text-fill: #a274db;"/>
+                    <Label text="SitMyPet" styleClass="sidebar-logo-text"/>
+                </HBox>
+                <Label text="PANNEAU ADMIN" styleClass="sidebar-subtitle"/>
+                <Region prefHeight="10"/>
+                <SmallThemeToggle />
+            </VBox>
+            
+            <Separator styleClass="sidebar-separator" />
+            
+            <!-- Section Principal -->
+            <VBox spacing="5" style="-fx-padding: 10 15 5 15;">
+                <Label text="PRINCIPAL" styleClass="sidebar-section"/>
+                <Button text="⏱ Dashboard" onAction="#handleDashboard" styleClass="sidebar-btn"/>
+            </VBox>
+            
+            <!-- Section Gestion -->
+            <VBox spacing="5" style="-fx-padding: 5 15 5 15;">
+                <Label text="GESTION" styleClass="sidebar-section"/>
+                <Button fx:id="btnNavUsers" text="👥 Utilisateurs" onAction="#handleSidebarUsers" styleClass="sidebar-btn, sidebar-active"/>
+                <Button fx:id="btnNavAnimaux" text="🐾 Animaux" onAction="#handleSidebarAnimaux" styleClass="sidebar-btn"/>
+                <Button fx:id="btnNavAnnonces" text="📢 Annonces" onAction="#handleSidebarAnnonces" styleClass="sidebar-btn"/>
+                <Button fx:id="btnNavPostulations" text="📋 Postulations" onAction="#handleSidebarPostulations" styleClass="sidebar-btn"/>
+                <Button text="📅 Événements" styleClass="sidebar-btn"/>
+                <Button fx:id="btnNavReclamations" text="📩 Réclamations" onAction="#handleSidebarReclamations" styleClass="sidebar-btn"/>
+            </VBox>
+            
+            <!-- Section Publique -->
+            <VBox spacing="5" style="-fx-padding: 10 15 5 15;">
+                <Label text="INTERFACE PUBLIQUE" styleClass="sidebar-section"/>
+                <Button text="🌐 Voir le site" styleClass="sidebar-btn"/>
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS" />
+            <Separator styleClass="sidebar-separator" />
+
+            <!-- Utilisateur Connecté en bas -->
+            <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 20 15 5 15;">
+                <Label text="SA" styleClass="sidebar-avatar"/>
+                <VBox alignment="CENTER_LEFT" spacing="2">
+                    <Label text="Super Admin" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <Label text="Administrateur" style="-fx-text-fill: #8a81ad; -fx-font-size: 11px;"/>
+                </VBox>
+            </HBox>
+            
+            <!-- Bouton de Déconnexion -->
+            <VBox style="-fx-padding: 0 15 20 15;">
+                <Button text="🚪 Se Déconnecter" onAction="#handleLogout" styleClass="sidebar-btn" style="-fx-text-fill: #e74c3c; -fx-font-weight: bold; -fx-alignment: CENTER; -fx-border-color: #3b305c; -fx-border-radius: 8; -fx-border-width: 1;"/>
+            </VBox>
+        </VBox>
+    </left>
+
+
+    <!-- CONTENU CENTRAL -->
+    <center>
+        <StackPane fx:id="adminCenterStack" maxWidth="Infinity" maxHeight="Infinity" style="-fx-background-color: -color-bg-surface;">
+        <VBox fx:id="paneUtilisateurs" maxWidth="Infinity" maxHeight="Infinity" StackPane.alignment="TOP_LEFT">
+            <!-- Nouveau En-tête Moderne -->
+            <VBox spacing="25" style="-fx-background-color: -color-bg-surface; -fx-padding: 30 40 30 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 10, 0, 0, 5);">
+                <HBox alignment="CENTER_LEFT" spacing="20">
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="👋" style="-fx-font-size: 32px;"/>
+                            <Label text="Gestion des Utilisateurs" style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: -color-text-main;"/>
+                        </HBox>
+                        <Label text="Supervisez l'activité, ajoutez de nouveaux comptes et gérez les accès de la plateforme." style="-fx-font-size: 15px; -fx-text-fill: -color-text-secondary;"/>
+                    </VBox>
+                    <Button text="+ Nouvel Utilisateur" onAction="#handleAjouter" styleClass="btn-primary" style="-fx-padding: 12 25; -fx-font-size: 15px; -fx-background-radius: 30; -fx-font-weight: 900; -fx-effect: dropshadow(gaussian, rgba(142, 91, 214, 0.4), 10, 0, 0, 4); -fx-cursor: hand;"/>
+                </HBox>
+                
+                <!-- Statistiques Modernes -->
+                <HBox spacing="25" alignment="CENTER_LEFT">
+                    <!-- Total -->
+                    <HBox style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: -color-border; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
+                        <StackPane style="-fx-background-color: #ebf4ff; -fx-background-radius: 12; -fx-padding: 15;">
+                            <Label text="👥" style="-fx-font-size: 24px;"/>
+                        </StackPane>
+                        <VBox alignment="CENTER_LEFT" spacing="2">
+                            <Label text="Total Utilisateurs" style="-fx-font-size: 13px; -fx-text-fill: -color-text-muted; -fx-font-weight: bold;"/>
+                            <Label fx:id="lblTotal" text="0" style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: -color-text-main;"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <!-- Admins -->
+                    <HBox style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: -color-border; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
+                        <StackPane style="-fx-background-color: #f3e8ff; -fx-background-radius: 12; -fx-padding: 15;">
+                            <Label text="⭐" style="-fx-font-size: 24px;"/>
+                        </StackPane>
+                        <VBox alignment="CENTER_LEFT" spacing="2">
+                            <Label text="Administrateurs" style="-fx-font-size: 13px; -fx-text-fill: -color-text-muted; -fx-font-weight: bold;"/>
+                            <Label fx:id="lblAdmin" text="0" style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: -color-text-main;"/>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Propriétaires -->
+                    <HBox style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: -color-border; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
+                        <StackPane style="-fx-background-color: #e6fffa; -fx-background-radius: 12; -fx-padding: 15;">
+                            <Label text="🏠" style="-fx-font-size: 24px;"/>
+                        </StackPane>
+                        <VBox alignment="CENTER_LEFT" spacing="2">
+                            <Label text="Propriétaires" style="-fx-font-size: 13px; -fx-text-fill: -color-text-muted; -fx-font-weight: bold;"/>
+                            <Label fx:id="lblProprietaire" text="0" style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: -color-text-main;"/>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Gardiens -->
+                    <HBox style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: -color-border; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
+                        <StackPane style="-fx-background-color: #fffff0; -fx-background-radius: 12; -fx-padding: 15;">
+                            <Label text="🐾" style="-fx-font-size: 24px;"/>
+                        </StackPane>
+                        <VBox alignment="CENTER_LEFT" spacing="2">
+                            <Label text="Gardiens" style="-fx-font-size: 13px; -fx-text-fill: -color-text-muted; -fx-font-weight: bold;"/>
+                            <Label fx:id="lblGardien" text="0" style="-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: -color-text-main;"/>
+                        </VBox>
+                    </HBox>
+                </HBox>
+            </VBox>
+
+            <!-- Section Liste & Recherche -->
+            <VBox spacing="20" VBox.vgrow="ALWAYS" style="-fx-padding: 20 40 30 40;">
+                
+                <!-- Barre de recherche moderne -->
+                <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 12 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 10, 0, 0, 4); -fx-border-color: -color-border; -fx-border-radius: 15; -fx-border-width: 1;">
+                    <Label text="🔍" style="-fx-font-size: 18px; -fx-text-fill: -color-text-muted;" minWidth="-Infinity"/>
+                    <TextField fx:id="txtRecherche" promptText="Rechercher par nom, prénom ou email..." HBox.hgrow="ALWAYS" style="-fx-background-color: transparent; -fx-font-size: 15px; -fx-prompt-text-fill: -color-text-muted; -fx-border-width: 0; -fx-text-fill: -color-text-main;"/>
+                    
+                    <Separator orientation="VERTICAL"/>
+                    <Label text="Rôle:" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -color-text-secondary;" minWidth="-Infinity"/>
+                    <ComboBox fx:id="comboRole" style="-fx-background-color: transparent; -fx-font-size: 14px; -fx-text-fill: -color-text-main;" minWidth="-Infinity"/>
+                    
+                    <Separator orientation="VERTICAL"/>
+                    <Label text="Statut:" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -color-text-secondary;" minWidth="-Infinity"/>
+                    <ComboBox fx:id="comboStatut" style="-fx-background-color: transparent; -fx-font-size: 14px; -fx-text-fill: -color-text-main;" minWidth="-Infinity"/>
+                    
+                    <Separator orientation="VERTICAL"/>
+                    <Label text="Tri:" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: -color-text-secondary;" minWidth="-Infinity"/>
+                    <ComboBox fx:id="comboTri" style="-fx-background-color: transparent; -fx-font-size: 14px; -fx-text-fill: -color-text-main;" minWidth="-Infinity"/>
+                    
+                    <Region prefWidth="5"/>
+                    <Button text="Filtrer" onAction="#handleRechercher" style="-fx-background-color: #8e5bd6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 20; -fx-cursor: hand;" minWidth="-Infinity"/>
+                    <Button text="↺" onAction="#handleReinitialiser" style="-fx-background-color: -color-bg-surface-alt; -fx-text-fill: -color-text-main; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 15; -fx-font-size: 14px; -fx-cursor: hand;" minWidth="-Infinity"/>
+                </HBox>
+                
+                <!-- Conteneur Principal ListView + Menu Détails -->
+                <HBox spacing="20" VBox.vgrow="ALWAYS">
+                    <!-- Liste remplaçant le tableau -->
+                    <ListView fx:id="listUsers" styleClass="custom-list-view" HBox.hgrow="ALWAYS" prefWidth="650"/>
+                    
+                    <!-- Panneau de détails caché par défaut -->
+                    <VBox fx:id="paneDetails" styleClass="details-pane" prefWidth="320" spacing="15" visible="false" managed="false">
+                        <Label text="Détails Utilisateur" styleClass="title-label">
+                            <font><Font name="System Bold" size="18"/></font>
+                        </Label>
+                        <Separator/>
+                        
+                        <HBox alignment="CENTER">
+                            <Label fx:id="lblDetailInitials" alignment="CENTER" prefHeight="80" prefWidth="80" styleClass="avatar-placeholder"/>
+                        </HBox>
+                        <Label fx:id="lblDetailNom" style="-fx-font-size: 20px; -fx-font-weight: bold;" alignment="CENTER" maxWidth="Infinity"/>
+                        
+                        <GridPane hgap="10" vgap="12">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="80" prefWidth="80"/>
+                                <ColumnConstraints hgrow="ALWAYS" prefWidth="180" maxWidth="180"/>
+                            </columnConstraints>
+                            
+                            <Label text="ID :" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
+                            <Label fx:id="lblDetailId" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                            
+                            <Label text="Email :" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-weight: bold;"/>
+                            <Label fx:id="lblDetailEmail" GridPane.columnIndex="1" GridPane.rowIndex="1" wrapText="true"/>
+                            
+                            <Label text="Téléphone :" GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-font-weight: bold;"/>
+                            <Label fx:id="lblDetailTel" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                            
+                            <Label text="Adresse :" GridPane.columnIndex="0" GridPane.rowIndex="3" style="-fx-font-weight: bold;"/>
+                            <Label fx:id="lblDetailAdresse" GridPane.columnIndex="1" GridPane.rowIndex="3" wrapText="true"/>
+                            
+                            <Label text="Rôle :" GridPane.columnIndex="0" GridPane.rowIndex="4" style="-fx-font-weight: bold;"/>
+                            <Label fx:id="lblDetailRole" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                            
+                            <Label text="Statut :" GridPane.columnIndex="0" GridPane.rowIndex="5" style="-fx-font-weight: bold;"/>
+                            <Label fx:id="lblDetailStatut" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                            
+                            <Label text="Inscrit le :" GridPane.columnIndex="0" GridPane.rowIndex="6" style="-fx-font-weight: bold;"/>
+                            <Label fx:id="lblDetailDate" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                        </GridPane>
+                        <Button fx:id="btnVoirCertificat" text="Voir le certificat" style="-fx-background-color: #8e5bd6; -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 20; -fx-font-weight: bold; -fx-cursor: hand;" maxWidth="Infinity" visible="false" managed="false" onAction="#handleVoirCertificat"/>
+                        <Button fx:id="btnDebloquer" text="🔓 Débloquer le compte" style="-fx-background-color: #e53e3e; -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 20; -fx-font-weight: bold; -fx-cursor: hand;" maxWidth="Infinity" visible="false" managed="false" onAction="#handleDebloquer"/>
+                    </VBox>
+                </HBox>
+                
+            </VBox>
+        </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

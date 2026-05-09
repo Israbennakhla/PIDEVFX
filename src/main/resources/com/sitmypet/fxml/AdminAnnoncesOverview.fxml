@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.sitmypet.controllers.AdminAnnoncesOverviewController"
+      maxWidth="Infinity" maxHeight="Infinity"
+      prefWidth="1100" prefHeight="700"
+      spacing="16"
+      style="-fx-background-color:#f0f0f8;-fx-padding:24 28;">
+
+    <HBox alignment="CENTER_LEFT">
+        <Label text="📢 Toutes les annonces" style="-fx-font-size:24px;-fx-font-weight:bold;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="labelCount" style="-fx-font-size:14px;-fx-text-fill:#666;"/>
+    </HBox>
+
+    <HBox spacing="12" alignment="CENTER_LEFT"
+          style="-fx-background-color:white;-fx-background-radius:10px;-fx-padding:14px 18px;">
+        <TextField fx:id="searchField" promptText="Rechercher (adresse, services…)" prefWidth="280" HBox.hgrow="ALWAYS"/>
+        <Button text="Rechercher" onAction="#handleRechercher"/>
+        <Button text="Réinitialiser" onAction="#handleReinitialiser"/>
+    </HBox>
+
+    <ListView fx:id="listAnnonces" VBox.vgrow="ALWAYS"/>
+</VBox>

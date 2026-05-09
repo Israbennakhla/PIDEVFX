@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sitmypet.controllers.AjouterReclamationController"
+      spacing="14" prefWidth="520" prefHeight="580"
+      style="-fx-padding:22;-fx-background-color:-color-bg-surface;">
+    <Label fx:id="lblTitle" style="-fx-font-size:20px;-fx-font-weight:bold;-fx-text-fill:-color-text-main;" text=""/>
+
+    <Label fx:id="lblNotice" wrapText="true"
+           style="-fx-font-size:12px;-fx-text-fill:-color-text-secondary;"
+           text=""/>
+
+    <Label fx:id="lblSujet"/>
+    <TextField fx:id="champSujet" prefHeight="36"/>
+
+    <Label fx:id="lblDesc"/>
+    <TextArea fx:id="champDescription" prefRowCount="5" wrapText="true"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Label fx:id="lblPriorite"/>
+        <ComboBox fx:id="champPriorite" prefWidth="160"/>
+    </HBox>
+    <Label fx:id="lblPrioriteAuto" wrapText="true"/>
+
+    <Label fx:id="lblNom"/>
+    <TextField fx:id="champNom"/>
+
+    <Label fx:id="lblEmail"/>
+    <TextField fx:id="champEmail"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Button fx:id="btnChoisirPhoto" onAction="#choisirPhoto"/>
+        <Button fx:id="btnRetirerPhoto" onAction="#supprimerPhoto"/>
+    </HBox>
+    <HBox spacing="14" alignment="CENTER_LEFT">
+        <ImageView fx:id="apercuPhoto" visible="false" preserveRatio="true" fitHeight="110" fitWidth="110"/>
+        <Label fx:id="lblPhoto" wrapText="true"/>
+    </HBox>
+
+    <Region VBox.vgrow="ALWAYS"/>
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button fx:id="btnAnnuler" cancelButton="true" onAction="#annuler"/>
+        <Button fx:id="btnEnvoyer" defaultButton="true" onAction="#enregistrer"/>
+    </HBox>
+</VBox>

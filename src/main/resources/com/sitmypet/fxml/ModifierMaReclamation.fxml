@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sitmypet.controllers.ModifierMaReclamationController"
+      spacing="12" stylesheets="/style.css"
+      style="-fx-padding:22;-fx-background-color:-color-bg-surface;">
+
+    <Label fx:id="lblTitle" style="-fx-font-size:18px;-fx-font-weight:bold;-fx-text-fill:-color-text-main;" text=""/>
+
+    <Label fx:id="lblLocked" managed="false" visible="false" wrapText="true"
+           style="-fx-text-fill:#e67e22;-fx-font-weight:bold;"/>
+
+    <Label fx:id="lblSujet"/>
+    <TextField fx:id="champSujet" prefHeight="36"/>
+
+    <Label fx:id="lblDesc"/>
+    <TextArea fx:id="champDescription" prefRowCount="4" wrapText="true"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Label fx:id="lblPriorite"/>
+        <ComboBox fx:id="champPriorite" prefWidth="160"/>
+    </HBox>
+
+    <Label fx:id="lblNom"/>
+    <TextField fx:id="champNom"/>
+
+    <Label fx:id="lblEmail"/>
+    <TextField fx:id="champEmail"/>
+
+    <Region VBox.vgrow="ALWAYS"/>
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button fx:id="btnAnnuler" cancelButton="true" onAction="#annuler"/>
+        <Button fx:id="btnEnregistrer" defaultButton="true" onAction="#enregistrer"/>
+    </HBox>
+</VBox>

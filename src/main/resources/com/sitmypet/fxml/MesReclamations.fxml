@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sitmypet.controllers.MesReclamationsController"
+      spacing="14" stylesheets="/style.css"
+      style="-fx-background-color:-color-bg-muted;-fx-padding:20 22 22 22;">
+
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <Label fx:id="lblPageTitle"
+               style="-fx-font-size:22px;-fx-font-weight:bold;-fx-text-fill:-color-text-main;"
+               text=""/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="btnNouvelle" onAction="#ouvrirAjout"
+                style="-fx-background-color:#8e5bd6;-fx-text-fill:white;-fx-font-weight:bold;-fx-background-radius:10;-fx-padding:12 22;-fx-cursor:hand;"
+                text=""/>
+    </HBox>
+
+    <HBox fx:id="boxStats" spacing="28" alignment="CENTER_LEFT">
+        <Label fx:id="lblStatWaitLbl" style="-fx-font-size:13px;-fx-text-fill:-color-text-secondary;"/>
+        <Label fx:id="lblStatWait" style="-fx-font-size:13px;-fx-font-weight:bold;-fx-text-fill:#9b72e8;"/>
+        <Label fx:id="lblStatCoursLbl" style="-fx-font-size:13px;-fx-text-fill:-color-text-secondary;"/>
+        <Label fx:id="lblStatCours" style="-fx-font-size:13px;-fx-font-weight:bold;-fx-text-fill:#2980b9;"/>
+        <Label fx:id="lblStatDoneLbl" style="-fx-font-size:13px;-fx-text-fill:-color-text-secondary;"/>
+        <Label fx:id="lblStatDone" style="-fx-font-size:13px;-fx-font-weight:bold;-fx-text-fill:#27ae60;"/>
+    </HBox>
+
+    <HBox spacing="12" alignment="CENTER_LEFT"
+          style="-fx-background-color:-color-bg-card;-fx-background-radius:12;-fx-padding:12 18;-fx-border-color:-color-border;-fx-border-radius:12;">
+        <TextField fx:id="rechercheNom" prefWidth="220"/>
+        <Label fx:id="lblFiltStatut"/>
+        <ComboBox fx:id="filtreStatut" onAction="#appliquerFiltre" prefWidth="140"/>
+        <Label fx:id="lblFiltPriorite"/>
+        <ComboBox fx:id="filtrePriorite" onAction="#appliquerFiltre" prefWidth="140"/>
+        <Button fx:id="btnFiltrer" onAction="#appliquerFiltre"
+                style="-fx-background-color:#8e5bd6;-fx-text-fill:white;-fx-font-weight:bold;-fx-background-radius:8;-fx-padding:8 18;-fx-cursor:hand;"
+                text=""/>
+        <Button fx:id="btnReset" onAction="#reinitialiserFiltre"
+                style="-fx-background-color:white;-fx-text-fill:-color-text-secondary;-fx-border-color:-color-border;-fx-border-radius:8;-fx-background-radius:8;-fx-padding:8 16;-fx-cursor:hand;"
+                text=""/>
+    </HBox>
+
+    <ScrollPane fx:id="scroll" fitToWidth="true" VBox.vgrow="ALWAYS"
+                style="-fx-background:transparent;-fx-background-color:transparent;-fx-padding:0;">
+        <GridPane fx:id="gridCartes" hgap="18" vgap="18"/>
+    </ScrollPane>
+
+</VBox>

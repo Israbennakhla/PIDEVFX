@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.sitmypet.controllers.PostulationsGardienController"
+      prefWidth="1100" prefHeight="700"
+      spacing="16"
+      style="-fx-background-color:#f0f0f8;-fx-padding:24 28;">
+
+    <HBox alignment="CENTER_LEFT">
+        <Label text="Mes postulations" style="-fx-font-size:24px;-fx-font-weight:bold;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="labelCount" text="0 postulation(s)" style="-fx-font-size:13px;-fx-text-fill:#666;"/>
+    </HBox>
+
+    <ListView fx:id="listPostulations" VBox.vgrow="ALWAYS"
+              style="-fx-background-color:transparent;-fx-border-color:transparent;"/>
+</VBox>

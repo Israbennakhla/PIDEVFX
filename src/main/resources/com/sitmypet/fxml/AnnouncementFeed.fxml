@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.sitmypet.controllers.AnnouncementFeedController"
+      maxWidth="Infinity" maxHeight="Infinity"
+      prefWidth="1100" prefHeight="520"
+      style="-fx-background-color:#f0f0f8;">
+
+    <HBox fx:id="navbarHBox" alignment="CENTER_RIGHT" spacing="12"
+          style="-fx-background-color:white;-fx-padding:12 20;-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.06),8,0,0,2);">
+        <Region HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <VBox VBox.vgrow="ALWAYS" spacing="16" style="-fx-padding:20 28;">
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <Label text="Annonces"
+                   style="-fx-font-size:22px;-fx-font-weight:bold;-fx-text-fill:#2d2d2d;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="labelCount" text="0 annonce(s)"
+                   style="-fx-font-size:13px;-fx-text-fill:#666666;"/>
+        </HBox>
+
+        <HBox spacing="12" alignment="CENTER_LEFT"
+              style="-fx-background-color:white;-fx-background-radius:10px;-fx-padding:14px 18px;">
+            <TextField fx:id="searchField" promptText="Rechercher par animal ou adresse" prefWidth="320"/>
+        </HBox>
+
+        <ListView fx:id="listAnnonces" VBox.vgrow="ALWAYS"
+                  style="-fx-background-color:transparent;-fx-border-color:transparent;"/>
+    </VBox>
+</VBox>
