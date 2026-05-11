@@ -11,32 +11,20 @@ public class User {
     private String adresse;
     private String photo;
     private String role;
-    private boolean isActive;
-    private LocalDateTime createdAt;
+    private boolean active;
     private String certificat;
-    
-    // Constructeur vide
-    public User() {
-    }
-    
-    // Constructeur complet
-    public User(int id, String nom, String prenom, String email, String telephone, 
-                String adresse, String photo, String role, boolean isActive, LocalDateTime createdAt) {
+    private LocalDateTime createdAt;
+
+    public User() {}
+
+    public User(int id, String nom, String prenom, String email) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
-        this.telephone = telephone;
-        this.adresse = adresse;
-        this.photo = photo;
-        this.role = role;
-        this.isActive = isActive;
-        this.createdAt = createdAt;
     }
-    
-    // Constructeur sans ID (pour ajout)
-    public User(String nom, String prenom, String email, String telephone, 
-                String adresse, String photo, String role, boolean isActive) {
+
+    public User(String nom, String prenom, String email, String telephone, String adresse, String photo, String role, boolean active) {
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
@@ -44,10 +32,9 @@ public class User {
         this.adresse = adresse;
         this.photo = photo;
         this.role = role;
-        this.isActive = isActive;
+        this.active = active;
     }
-    
-    // Getters et Setters
+
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     
@@ -72,24 +59,18 @@ public class User {
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
     
-    public boolean isActive() { return isActive; }
-    public void setActive(boolean active) { this.isActive = active; }
-    
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
     
     public String getCertificat() { return certificat; }
     public void setCertificat(String certificat) { this.certificat = certificat; }
     
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    /** Displayed in the ComboBox dropdown. */
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", nom='" + nom + '\'' +
-                ", prenom='" + prenom + '\'' +
-                ", email='" + email + '\'' +
-                ", role='" + role + '\'' +
-                ", isActive=" + isActive +
-                '}';
+        return prenom + " " + nom + "  —  " + email;
     }
 }

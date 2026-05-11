@@ -74,9 +74,9 @@ public class AfficherUserController {
                     VBox identity = new VBox(5);
                     Label nameLbl = new Label(item.getPrenom() + " " + item.getNom());
                     nameLbl.getStyleClass().add("user-name-label");
-                    Label emailLbl = new Label("📧 " + item.getEmail());
+                    Label emailLbl = new Label(" " + item.getEmail());
                     emailLbl.getStyleClass().add("user-detail-label");
-                    Label phoneLbl = new Label("📞 " + (item.getTelephone() != null && !item.getTelephone().isEmpty() ? item.getTelephone() : "Non renseigné"));
+                    Label phoneLbl = new Label(" " + (item.getTelephone() != null && !item.getTelephone().isEmpty() ? item.getTelephone() : "Non renseigné"));
                     phoneLbl.getStyleClass().add("user-detail-label");
                     identity.getChildren().addAll(nameLbl, emailLbl, phoneLbl);
                     
@@ -89,7 +89,7 @@ public class AfficherUserController {
                     Label roleLbl = new Label(role);
                     roleLbl.getStyleClass().add("role-badge");
                     
-                    Label statusLbl = new Label(item.isActive() ? "✅ Actif" : "❌ Inactif");
+                    Label statusLbl = new Label(item.isActive() ? " Actif" : " Inactif");
                     statusLbl.setStyle(item.isActive() ? "-fx-text-fill: #2ecc71; -fx-font-weight: bold;" : "-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
                     
                     statusBox.getChildren().addAll(roleLbl, statusLbl);
@@ -182,7 +182,7 @@ public class AfficherUserController {
         String role = user.getRole() != null ? user.getRole().replace("ROLE_", "") : "USER";
         lblDetailRole.setText(role);
         
-        lblDetailStatut.setText(user.isActive() ? "✅ Actif" : "❌ Inactif");
+        lblDetailStatut.setText(user.isActive() ? " Actif" : " Inactif");
         lblDetailStatut.setStyle(user.isActive() ? "-fx-text-fill: #2ecc71; -fx-font-weight: bold;" : "-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
         
         if (user.getCreatedAt() != null) {
@@ -314,7 +314,7 @@ public class AfficherUserController {
     private void styleAlert(Alert alert) {
         DialogPane dialogPane = alert.getDialogPane();
         try {
-            dialogPane.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+            dialogPane.getStylesheets().add(getClass().getResource("/com/sitmypet/css/style.css").toExternalForm());
         } catch (Exception e) {}
         dialogPane.getStyleClass().add("custom-alert");
     }
@@ -326,7 +326,7 @@ public class AfficherUserController {
         DialogPane dialogPane = dialog.getDialogPane();
         dialogPane.setStyle("-fx-background-color: white;");
         try {
-            dialogPane.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+            dialogPane.getStylesheets().add(getClass().getResource("/com/sitmypet/css/style.css").toExternalForm());
         } catch (Exception e) {}
         
         VBox content = new VBox(20);
@@ -335,7 +335,7 @@ public class AfficherUserController {
         
         javafx.scene.layout.StackPane iconContainer = new javafx.scene.layout.StackPane();
         iconContainer.setStyle("-fx-background-color: #fff5f5; -fx-background-radius: 50; -fx-padding: 20; -fx-max-width: 80; -fx-max-height: 80;");
-        Label iconLabel = new Label("⚠️");
+        Label iconLabel = new Label("!");
         iconLabel.setStyle("-fx-font-size: 40px; -fx-text-fill: #e53e3e;");
         iconContainer.getChildren().add(iconLabel);
         
@@ -464,10 +464,10 @@ public class AfficherUserController {
                 buttonBox.setAlignment(javafx.geometry.Pos.CENTER);
                 buttonBox.setPadding(new javafx.geometry.Insets(10, 0, 10, 0));
                 
-                Button btnAccepter = new Button("✅ Accepter et Activer");
+                Button btnAccepter = new Button(" Accepter et Activer");
                 btnAccepter.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 20; -fx-background-radius: 5; -fx-cursor: hand;");
                 
-                Button btnRefuser = new Button("❌ Refuser et Supprimer");
+                Button btnRefuser = new Button(" Refuser et Supprimer");
                 btnRefuser.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 20; -fx-background-radius: 5; -fx-cursor: hand;");
                 
                 Stage stage = new Stage();
@@ -533,4 +533,22 @@ public class AfficherUserController {
             e.printStackTrace();
         }
     }
+    private void navigate(javafx.event.ActionEvent event, String fxmlPath) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
+            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+            stage.setScene(new Scene(root, bounds.getWidth() * 0.9, bounds.getHeight() * 0.9));
+            stage.setMaximized(true);
+            stage.centerOnScreen();
+            stage.show();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML private void handleAnimaux(javafx.event.ActionEvent event) { navigate(event, "/com/sitmypet/fxml/AdminAnimaux.fxml"); }
+    @FXML private void handleAnnonces(javafx.event.ActionEvent event) { navigate(event, "/com/sitmypet/fxml/AdminAnnonces.fxml"); }
+    @FXML private void handleEvenements(javafx.event.ActionEvent event) { navigate(event, "/com/sitmypet/fxml/AdminEvenements.fxml"); }
+    @FXML private void handleReclamations(javafx.event.ActionEvent event) { navigate(event, "/com/sitmypet/fxml/AdminReclamations.fxml"); }
 }

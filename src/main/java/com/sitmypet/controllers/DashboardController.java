@@ -83,7 +83,7 @@ public class DashboardController {
     @FXML
     private void handleAfficherAnnonces(ActionEvent event) {
         System.out.println("Navigation vers Annonces (Admin)");
-        showAlert("En développement", "Le module de gestion des annonces sera bientôt disponible !");
+        loadAdminView(event, "/com/sitmypet/fxml/AdminAnnonces.fxml");
     }
 
     @FXML

@@ -8,7 +8,7 @@
 <ScrollPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.sitmypet.controllers.LoginController"
-            stylesheets="/style.css"
+            stylesheets="@../css/style.css"
             fitToWidth="true" fitToHeight="true"
             style="-fx-background-color: white; -fx-padding: 0; -fx-background: white;">
     <HBox style="-fx-background-color: white;">

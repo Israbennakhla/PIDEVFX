@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Font?>
 <?import com.sitmypet.components.SmallThemeToggle?>
 
-<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.sitmypet.controllers.ModifierUserController" stylesheets="/style.css" fitToWidth="true" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.sitmypet.controllers.ModifierUserController" stylesheets="@../css/style.css" fitToWidth="true" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
     <VBox alignment="CENTER" style="-fx-background-color: linear-gradient(to right bottom, #f4f7f6, #e2e8f0);">
     <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
     

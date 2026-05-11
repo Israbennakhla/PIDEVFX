@@ -5,8 +5,8 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import model.Reclamation;
-import services.ServiceReclamation;
+import com.sitmypet.model.Reclamation;
+import com.sitmypet.services.ServiceReclamation;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

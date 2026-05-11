@@ -177,10 +177,11 @@ public class AjouterUserController {
         }
         
         if (erreurs.length() > 0) {
-            AlertHelper.showAlert(Alert.AlertType.ERROR, txtNom.getScene().getWindow(), "⚠️ Erreurs de saisie", erreurs.toString());
+            AlertHelper.showAlert(Alert.AlertType.ERROR, txtNom.getScene().getWindow(), "! Erreurs de saisie", erreurs.toString());
             return false;
         }
         
         return true;
     }
 }
+

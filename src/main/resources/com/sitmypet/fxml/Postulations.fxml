@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.sitmypet.controllers.PostulationsController"
+      styleClass="root" stylesheets="@../css/style.css"
+      spacing="16" style="-fx-background-color: transparent; -fx-padding: 25px 30px;">
+
+    <!-- En-tete -->
+    <HBox alignment="CENTER_LEFT" styleClass="header" style="-fx-background-color: transparent; -fx-padding: 0;">
+        <VBox spacing="4">
+            <Label text="Mes Postulations" styleClass="title" style="-fx-font-size:22px;"/>
+            <Label fx:id="labelCount" style="-fx-font-size:13px; -fx-text-fill: -color-text-secondary; -fx-font-weight:bold;"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Voir les annonces" onAction="#handleNavAccueil" styleClass="btn-primary" style="-fx-font-size:13px; -fx-padding:10 20;"/>
+    </HBox>
+
+    <!-- Message si vide -->
+    <Label text="Vous n'avez pas encore postulé sur une annonce."
+           style="-fx-font-size:14px; -fx-text-fill: -color-text-muted; -fx-padding:20 0;"/>
+
+    <!-- Liste postulations -->
+    <ListView fx:id="listPostulations" VBox.vgrow="ALWAYS" styleClass="custom-list-view"/>
+</VBox>

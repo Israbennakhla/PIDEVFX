@@ -3,10 +3,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sitmypet.controllers.FrontEvenementsController" stylesheets="/style.css" style="-fx-background-color: #f4f7f6;">
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sitmypet.controllers.FrontEvenementsController" stylesheets="@../css/style.css" styleClass="root">
     <top>
-        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20; -fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0;" spacing="20">
-            <Label text="📅 Événements à venir" style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: #2d1354;"/>
+        <HBox alignment="CENTER_LEFT" styleClass="header" spacing="20">
+            <Label text="📅 Événements à venir" styleClass="title" style="-fx-font-size: 28px;"/>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="btnAjouter" text="+ Ajouter un événement" onAction="#handleShowForm" styleClass="btn-primary" style="-fx-font-size: 14px; -fx-padding: 10 20; -fx-background-radius: 20;"/>
         </HBox>
     </top>
     

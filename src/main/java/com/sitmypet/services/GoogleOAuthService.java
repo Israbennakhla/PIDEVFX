@@ -23,10 +23,16 @@ public class GoogleOAuthService {
 
     static {
         java.util.Properties props = new java.util.Properties();
-        try (java.io.InputStream is = new java.io.FileInputStream("config.properties")) {
-            props.load(is);
-            CLIENT_ID = props.getProperty("GOOGLE_OAUTH_CLIENT_ID");
-            CLIENT_SECRET = props.getProperty("GOOGLE_OAUTH_CLIENT_SECRET");
+        try {
+            java.io.File file = new java.io.File("config.properties");
+            if (!file.exists()) {
+                file = new java.io.File("SitMyPet-Desktop/config.properties");
+            }
+            try (java.io.InputStream is = new java.io.FileInputStream(file)) {
+                props.load(is);
+                CLIENT_ID = props.getProperty("GOOGLE_OAUTH_CLIENT_ID");
+                CLIENT_SECRET = props.getProperty("GOOGLE_OAUTH_CLIENT_SECRET");
+            }
         } catch (Exception e) {
             System.err.println("Erreur chargement config.properties : " + e.getMessage());
         }

@@ -7,7 +7,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import com.sitmypet.components.ThemeToggle?>
 
-<BorderPane fx:id="mainContainer" prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sitmypet.controllers.FrontAccueilController" stylesheets="/style.css">
+<BorderPane fx:id="mainContainer" prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sitmypet.controllers.FrontAccueilController" stylesheets="@../css/style.css">
     
     <!-- TOP NAVBAR -->
     <top>
@@ -25,20 +25,19 @@
             <Button fx:id="btnAccueil" text="Accueil" onAction="#handleShowAccueil" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #8e5bd6; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: transparent transparent #8e5bd6 transparent; -fx-border-width: 0 0 3 0; -fx-padding: 5 10;"/>
             <Button fx:id="btnProfil" text="Mon Profil" onAction="#handleShowProfil" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
             
-            <!-- SECTION PROPRIETAIRE -->
             <HBox fx:id="boxProprietaire" spacing="5" managed="false" visible="false" alignment="CENTER_LEFT" minWidth="-Infinity">
                 <Button fx:id="btnMesAnimaux" text="Mes Animaux" onAction="#handleShowAnimaux" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
-                <Button fx:id="btnMesAnnonces" text="Mes Annonces" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
-                <Button fx:id="btnPostulationsRecues" text="Postulations" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
+                <Button fx:id="btnMesAnnonces" text="Mes Annonces" onAction="#handleShowAnnonces" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
+                <Button fx:id="btnPostulationsRecues" text="Postulations" onAction="#handleShowPostulations" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
             </HBox>
 
             <!-- SECTION GARDIEN -->
             <HBox fx:id="boxGardien" spacing="5" managed="false" visible="false" alignment="CENTER_LEFT" minWidth="-Infinity">
                 <Button fx:id="btnRechercherAnnonces" text="Annonces" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
-                <Button fx:id="btnMesPostulations" text="Mes Postulations" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
+                <Button fx:id="btnMesPostulations" text="Mes Postulations" onAction="#handleShowPostulations" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
             </HBox>
 
-            <Button fx:id="btnMessagerie" text="Messagerie" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
+            <Button fx:id="btnMessagerie" text="Messagerie" onAction="#handleShowMessagerie" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
             <Button fx:id="btnEvenements" text="Événements" onAction="#handleShowEvenements" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
             <Button fx:id="btnReclamations" text="Réclamations" onAction="#handleShowReclamations" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
             <Button fx:id="btnArticles" text="Blog" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>

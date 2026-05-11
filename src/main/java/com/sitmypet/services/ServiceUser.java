@@ -1,7 +1,7 @@
 package com.sitmypet.services;
 
 import com.sitmypet.model.User;
-import com.sitmypet.utils.MyDatabase;
+import com.sitmypet.utils.MyDataBase;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class ServiceUser implements IService<User> {
     private Connection connection;
     
     public ServiceUser() {
-        connection = MyDatabase.getInstance().getConnection();
+        connection = MyDataBase.getInstance().getConnection();
     }
     
     @Override
@@ -228,7 +228,7 @@ public class ServiceUser implements IService<User> {
 
         // 2. Vérification DB
         if (connection == null) {
-            connection = MyDatabase.getInstance().getConnection();
+            connection = MyDataBase.getInstance().getConnection();
             if (connection == null) {
                 throw new AuthenticationException("❌ Impossible de se connecter à la base de données. Veuillez vérifier que XAMPP / MySQL est bien démarré.");
             }
@@ -448,7 +448,7 @@ public class ServiceUser implements IService<User> {
     // Authentification ou Inscription via Google
     public User authentifierOuInscrireGoogle(String email, String nom, String prenom, String photoUrl) {
         if (connection == null) {
-            connection = MyDatabase.getInstance().getConnection();
+            connection = MyDataBase.getInstance().getConnection();
             if (connection == null) {
                 System.err.println("❌ Impossible de se connecter à la base de données. Veuillez vérifier que XAMPP / MySQL est bien démarré.");
                 return null;
@@ -537,5 +537,29 @@ public class ServiceUser implements IService<User> {
         } catch (SQLException e) {
             System.err.println("❌ Erreur JDBC lors du déblocage du compte : " + e.getMessage());
         }
+    }
+
+    /**
+     * Fetches all active (non-deleted) users from the `user` table.
+     * Only the columns needed for the ComboBox are selected.
+     */
+    public List<User> getAll() {
+        List<User> list = new ArrayList<>();
+        String req = "SELECT id, nom, prenom, email FROM utilisateurs WHERE deleted_at IS NULL ORDER BY nom, prenom";
+        try {
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery(req);
+            while (rs.next()) {
+                list.add(new User(
+                    rs.getInt("id"),
+                    rs.getString("nom"),
+                    rs.getString("prenom"),
+                    rs.getString("email")
+                ));
+            }
+        } catch (SQLException e) {
+            System.out.println("ServiceUser.getAll() error: " + e.getMessage());
+        }
+        return list;
     }
 }

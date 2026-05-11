@@ -59,13 +59,32 @@ public class FrontAccueilController {
             String displayRole = role.replace("ROLE_", "");
             lblRoleDisplay.setText(displayRole);
 
+            // Hide general buttons by default, we'll reveal them based on role
+            btnArticles.setVisible(false);
+            btnArticles.setManaged(false);
+
             // Gestion de l'affichage selon la matrice d'accès
             if (role.contains("PROPRIETAIRE") || role.contains("PROPRIÉTAIRE")) {
                 boxProprietaire.setVisible(true);
                 boxProprietaire.setManaged(true);
+                
+                // Le propriétaire ne doit voir QUE : Accueil, Annonces, Animaux, Réclamations, Messagerie, Événements.
+                btnArticles.setVisible(false);
+                btnArticles.setManaged(false);
+                
+                btnPostulationsRecues.setVisible(false);
+                btnPostulationsRecues.setManaged(false);
+                
             } else if (role.contains("GARDIEN")) {
                 boxGardien.setVisible(true);
                 boxGardien.setManaged(true);
+                
+                // Le gardien ne doit voir QUE : Accueil, Postulations, Réclamations, Messagerie, Événements.
+                btnRechercherAnnonces.setVisible(false);
+                btnRechercherAnnonces.setManaged(false);
+                
+                btnArticles.setVisible(false);
+                btnArticles.setManaged(false);
             }
         }
     }
@@ -128,10 +147,36 @@ public class FrontAccueilController {
     }
 
     @FXML
+    private void handleShowAnnonces(ActionEvent event) {
+        System.out.println("Afficher les annonces");
+        loadCenterView("/com/sitmypet/fxml/AfficherAnnonces.fxml");
+        updateNavStyles(btnMesAnnonces);
+    }
+
+    @FXML
     private void handleShowReclamations(ActionEvent event) {
         System.out.println("Afficher les réclamations");
         loadCenterView("/com/sitmypet/fxml/FrontReclamations.fxml");
         updateNavStyles(btnReclamations);
+    }
+
+    @FXML
+    private void handleShowPostulations(ActionEvent event) {
+        System.out.println("Afficher les postulations");
+        loadCenterView("/com/sitmypet/fxml/Postulations.fxml");
+        // btnMesPostulations or btnPostulationsRecues can be updated, let's just update the Gardien one for now
+        if (currentUser != null && currentUser.getRole().toUpperCase().contains("GARDIEN")) {
+            updateNavStyles(btnMesPostulations);
+        } else {
+            updateNavStyles(btnPostulationsRecues);
+        }
+    }
+
+    @FXML
+    private void handleShowMessagerie(ActionEvent event) {
+        System.out.println("Afficher la messagerie");
+        loadCenterView("/com/sitmypet/fxml/Messagerie.fxml");
+        updateNavStyles(btnMessagerie);
     }
 
     private void loadCenterView(String fxmlPath) {
@@ -142,6 +187,8 @@ public class FrontAccueilController {
             Object controller = loader.getController();
             if (controller instanceof FrontReclamationsController) {
                 ((FrontReclamationsController) controller).setUser(currentUser);
+            } else if (controller instanceof FrontEvenementsController) {
+                ((FrontEvenementsController) controller).setUser(currentUser);
             }
             
             mainContainer.setCenter(view);

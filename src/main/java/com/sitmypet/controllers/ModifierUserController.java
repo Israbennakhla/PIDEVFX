@@ -203,7 +203,7 @@ public class ModifierUserController {
         }
         
         if (erreurs.length() > 0) {
-            afficherErreur("⚠️ Erreurs de saisie", erreurs.toString());
+            afficherErreur("! Erreurs de saisie", erreurs.toString());
             return false;
         }
         
@@ -231,3 +231,4 @@ public class ModifierUserController {
         alert.showAndWait();
     }
 }
+

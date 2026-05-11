@@ -3,12 +3,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sitmypet.controllers.FrontAnimauxController" stylesheets="/style.css" style="-fx-background-color: #f4f7f6;">
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sitmypet.controllers.FrontAnimauxController" stylesheets="@../css/style.css" styleClass="root">
     <top>
-        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20; -fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0;" spacing="20">
-            <Label text="🐾 Mes Compagnons" style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: #2d1354;"/>
+        <HBox alignment="CENTER_LEFT" styleClass="header" spacing="20">
+            <Label text="🐾 Mes Compagnons" styleClass="title" style="-fx-font-size: 28px;"/>
             <Region HBox.hgrow="ALWAYS" />
-            <Button text="+ Ajouter un compagnon" onAction="#handleShowForm" style="-fx-background-color: #8e5bd6; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 20; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(142, 91, 214, 0.4), 10, 0, 0, 3);"/>
+            <Button text="+ Ajouter un compagnon" onAction="#handleShowForm" styleClass="btn-primary" style="-fx-font-size: 16px; -fx-padding: 10 20; -fx-background-radius: 20;"/>
         </HBox>
     </top>
     
@@ -19,55 +19,59 @@
     </center>
     
     <right>
-        <VBox fx:id="formContainer" managed="false" visible="false" spacing="15" style="-fx-padding: 25; -fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, -2, 0);" prefWidth="350">
+        <VBox fx:id="formContainer" managed="false" visible="false" spacing="15" styleClass="details-pane" prefWidth="350">
             <HBox alignment="CENTER_LEFT">
-                <Label fx:id="lblFormTitle" text="Nouveau compagnon" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2d1354;"/>
+                <Label fx:id="lblFormTitle" text="Nouveau compagnon" styleClass="title-label" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
                 <Region HBox.hgrow="ALWAYS" />
-                <Button text="✕" onAction="#handleCloseForm" style="-fx-background-color: transparent; -fx-text-fill: #a0aec0; -fx-font-size: 16px; -fx-font-weight: bold; -fx-cursor: hand;"/>
+                <Button text="✕" onAction="#handleCloseForm" style="-fx-background-color: transparent; -fx-text-fill: -color-text-muted; -fx-font-size: 16px; -fx-font-weight: bold; -fx-cursor: hand;"/>
             </HBox>
             
             <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
                 <VBox spacing="15" style="-fx-padding: 5;">
                     <VBox spacing="5">
-                        <Label text="Nom" style="-fx-text-fill: #4a5568; -fx-font-weight: bold;"/>
-                        <TextField fx:id="txtNom" style="-fx-padding: 10; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #cbd5e0;"/>
+                        <Label text="Nom" style="-fx-text-fill: -color-text-secondary; -fx-font-weight: bold;"/>
+                        <TextField fx:id="txtNom" styleClass="text-field"/>
                     </VBox>
                     <VBox spacing="5">
-                        <Label text="Type" style="-fx-text-fill: #4a5568; -fx-font-weight: bold;"/>
-                        <ComboBox fx:id="cbType" maxWidth="Infinity" style="-fx-padding: 5; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #cbd5e0;"/>
+                        <Label text="Type" style="-fx-text-fill: -color-text-secondary; -fx-font-weight: bold;"/>
+                        <ComboBox fx:id="cbType" maxWidth="Infinity" styleClass="combo-box"/>
                     </VBox>
                     <VBox spacing="5">
-                        <Label text="Race" style="-fx-text-fill: #4a5568; -fx-font-weight: bold;"/>
-                        <TextField fx:id="txtRace" style="-fx-padding: 10; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #cbd5e0;"/>
+                        <Label text="Race" style="-fx-text-fill: -color-text-secondary; -fx-font-weight: bold;"/>
+                        <TextField fx:id="txtRace" styleClass="text-field"/>
                     </VBox>
                     <HBox spacing="10">
                         <VBox spacing="5" HBox.hgrow="ALWAYS">
-                            <Label text="Genre" style="-fx-text-fill: #4a5568; -fx-font-weight: bold;"/>
-                            <ComboBox fx:id="cbGenre" maxWidth="Infinity" style="-fx-padding: 5; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #cbd5e0;"/>
+                            <Label text="Genre" style="-fx-text-fill: -color-text-secondary; -fx-font-weight: bold;"/>
+                            <ComboBox fx:id="cbGenre" maxWidth="Infinity" styleClass="combo-box"/>
                         </VBox>
                         <VBox spacing="5" HBox.hgrow="ALWAYS">
-                            <Label text="Poids (kg)" style="-fx-text-fill: #4a5568; -fx-font-weight: bold;"/>
-                            <TextField fx:id="txtPoids" style="-fx-padding: 10; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #cbd5e0;"/>
+                            <Label text="Poids (kg)" style="-fx-text-fill: -color-text-secondary; -fx-font-weight: bold;"/>
+                            <TextField fx:id="txtPoids" styleClass="text-field"/>
                         </VBox>
                     </HBox>
                     <VBox spacing="5">
-                        <Label text="Date de naissance" style="-fx-text-fill: #4a5568; -fx-font-weight: bold;"/>
-                        <DatePicker fx:id="dpNaissance" maxWidth="Infinity" style="-fx-padding: 5; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #cbd5e0;"/>
+                        <Label text="Date de naissance" style="-fx-text-fill: -color-text-secondary; -fx-font-weight: bold;"/>
+                        <DatePicker fx:id="dpNaissance" maxWidth="Infinity" styleClass="text-field"/>
                     </VBox>
                     <VBox spacing="5">
-                        <Label text="Description" style="-fx-text-fill: #4a5568; -fx-font-weight: bold;"/>
-                        <TextArea fx:id="txtDescription" prefRowCount="3" style="-fx-padding: 5; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #cbd5e0;" wrapText="true"/>
+                        <Label text="Description" style="-fx-text-fill: -color-text-secondary; -fx-font-weight: bold;"/>
+                        <TextArea fx:id="txtDescription" prefRowCount="3" style="-fx-background-radius: 12; -fx-border-radius: 12;" wrapText="true"/>
                     </VBox>
                     
-                    <Label text="État de santé" style="-fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-padding: 10 0 0 0;"/>
-                    <CheckBox fx:id="chkVaccine" text="Vacciné" style="-fx-text-fill: #4a5568;"/>
-                    <CheckBox fx:id="chkDossier" text="Possède un carnet de santé" style="-fx-text-fill: #4a5568;"/>
-                    <CheckBox fx:id="chkMaladie" text="Maladie contagieuse" style="-fx-text-fill: #e53e3e;"/>
-                    <CheckBox fx:id="chkCritique" text="Condition médicale critique" style="-fx-text-fill: #e53e3e;"/>
+                    <Label text="État de santé" style="-fx-text-fill: -color-text-secondary; -fx-font-weight: bold; -fx-padding: 10 0 0 0;"/>
+                    <CheckBox fx:id="chkVaccine" text="Vacciné" style="-fx-text-fill: -color-text-secondary;"/>
+                    <CheckBox fx:id="chkDossier" text="Possède un carnet de santé" style="-fx-text-fill: -color-text-secondary;"/>
+                    <CheckBox fx:id="chkMaladie" text="Maladie contagieuse" style="-fx-text-fill: -color-text-danger;"/>
+                    <CheckBox fx:id="chkCritique" text="Condition médicale critique" style="-fx-text-fill: -color-text-danger;"/>
                 </VBox>
             </ScrollPane>
             
-            <Button fx:id="btnSubmit" text="Enregistrer" onAction="#handleSubmit" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 8; -fx-cursor: hand;" maxWidth="Infinity"/>
+            <Button fx:id="btnSubmit" text="Enregistrer" onAction="#handleSubmit" styleClass="btn-success" maxWidth="Infinity">
+                <VBox.margin>
+                    <Insets top="10" />
+                </VBox.margin>
+            </Button>
         </VBox>
     </right>
 </BorderPane>

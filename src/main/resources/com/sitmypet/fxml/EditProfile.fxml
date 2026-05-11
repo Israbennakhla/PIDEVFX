@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.sitmypet.controllers.EditProfileController" stylesheets="/style.css" fitToWidth="true" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.sitmypet.controllers.EditProfileController" stylesheets="@../css/style.css" fitToWidth="true" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
     <VBox alignment="CENTER" style="-fx-background-color: -color-bg-main;">
         <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
         

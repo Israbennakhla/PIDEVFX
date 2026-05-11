@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="0"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.sitmypet.controllers.AfficherReclamations"
+      stylesheets="@../css/style.css"
+      style="-fx-background-color: #f0f0f8;">
+
+    <!-- ══════════════ NAVBAR ══════════════ -->
+    <HBox alignment="CENTER_LEFT" spacing="0"
+          style="-fx-background-color: #1a0a2e;
+             -fx-padding: 0 30;
+             -fx-min-height: 68px;
+             -fx-max-height: 68px;">
+
+        <!-- Logo -->
+        <HBox alignment="CENTER" spacing="10" style="-fx-padding: 0 30 0 0;">
+            <Label text="🐾" style="-fx-font-size: 22px;"/>
+            <VBox alignment="CENTER_LEFT" spacing="2">
+                <Label text="SitMyPet"
+                       style="-fx-font-size: 15px; -fx-font-weight: bold;
+                          -fx-text-fill: white; -fx-letter-spacing: 1;"/>
+                <Label text="ADMIN"
+                       style="-fx-font-size: 8px; -fx-text-fill: white;
+                          -fx-background-color: #7c3aed;
+                          -fx-padding: 2 8; -fx-background-radius: 20;
+                          -fx-font-weight: bold;"/>
+            </VBox>
+        </HBox>
+
+        <!-- Séparateur -->
+        <Region style="-fx-min-width: 1; -fx-max-width: 1;
+                   -fx-min-height: 30; -fx-background-color: #3d1f6e;"/>
+        <Region style="-fx-min-width: 10;"/>
+
+        <!-- Liens -->
+        <Button text="🏠  Dashboard"
+                style="-fx-background-color: transparent;
+                   -fx-text-fill: #a89cc8;
+                   -fx-font-size: 12px;
+                   -fx-font-weight: bold;
+                   -fx-cursor: hand;
+                   -fx-padding: 22 16;
+                   -fx-letter-spacing: 0.5;"/>
+
+        <Button text="📣  Annonces"
+                style="-fx-background-color: transparent;
+                   -fx-text-fill: #a89cc8;
+                   -fx-font-size: 12px;
+                   -fx-font-weight: bold;
+                   -fx-cursor: hand;
+                   -fx-padding: 22 16;"/>
+
+        <Button text="📅  Événements"
+                style="-fx-background-color: transparent;
+                   -fx-text-fill: #a89cc8;
+                   -fx-font-size: 12px;
+                   -fx-font-weight: bold;
+                   -fx-cursor: hand;
+                   -fx-padding: 22 16;"/>
+
+        <Button text="🐾  Animaux"
+                style="-fx-background-color: transparent;
+                   -fx-text-fill: #a89cc8;
+                   -fx-font-size: 12px;
+                   -fx-font-weight: bold;
+                   -fx-cursor: hand;
+                   -fx-padding: 22 16;"/>
+
+        <!-- Actif — Réclamations -->
+        <Button text="📩  Réclamations"
+                style="-fx-background-color: transparent;
+                   -fx-text-fill: #f5c518;
+                   -fx-font-size: 12px;
+                   -fx-font-weight: bold;
+                   -fx-cursor: hand;
+                   -fx-padding: 22 16;
+                   -fx-border-color: transparent transparent #f5c518 transparent;
+                   -fx-border-width: 0 0 3 0;"/>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <!-- Icônes droite -->
+        <HBox alignment="CENTER" spacing="8">
+            <Button text="🔔"
+                    style="-fx-background-color: #2d1050;
+                       -fx-text-fill: white;
+                       -fx-background-radius: 50;
+                       -fx-font-size: 13px;
+                       -fx-cursor: hand;
+                       -fx-min-width: 38; -fx-min-height: 38;
+                       -fx-padding: 0;"/>
+            <Button text="🌙"
+                    style="-fx-background-color: #2d1050;
+                       -fx-text-fill: white;
+                       -fx-background-radius: 50;
+                       -fx-font-size: 13px;
+                       -fx-cursor: hand;
+                       -fx-min-width: 38; -fx-min-height: 38;
+                       -fx-padding: 0;"/>
+            <Button text="👤"
+                    style="-fx-background-color: #7c3aed;
+                       -fx-text-fill: white;
+                       -fx-background-radius: 50;
+                       -fx-font-size: 13px;
+                       -fx-cursor: hand;
+                       -fx-min-width: 38; -fx-min-height: 38;
+                       -fx-padding: 0;"/>
+        </HBox>
+
+    </HBox>
+
+    <VBox spacing="15" VBox.vgrow="ALWAYS"
+          style="-fx-padding: 20 25 10 25; -fx-background-color: #f0f0f8;">
+
+        <!-- En-tête titre + bouton -->
+        <HBox alignment="CENTER_LEFT">
+            <Label text="📩 Réclamations"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c2c2c;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="+ Nouvelle Réclamation" onAction="#ouvrirAjout"
+                    style="-fx-background-color: #9b8ec4; -fx-text-fill: white;
+                           -fx-font-size: 13px; -fx-font-weight: bold;
+                           -fx-background-radius: 10; -fx-padding: 12 22;
+                           -fx-cursor: hand;
+                           -fx-effect: dropshadow(gaussian, rgba(155,142,196,0.4), 8, 0, 0, 3);"/>
+        </HBox>
+
+        <!-- Barre filtres -->
+        <HBox spacing="12" alignment="CENTER_LEFT"
+              style="-fx-background-color: white;
+                     -fx-background-radius: 12;
+                     -fx-padding: 12 18;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 2);">
+
+            <TextField fx:id="rechercheNom"
+                       promptText="🔍 Rechercher par nom..."
+                       prefWidth="220"
+                       style="-fx-background-color: #f5f5f5;
+                              -fx-border-color: #e0e0e0;
+                              -fx-border-radius: 8; -fx-background-radius: 8;
+                              -fx-padding: 9 14; -fx-font-size: 13px;"/>
+
+            <Label text="Statut :"
+                   style="-fx-font-weight: bold; -fx-text-fill: #444; -fx-font-size: 13px;"/>
+            <ComboBox fx:id="filtreStatut" onAction="#appliquerFiltre"
+                      prefWidth="140"
+                      style="-fx-background-color: white; -fx-border-color: #e0e0e0;
+                             -fx-border-radius: 8; -fx-background-radius: 8;
+                             -fx-padding: 4 10; -fx-font-size: 13px;"/>
+
+            <Label text="Priorité :"
+                   style="-fx-font-weight: bold; -fx-text-fill: #444; -fx-font-size: 13px;"/>
+            <ComboBox fx:id="filtrePriorite" onAction="#appliquerFiltre"
+                      prefWidth="140"
+                      style="-fx-background-color: white; -fx-border-color: #e0e0e0;
+                             -fx-border-radius: 8; -fx-background-radius: 8;
+                             -fx-padding: 4 10; -fx-font-size: 13px;"/>
+
+            <Button text="🔍 Rechercher" onAction="#appliquerFiltre"
+                    style="-fx-background-color: #9b8ec4; -fx-text-fill: white;
+                           -fx-font-size: 13px; -fx-font-weight: bold;
+                           -fx-background-radius: 8; -fx-padding: 9 18;
+                           -fx-cursor: hand;"/>
+
+            <Button text="Réinitialiser" onAction="#reinitialiser"
+                    style="-fx-background-color: white; -fx-text-fill: #888;
+                           -fx-font-size: 13px; -fx-background-radius: 8;
+                           -fx-border-color: #e0e0e0; -fx-border-radius: 8;
+                           -fx-padding: 9 18; -fx-cursor: hand;"/>
+        </HBox>
+
+        <!-- Grille cartes — pleine largeur -->
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                    style="-fx-background: transparent;
+                           -fx-background-color: transparent;
+                           -fx-padding: 0;
+                           -fx-border-color: transparent;">
+            <GridPane fx:id="gridCartes" hgap="20" vgap="20"
+                      style="-fx-padding: 5 0 15 0;"/>
+        </ScrollPane>
+
+    </VBox>
+</VBox>

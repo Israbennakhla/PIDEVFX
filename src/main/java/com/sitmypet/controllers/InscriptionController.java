@@ -118,13 +118,13 @@ public class InscriptionController {
 
             // 1. Contrôle de saisie global
             if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || pass.isEmpty() || confPass.isEmpty() || txtCaptcha.getText().trim().isEmpty()) {
-                afficherErreur("⚠️ Veuillez remplir tous les champs obligatoires, y compris le CAPTCHA.");
+                afficherErreur("! Veuillez remplir tous les champs obligatoires, y compris le CAPTCHA.");
                 return;
             }
 
             // 1.5 Vérification du CAPTCHA (insensible à la casse)
             if (!txtCaptcha.getText().trim().equalsIgnoreCase(currentCaptchaCode)) {
-                afficherErreur("⚠️ Le code CAPTCHA est incorrect.");
+                afficherErreur("! Le code CAPTCHA est incorrect.");
                 genererNouveauCaptcha(); // On force un nouveau si erreur
                 txtCaptcha.clear();
                 return;
@@ -132,36 +132,36 @@ public class InscriptionController {
 
             // 2. Format Nom / Prénom
             if (nom.length() < 2 || prenom.length() < 2) {
-                afficherErreur("⚠️ Le nom et le prénom doivent contenir au moins 2 caractères.");
+                afficherErreur("! Le nom et le prénom doivent contenir au moins 2 caractères.");
                 return;
             }
 
             // 3. Validation de l'email correct
             if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-                afficherErreur("⚠️ L'adresse email est invalide.");
+                afficherErreur("! L'adresse email est invalide.");
                 return;
             }
 
             // 4. Validation du téléphone (obligatoire, 8 chiffres)
             if (tel.isEmpty() || !tel.matches("^\\d{8}$")) {
-                afficherErreur("⚠️ Le numéro de téléphone doit contenir exactement 8 chiffres.");
+                afficherErreur("! Le numéro de téléphone doit contenir exactement 8 chiffres.");
                 return;
             }
 
             // 5. Validation sécuritaire des mots de passe
             if (!pass.equals(confPass)) {
-                afficherErreur("⚠️ Les mots de passe ne correspondent pas.");
+                afficherErreur("! Les mots de passe ne correspondent pas.");
                 return;
             }
 
             if (pass.length() < 6) {
-                afficherErreur("⚠️ Le mot de passe doit contenir au moins 6 caractères.");
+                afficherErreur("! Le mot de passe doit contenir au moins 6 caractères.");
                 return;
             }
 
             boolean isGardien = "GARDIEN".equals(role);
             if (isGardien && certificatFile == null) {
-                afficherErreur("⚠️ Veuillez importer votre certificat pour continuer l'inscription.");
+                afficherErreur("! Veuillez importer votre certificat pour continuer l'inscription.");
                 return;
             }
 
@@ -189,10 +189,10 @@ public class InscriptionController {
                     
                     if (aiResult.isValid) {
                         isActive = true;
-                        finalAiMessage = "✅ Validation IA réussie (Note: " + aiResult.score + "/10)\nRaison : " + aiResult.reason;
+                        finalAiMessage = " Validation IA réussie (Note: " + aiResult.score + "/10)\nRaison : " + aiResult.reason;
                     } else {
                         isActive = false;
-                        finalAiMessage = "⚠️ Validation IA refusée (Note: " + aiResult.score + "/10)\nRaison : " + aiResult.reason;
+                        finalAiMessage = "! Validation IA refusée (Note: " + aiResult.score + "/10)\nRaison : " + aiResult.reason;
                     }
                     
                     // Envoi de l'email généré par l'IA en arrière-plan
@@ -320,10 +320,10 @@ public class InscriptionController {
                         stage.show();
                     } catch (IOException e) {
                         e.printStackTrace();
-                        afficherErreur("⚠️ Erreur lors de l'ouverture du Dashboard.");
+                        afficherErreur("! Erreur lors de l'ouverture du Dashboard.");
                     }
                 } else {
-                    afficherErreur("⚠️ Échec de la création du compte Google.");
+                    afficherErreur("! Échec de la création du compte Google.");
                 }
             }
 
@@ -344,3 +344,4 @@ public class InscriptionController {
         }
     }
 }
+

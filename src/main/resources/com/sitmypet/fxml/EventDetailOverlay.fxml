@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.sitmypet.controllers.EventDetailOverlayController"
+           prefWidth="560" prefHeight="680"
+           style="-fx-background-color: transparent;">
+
+    <!-- Light themed card (matching app palette: lavender, white, purple) -->
+    <VBox alignment="TOP_CENTER" spacing="0"
+          style="-fx-background-color: white; -fx-background-radius: 18;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.20), 24, 0, 0, 6);">
+
+        <!-- ── HEADER (purple gradient) ──────────────────────────────── -->
+        <VBox alignment="CENTER" spacing="6"
+              style="-fx-background-color: linear-gradient(to right, #6C3CE1, #7C3AED, #8B5CF6);
+                     -fx-background-radius: 18 18 0 0; -fx-padding: 28 30 22 30;">
+            <Label text="📅" style="-fx-font-size: 38px;"/>
+            <Label text="DÉTAILS DE L'ÉVÉNEMENT"
+                   style="-fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.7);
+                          -fx-letter-spacing: 3; -fx-font-weight: bold;"/>
+            <Label fx:id="lblEventName"
+                   style="-fx-font-size: 22px; -fx-text-fill: white; -fx-font-weight: bold;
+                          -fx-wrap-text: true; -fx-text-alignment: center;"
+                   maxWidth="480" wrapText="true"/>
+        </VBox>
+
+        <!-- ── BODY ──────────────────────────────────────────────────── -->
+        <VBox VBox.vgrow="ALWAYS" spacing="12"
+              style="-fx-background-color: #F5F3FF; -fx-padding: 20 28;">
+
+            <!-- Info rows -->
+            <GridPane hgap="12" vgap="8"
+                      style="-fx-background-color: white; -fx-background-radius: 10;
+                             -fx-padding: 16; -fx-border-color: #EDE9FF;
+                             -fx-border-radius: 10; -fx-border-width: 1;">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="110" prefWidth="120"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+
+                <!-- Date -->
+                <Label text="📅  Date" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                       style="-fx-text-fill: #6C3CE1; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblDate" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                       style="-fx-text-fill: #1A1A2E; -fx-font-size: 14px;" wrapText="true"/>
+
+                <!-- Heure -->
+                <Label text="🕐  Heure" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                       style="-fx-text-fill: #6C3CE1; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblHeure" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                       style="-fx-text-fill: #1A1A2E; -fx-font-size: 14px;"/>
+
+                <!-- Adresse -->
+                <Label text="📍  Adresse" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                       style="-fx-text-fill: #6C3CE1; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblAddress" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                       style="-fx-text-fill: #1A1A2E; -fx-font-size: 14px;" wrapText="true"/>
+
+                <!-- Description -->
+                <Label text="📝  Description" GridPane.rowIndex="3" GridPane.columnIndex="0"
+                       style="-fx-text-fill: #6C3CE1; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblDescription" GridPane.rowIndex="3" GridPane.columnIndex="1"
+                       style="-fx-text-fill: #4B5563; -fx-font-size: 13px;" wrapText="true"
+                       maxHeight="80"/>
+            </GridPane>
+
+            <!-- Map section label -->
+            <HBox alignment="CENTER" style="-fx-padding: 2 0;">
+                <Label text="🗺️  LOCALISATION"
+                       style="-fx-text-fill: #6C3CE1; -fx-font-size: 11px; -fx-font-weight: bold;
+                              -fx-letter-spacing: 2;"/>
+            </HBox>
+
+            <!-- Map WebView -->
+            <VBox VBox.vgrow="ALWAYS"
+                  style="-fx-background-color: white; -fx-background-radius: 10;
+                         -fx-border-color: #EDE9FF; -fx-border-radius: 10; -fx-border-width: 1;
+                         -fx-padding: 4;">
+                <WebView fx:id="mapWebView" prefHeight="200" VBox.vgrow="ALWAYS"/>
+            </VBox>
+        </VBox>
+
+        <!-- ── FOOTER ─────────────────────────────────────────────────── -->
+        <HBox alignment="CENTER" spacing="12"
+              style="-fx-background-color: #EEF0FA; -fx-background-radius: 0 0 18 18; -fx-padding: 14 30;">
+            <Button fx:id="btnAction" text="Participer" onAction="#handleParticipation"
+                    style="-fx-background-color: #22C55E; -fx-text-fill: white; -fx-font-size: 13px;
+                           -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 28;
+                           -fx-cursor: hand;" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            <Button text="✖  Fermer" onAction="#fermer"
+                    style="-fx-background-color: #6C3CE1; -fx-text-fill: white; -fx-font-size: 13px;
+                           -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 28;
+                           -fx-cursor: hand;" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+        </HBox>
+    </VBox>
+</StackPane>

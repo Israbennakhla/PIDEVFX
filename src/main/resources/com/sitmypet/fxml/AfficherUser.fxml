@@ -9,12 +9,14 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.sitmypet.controllers.AfficherUserController"
-            stylesheets="/style.css"
+            stylesheets="@../css/style.css"
             prefHeight="750.0" prefWidth="1300.0">
 
     <!-- SIDEBAR GAUCHE -->
     <left>
-        <VBox styleClass="sidebar" prefWidth="260" spacing="10">
+        <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+            <content>
+                <VBox styleClass="sidebar" prefWidth="260" spacing="10">
             <!-- Logo Section -->
             <VBox alignment="CENTER_LEFT" spacing="5" style="-fx-padding: 25 20 15 20;">
                 <HBox alignment="CENTER_LEFT" spacing="10">
@@ -38,10 +40,10 @@
             <VBox spacing="5" style="-fx-padding: 5 15 5 15;">
                 <Label text="GESTION" styleClass="sidebar-section"/>
                 <Button text="👥 Utilisateurs" styleClass="sidebar-btn, sidebar-active"/>
-                <Button text="🐾 Animaux" styleClass="sidebar-btn"/>
-                <Button text="📢 Annonces" styleClass="sidebar-btn"/>
-                <Button text="📅 Événements" styleClass="sidebar-btn"/>
-                <Button text="📩 Réclamations" styleClass="sidebar-btn"/>
+                <Button text="🐾 Animaux" onAction="#handleAnimaux" styleClass="sidebar-btn"/>
+                <Button text="📢 Annonces" onAction="#handleAnnonces" styleClass="sidebar-btn"/>
+                <Button text="📅 Événements" onAction="#handleEvenements" styleClass="sidebar-btn"/>
+                <Button text="📩 Réclamations" onAction="#handleReclamations" styleClass="sidebar-btn"/>
             </VBox>
             
             <!-- Section Publique -->
@@ -67,6 +69,8 @@
                 <Button text="🚪 Se Déconnecter" onAction="#handleLogout" styleClass="sidebar-btn" style="-fx-text-fill: #e74c3c; -fx-font-weight: bold; -fx-alignment: CENTER; -fx-border-color: #3b305c; -fx-border-radius: 8; -fx-border-width: 1;"/>
             </VBox>
         </VBox>
+        </content>
+        </ScrollPane>
     </left>
 
 

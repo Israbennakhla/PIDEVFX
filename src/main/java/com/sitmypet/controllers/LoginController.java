@@ -222,7 +222,7 @@ public class LoginController {
         javafx.scene.control.DialogPane dialogPane = dialog.getDialogPane();
         dialogPane.setStyle("-fx-background-color: white;");
         try {
-            dialogPane.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+            dialogPane.getStylesheets().add(getClass().getResource("/com/sitmypet/css/style.css").toExternalForm());
         } catch (Exception e) {}
         
         javafx.scene.layout.VBox content = new javafx.scene.layout.VBox(20);
@@ -347,7 +347,7 @@ public class LoginController {
         lockoutTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             long remainingSec = (targetTimeMillis - System.currentTimeMillis()) / 1000;
             if (remainingSec <= 0) {
-                lblErreur.setText("✅ Fin du blocage. Vous pouvez réessayer de vous connecter.");
+                lblErreur.setText(" Fin du blocage. Vous pouvez réessayer de vous connecter.");
                 lblErreur.setStyle("-fx-text-fill: #2ecc71; -fx-font-weight: bold;"); // Green
                 if (lockoutTimer != null) lockoutTimer.stop();
             } else {
@@ -378,3 +378,4 @@ public class LoginController {
         lblErreur.setVisible(true);
     }
 }
+

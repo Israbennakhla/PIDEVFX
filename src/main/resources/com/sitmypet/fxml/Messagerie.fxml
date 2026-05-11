@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.sitmypet.controllers.MessageriePropController"
+      styleClass="root" stylesheets="@../css/style.css"
+      style="-fx-background-color: transparent;">
+
+    <!-- CONTENU : 2 colonnes -->
+    <HBox VBox.vgrow="ALWAYS" spacing="0" style="-fx-padding: 20;">
+
+        <!-- Colonne gauche : liste conversations -->
+        <VBox prefWidth="300" minWidth="280" maxWidth="320" styleClass="details-pane"
+              style="-fx-padding: 0; -fx-background-radius: 12 0 0 12; -fx-border-radius: 12 0 0 12; -fx-border-width: 1 0 1 1;">
+
+            <HBox style="-fx-background-color: -color-bg-surface-alt; -fx-padding: 16 18; -fx-background-radius: 12 0 0 0; -fx-border-color: -color-border; -fx-border-width: 0 0 1 0;">
+                <Label text="Conversations" styleClass="title-label" style="-fx-font-size: 16px;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="labelNbConv" style="-fx-font-size: 12px; -fx-text-fill: -color-text-muted; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <ListView fx:id="listConversations" VBox.vgrow="ALWAYS" styleClass="custom-list-view"
+                      style="-fx-background-color: transparent;"/>
+        </VBox>
+
+        <!-- Colonne droite : chat -->
+        <VBox HBox.hgrow="ALWAYS" styleClass="details-pane"
+              style="-fx-padding: 0; -fx-background-radius: 0 12 12 0; -fx-border-radius: 0 12 12 0; -fx-border-width: 1 1 1 0;">
+
+            <!-- En-tête chat -->
+            <HBox alignment="CENTER_LEFT"
+                  style="-fx-background-color: -color-bg-surface; -fx-padding: 14 20; -fx-background-radius: 0 12 0 0; -fx-border-color: -color-border; -fx-border-width: 0 0 1 0; -fx-min-height: 60; -fx-max-height: 60;">
+                <Label fx:id="labelInterlocuteur" text="Sélectionnez une conversation" styleClass="title-label" style="-fx-font-size: 16px;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="labelStatut" text="" style="-fx-font-size: 11px; -fx-text-fill: #10b981; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <!-- Messages -->
+            <ScrollPane fx:id="scrollMessages" fitToWidth="true" VBox.vgrow="ALWAYS"
+                        style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 10;">
+                <VBox fx:id="messagesBox" spacing="10" style="-fx-background-color: transparent; -fx-padding: 16;"/>
+            </ScrollPane>
+
+            <!-- Saisie -->
+            <HBox spacing="10" alignment="CENTER"
+                  style="-fx-background-color: -color-bg-surface-alt; -fx-padding: 10 20; -fx-background-radius: 0 0 12 0; -fx-border-color: -color-border; -fx-border-width: 1 0 0 0;">
+                <TextArea fx:id="inputField" promptText="Écrivez votre message..." prefRowCount="2" wrapText="true" styleClass="text-field" HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnEnvoyer" text="Envoyer" onAction="#handleEnvoyer" styleClass="btn-primary" style="-fx-padding: 12 24;"/>
+            </HBox>
+        </VBox>
+    </HBox>
+</VBox>

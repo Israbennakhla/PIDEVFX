@@ -6,8 +6,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import model.Pet;
-import services.ServicePet;
+import com.sitmypet.model.Pet;
+import com.sitmypet.services.ServicePet;
 
 import java.sql.Date;
 import java.util.List;
@@ -137,13 +137,13 @@ public class FrontAnimauxController {
     }
 
     private String getIconForType(String type) {
-        if (type == null) return "🐾";
+        if (type == null) return "";
         switch (type.toLowerCase()) {
             case "chien": return "🐶";
             case "chat": return "🐱";
             case "oiseau": return "🦜";
             case "rongeur": return "🐹";
-            default: return "🐾";
+            default: return "";
         }
     }
 
@@ -267,3 +267,4 @@ public class FrontAnimauxController {
         a.showAndWait();
     }
 }
+

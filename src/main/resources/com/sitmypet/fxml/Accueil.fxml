@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.sitmypet.controllers.AccueilController"
+      prefWidth="1280" prefHeight="760"
+      style="-fx-background-color:#f0f0f8;">
+
+    <!-- NAVBAR — fx:id="navbarHBox" pour injection du badge notif en Java -->
+    <HBox fx:id="navbarHBox" alignment="CENTER_LEFT" spacing="0"
+          style="-fx-background-color:#1a0a2e;-fx-padding:0 30px;-fx-min-height:64px;-fx-max-height:64px;">
+        <VBox alignment="CENTER_LEFT" spacing="0" style="-fx-padding:0 30 0 0;">
+            <Label text="SitMyPet" style="-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+        </VBox>
+        <Button text="Dashboard"    onAction="#handleNavDashboard"
+                style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
+        <Button text="Accueil"      onAction="#handleNavAccueil"
+                style="-fx-background-color:transparent;-fx-text-fill:#f5c518;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
+        <Button text="Postulations" onAction="#handleNavPostulations"
+                style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
+        <Button text="Annonces"     onAction="#handleNavAnnonces"
+                style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
+        <Button text="Evenements"   onAction="#handleNavEvenements"
+                style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
+        <Button text="Animaux"      onAction="#handleNavAnimaux"
+                style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
+        <Button text="Reclamations" onAction="#handleNavReclamations"
+                style="-fx-background-color:transparent;-fx-text-fill:#cccccc;-fx-font-size:13px;-fx-font-weight:bold;-fx-cursor:hand;-fx-padding:20 18;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <!-- Le badge 🔔 est injecté ici par Java dans initialize() -->
+        <!-- Le bouton 👤 reste le dernier élément -->
+        <Button text="👤" style="-fx-background-color:#c084fc;-fx-text-fill:white;-fx-background-radius:50%;-fx-font-size:14px;-fx-cursor:hand;-fx-padding:8 10;-fx-min-width:36;"/>
+    </HBox>
+
+    <!-- CONTENU -->
+    <VBox VBox.vgrow="ALWAYS" spacing="16"
+          style="-fx-background-color:#f0f0f8;-fx-padding:25px 30px;">
+        <HBox alignment="CENTER_LEFT">
+            <VBox spacing="4">
+                <Label text="Toutes les annonces disponibles"
+                       style="-fx-font-size:22px;-fx-font-weight:bold;-fx-text-fill:#1a1a2e;"/>
+                <Label fx:id="labelCount"
+                       style="-fx-font-size:13px;-fx-text-fill:#9b72e8;-fx-font-weight:bold;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="searchField"
+                       promptText="Rechercher par animal ou adresse..."
+                       prefWidth="280"
+                       style="-fx-background-color:white;-fx-border-color:#cccccc;
+                              -fx-border-radius:8px;-fx-background-radius:8px;
+                              -fx-padding:9px 14px;-fx-font-size:13px;"/>
+        </HBox>
+
+        <ListView fx:id="listAnnonces" VBox.vgrow="ALWAYS"
+                  style="-fx-background-color:transparent;-fx-border-color:transparent;
+                         -fx-padding:0;-fx-focus-color:transparent;-fx-faint-focus-color:transparent;"/>
+    </VBox>
+
+    <!-- FOOTER -->
+    <VBox style="-fx-background-color:#1a0a2e;">
+        <HBox style="-fx-padding:10px 40px;-fx-border-color:#2d1050 transparent transparent transparent;-fx-border-width:1;">
+            <Label text="2026 SITMYPET." style="-fx-font-size:10px;-fx-text-fill:#888899;"/>
+        </HBox>
+    </VBox>
+</VBox>
