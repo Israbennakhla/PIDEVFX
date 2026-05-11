@@ -37,12 +37,11 @@
             <!-- Section Gestion -->
             <VBox spacing="5" style="-fx-padding: 5 15 5 15;">
                 <Label text="GESTION" styleClass="sidebar-section"/>
-                <Button fx:id="btnNavUsers" text="👥 Utilisateurs" onAction="#handleSidebarUsers" styleClass="sidebar-btn, sidebar-active"/>
-                <Button fx:id="btnNavAnimaux" text="🐾 Animaux" onAction="#handleSidebarAnimaux" styleClass="sidebar-btn"/>
-                <Button fx:id="btnNavAnnonces" text="📢 Annonces" onAction="#handleSidebarAnnonces" styleClass="sidebar-btn"/>
-                <Button fx:id="btnNavPostulations" text="📋 Postulations" onAction="#handleSidebarPostulations" styleClass="sidebar-btn"/>
+                <Button text="👥 Utilisateurs" styleClass="sidebar-btn, sidebar-active"/>
+                <Button text="🐾 Animaux" styleClass="sidebar-btn"/>
+                <Button text="📢 Annonces" styleClass="sidebar-btn"/>
                 <Button text="📅 Événements" styleClass="sidebar-btn"/>
-                <Button fx:id="btnNavReclamations" text="📩 Réclamations" onAction="#handleSidebarReclamations" styleClass="sidebar-btn"/>
+                <Button text="📩 Réclamations" styleClass="sidebar-btn"/>
             </VBox>
             
             <!-- Section Publique -->
@@ -73,8 +72,7 @@
 
     <!-- CONTENU CENTRAL -->
     <center>
-        <StackPane fx:id="adminCenterStack" maxWidth="Infinity" maxHeight="Infinity" style="-fx-background-color: -color-bg-surface;">
-        <VBox fx:id="paneUtilisateurs" maxWidth="Infinity" maxHeight="Infinity" StackPane.alignment="TOP_LEFT">
+        <VBox>
             <!-- Nouveau En-tête Moderne -->
             <VBox spacing="25" style="-fx-background-color: -color-bg-surface; -fx-padding: 30 40 30 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 10, 0, 0, 5);">
                 <HBox alignment="CENTER_LEFT" spacing="20">
@@ -212,6 +210,5 @@
                 
             </VBox>
         </VBox>
-        </StackPane>
     </center>
 </BorderPane>

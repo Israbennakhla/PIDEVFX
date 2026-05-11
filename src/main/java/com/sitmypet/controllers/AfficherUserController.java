@@ -1,19 +1,15 @@
 package com.sitmypet.controllers;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import com.sitmypet.model.User;
@@ -25,26 +21,6 @@ import java.util.Optional;
 // Imports externes supprimés
 
 public class AfficherUserController {
-
-    /** Utilisé par {@link DashboardController} pour ouvrir directement un écran gestion. */
-    public static volatile String INITIAL_ADMIN_SECTION = "users";
-
-    @FXML private StackPane adminCenterStack;
-    @FXML private VBox paneUtilisateurs;
-    @FXML private Button btnNavUsers;
-    @FXML private Button btnNavAnimaux;
-    @FXML private Button btnNavAnnonces;
-    @FXML private Button btnNavPostulations;
-    @FXML private Button btnNavReclamations;
-
-    private Node paneAnimauxRoot;
-    private Node paneAnnoncesRoot;
-    private Node panePostulationsRoot;
-    private Node paneReclamationsRoot;
-    private AdminAnimauxOverviewController ctrlAnimaux;
-    private AdminAnnoncesOverviewController ctrlAnnonces;
-    private AdminPostulationsOverviewController ctrlPostulations;
-    private AdminReclamationsOverviewController ctrlReclamations;
 
     @FXML private ListView<User> listUsers;
     @FXML private TextField txtRecherche;
@@ -183,119 +159,6 @@ public class AfficherUserController {
         
         // Menu contextuel (clic droit)
         creerMenuContextuel();
-
-        String initial = INITIAL_ADMIN_SECTION;
-        INITIAL_ADMIN_SECTION = "users";
-        Platform.runLater(() -> {
-            switch (initial) {
-                case "animaux" -> handleSidebarAnimaux(null);
-                case "annonces" -> handleSidebarAnnonces(null);
-                case "postulations" -> handleSidebarPostulations(null);
-                case "reclamations" -> handleSidebarReclamations(null);
-                default -> handleSidebarUsers(null);
-            }
-        });
-    }
-
-    private void markSidebarActive(Button active) {
-        for (Button b : new Button[] {
-                btnNavUsers, btnNavAnimaux, btnNavAnnonces, btnNavPostulations, btnNavReclamations }) {
-            b.getStyleClass().removeAll("sidebar-active");
-        }
-        if (active != null && !active.getStyleClass().contains("sidebar-active")) {
-            active.getStyleClass().add("sidebar-active");
-        }
-    }
-
-    private void showOnly(Node node) {
-        for (Node c : adminCenterStack.getChildren()) {
-            boolean on = (c == node);
-            c.setVisible(on);
-            c.setManaged(on);
-        }
-    }
-
-    @FXML
-    private void handleSidebarUsers(javafx.event.ActionEvent event) {
-        showOnly(paneUtilisateurs);
-        markSidebarActive(btnNavUsers);
-        chargerUtilisateurs();
-    }
-
-    @FXML
-    private void handleSidebarAnimaux(javafx.event.ActionEvent event) {
-        try {
-            if (paneAnimauxRoot == null) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sitmypet/fxml/AdminAnimauxOverview.fxml"));
-                paneAnimauxRoot = loader.load();
-                ctrlAnimaux = loader.getController();
-                StackPane.setAlignment(paneAnimauxRoot, Pos.TOP_LEFT);
-                adminCenterStack.getChildren().add(paneAnimauxRoot);
-            } else if (ctrlAnimaux != null) {
-                ctrlAnimaux.reloadFromDb();
-            }
-            showOnly(paneAnimauxRoot);
-            markSidebarActive(btnNavAnimaux);
-        } catch (IOException e) {
-            afficherErreur("Erreur", "Impossible d’ouvrir la liste des animaux : " + e.getMessage());
-        }
-    }
-
-    @FXML
-    private void handleSidebarAnnonces(javafx.event.ActionEvent event) {
-        try {
-            if (paneAnnoncesRoot == null) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sitmypet/fxml/AdminAnnoncesOverview.fxml"));
-                paneAnnoncesRoot = loader.load();
-                ctrlAnnonces = loader.getController();
-                StackPane.setAlignment(paneAnnoncesRoot, Pos.TOP_LEFT);
-                adminCenterStack.getChildren().add(paneAnnoncesRoot);
-            } else if (ctrlAnnonces != null) {
-                ctrlAnnonces.reloadFromDb();
-            }
-            showOnly(paneAnnoncesRoot);
-            markSidebarActive(btnNavAnnonces);
-        } catch (IOException e) {
-            afficherErreur("Erreur", "Impossible d’ouvrir la liste des annonces : " + e.getMessage());
-        }
-    }
-
-    @FXML
-    private void handleSidebarPostulations(javafx.event.ActionEvent event) {
-        try {
-            if (panePostulationsRoot == null) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sitmypet/fxml/AdminPostulationsOverview.fxml"));
-                panePostulationsRoot = loader.load();
-                ctrlPostulations = loader.getController();
-                StackPane.setAlignment(panePostulationsRoot, Pos.TOP_LEFT);
-                adminCenterStack.getChildren().add(panePostulationsRoot);
-            } else if (ctrlPostulations != null) {
-                ctrlPostulations.reloadFromDb();
-            }
-            showOnly(panePostulationsRoot);
-            markSidebarActive(btnNavPostulations);
-        } catch (IOException e) {
-            afficherErreur("Erreur", "Impossible d’ouvrir les postulations : " + e.getMessage());
-        }
-    }
-
-    @FXML
-    private void handleSidebarReclamations(javafx.event.ActionEvent event) {
-        try {
-            if (paneReclamationsRoot == null) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sitmypet/fxml/AdminReclamationsOverview.fxml"));
-                paneReclamationsRoot = loader.load();
-                ctrlReclamations = loader.getController();
-                StackPane.setAlignment(paneReclamationsRoot, Pos.TOP_LEFT);
-                adminCenterStack.getChildren().add(paneReclamationsRoot);
-            } else if (ctrlReclamations != null) {
-                ctrlReclamations.reloadFromDb();
-            }
-            showOnly(paneReclamationsRoot);
-            markSidebarActive(btnNavReclamations);
-        } catch (IOException e) {
-            afficherErreur("Erreur", "Impossible d’ouvrir les réclamations : " + e.getMessage());
-        }
     }
 
     private void afficherDetails(User user) {

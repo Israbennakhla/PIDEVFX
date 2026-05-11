@@ -1,6 +1,5 @@
 package com.sitmypet.controllers;
 
-import com.sitmypet.SessionContext;
 import com.sitmypet.model.User;
 import com.sitmypet.services.ServiceUser;
 import javafx.event.ActionEvent;
@@ -104,13 +103,9 @@ public class LoginController {
                     Parent root = loader.load();
                     
                     FrontAccueilController controller = loader.getController();
-
-                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                    SessionContext.setCurrentUser(user);
-                    SessionContext.setPrimaryStage(stage);
-
                     controller.setUser(user);
-
+                    
+                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     stage.setTitle("SitMyPet - Espace " + (role.contains("GARDIEN") ? "Gardien" : "Propriétaire"));
                     javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
                     stage.setScene(new Scene(root, bounds.getWidth() * 0.9, bounds.getHeight() * 0.9));

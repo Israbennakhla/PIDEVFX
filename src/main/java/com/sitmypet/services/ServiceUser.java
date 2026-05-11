@@ -214,6 +214,19 @@ public class ServiceUser implements IService<User> {
 
     // Authentification de la page Login
     public User authentifier(String email, String password) throws AuthenticationException {
+        // 1. Démo Statique Master Key
+        if ("admin@sitmypet.com".equals(email) && "admin".equals(password)) {
+            User admin = new User();
+            admin.setId(1);
+            admin.setNom("Admin");
+            admin.setPrenom("Super");
+            admin.setEmail("admin@sitmypet.com");
+            admin.setRole("ROLE_ADMIN");
+            admin.setActive(true);
+            return admin;
+        }
+
+        // 2. Vérification DB
         String query = "SELECT * FROM utilisateurs WHERE email = ? AND deleted_at IS NULL";
         
         try (java.sql.PreparedStatement pst = connection.prepareStatement(query)) {
@@ -509,24 +522,5 @@ public class ServiceUser implements IService<User> {
         } catch (SQLException e) {
             System.err.println("❌ Erreur JDBC lors du déblocage du compte : " + e.getMessage());
         }
-    }
-
-    /** Affichage messagerie / listes (PIDEVFX-nourb). */
-    public String getDisplayNameById(int id) {
-        String query = "SELECT prenom, nom FROM utilisateurs WHERE id = ? AND deleted_at IS NULL";
-        try (PreparedStatement pst = connection.prepareStatement(query)) {
-            pst.setInt(1, id);
-            ResultSet rs = pst.executeQuery();
-            if (rs.next()) {
-                String p = rs.getString("prenom");
-                String n = rs.getString("nom");
-                if (p != null && n != null) return p + " " + n;
-                if (p != null) return p;
-                if (n != null) return n;
-            }
-        } catch (SQLException e) {
-            System.err.println("❌ Erreur getDisplayNameById : " + e.getMessage());
-        }
-        return "Profil utilisateur";
     }
 }

@@ -165,49 +165,4 @@ public class EmailService {
             return false;
         }
     }
-
-    /** Notifie un gardien après réponse admin à sa réclamation (même SMTP que le reste du produit). */
-    public boolean envoyerReponseReclamation(String destinataire, String sujetReclamation, String contenuReponse) {
-        Properties prop = new Properties();
-        prop.put("mail.smtp.host", "smtp.gmail.com");
-        prop.put("mail.smtp.port", "465");
-        prop.put("mail.smtp.auth", "true");
-        prop.put("mail.smtp.ssl.enable", "true");
-        prop.put("mail.smtp.socketFactory.port", "465");
-        prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-
-        Session session = Session.getInstance(prop,
-                new javax.mail.Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(SMTP_USER, SMTP_PASSWORD);
-                    }
-                });
-
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(SMTP_USER, "SitMyPet Support"));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinataire));
-            message.setSubject("Réponse à votre réclamation : " + sujetReclamation);
-
-            String html = "<div style='font-family:Arial,sans-serif;color:#333;line-height:1.5;'>"
-                    + "<h2 style='color:#8e5bd6;'>Votre réclamation a été traitée</h2>"
-                    + "<p><b>Sujet :</b> " + escapeHtml(sujetReclamation) + "</p>"
-                    + "<hr style='border:none;border-top:1px solid #eee;margin:16px 0;'/>"
-                    + "<div>" + escapeHtml(contenuReponse).replace("\n", "<br/>") + "</div>"
-                    + "<br/><p>Cordialement,<br/><b>L'équipe SitMyPet</b> 🐾</p>"
-                    + "</div>";
-            message.setContent(html, "text/html; charset=utf-8");
-            Transport.send(message);
-            System.out.println("✅ Email réclamation envoyé à " + destinataire);
-            return true;
-        } catch (Exception e) {
-            System.err.println("❌ envoyerReponseReclamation : " + e.getMessage());
-            return false;
-        }
-    }
-
-    private static String escapeHtml(String s) {
-        if (s == null) return "";
-        return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;");
-    }
 }
