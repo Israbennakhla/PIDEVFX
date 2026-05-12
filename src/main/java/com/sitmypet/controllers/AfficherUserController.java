@@ -22,6 +22,16 @@ import java.util.Optional;
 
 public class AfficherUserController {
 
+    public static String INITIAL_ADMIN_SECTION = "users";
+
+    @FXML private javafx.scene.layout.BorderPane mainContainer;
+    @FXML private VBox userManagementContent;
+    @FXML private Button navUsersBtn;
+    @FXML private Button navAnimauxBtn;
+    @FXML private Button navAnnoncesBtn;
+    @FXML private Button navEvenementsBtn;
+    @FXML private Button navReclamationsBtn;
+
     @FXML private ListView<User> listUsers;
     @FXML private TextField txtRecherche;
     @FXML private ComboBox<String> comboRole;
@@ -159,6 +169,16 @@ public class AfficherUserController {
         
         // Menu contextuel (clic droit)
         creerMenuContextuel();
+
+        if (INITIAL_ADMIN_SECTION != null && !INITIAL_ADMIN_SECTION.equals("users")) {
+            javafx.application.Platform.runLater(() -> {
+                switch (INITIAL_ADMIN_SECTION) {
+                    case "animaux": handleNavAnimaux(); break;
+                    case "annonces": handleNavAnnonces(); break;
+                    case "reclamations": handleNavReclamations(); break;
+                }
+            });
+        }
     }
 
     private void afficherDetails(User user) {
@@ -517,6 +537,77 @@ public class AfficherUserController {
         }
     }
 
+
+    @FXML
+    private void handleNavUsers() {
+        setActiveNav(navUsersBtn);
+        if (mainContainer != null && userManagementContent != null) {
+            mainContainer.setCenter(userManagementContent);
+        }
+    }
+
+    @FXML
+    private void handleNavAnimaux() {
+        setActiveNav(navAnimauxBtn);
+        loadAdminCenter("/com/sitmypet/fxml/AdminAnimauxOverview.fxml");
+    }
+
+    @FXML
+    private void handleNavAnnonces() {
+        setActiveNav(navAnnoncesBtn);
+        loadAdminCenter("/com/sitmypet/fxml/AdminAnnoncesOverview.fxml");
+    }
+
+    @FXML
+    private void handleNavEvenements() {
+        setActiveNav(navEvenementsBtn);
+        // loadAdminCenter("/com/sitmypet/fxml/AdminEvenementsOverview.fxml"); // Mettre à jour quand le module existe
+    }
+
+    @FXML
+    private void handleNavReclamations() {
+        setActiveNav(navReclamationsBtn);
+        loadAdminCenter("/com/sitmypet/fxml/AdminReclamationsOverview.fxml");
+    }
+
+    @FXML
+    private void handleDashboard(javafx.event.ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/com/sitmypet/fxml/Dashboard.fxml"));
+            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            stage.setTitle("SitMyPet - Dashboard");
+            javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+            stage.setScene(new Scene(root, bounds.getWidth() * 0.9, bounds.getHeight() * 0.9));
+            stage.setResizable(true);
+            stage.centerOnScreen();
+            stage.show();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setActiveNav(Button activeBtn) {
+        Button[] btns = {navUsersBtn, navAnimauxBtn, navAnnoncesBtn, navEvenementsBtn, navReclamationsBtn};
+        for (Button btn : btns) {
+            if (btn != null) {
+                btn.getStyleClass().remove("sidebar-active");
+                if (btn == activeBtn) {
+                    btn.getStyleClass().add("sidebar-active");
+                }
+            }
+        }
+    }
+
+    private void loadAdminCenter(String fxmlPath) {
+        try {
+            javafx.scene.Node node = FXMLLoader.load(getClass().getResource(fxmlPath));
+            if (mainContainer != null) {
+                mainContainer.setCenter(node);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     private void handleLogout(javafx.event.ActionEvent event) {

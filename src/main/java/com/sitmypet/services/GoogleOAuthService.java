@@ -18,8 +18,8 @@ import java.nio.charset.StandardCharsets;
 public class GoogleOAuthService {
 
     // REMPLACEZ CES VALEURS PAR VOS VRAIES CLÉS GOOGLE CLOUD CONSOLE
-    private static final String CLIENT_ID = "660511218870-pb77u66es89eposulpr6p0drvp11p6jr.apps.googleusercontent.com";
-    private static final String CLIENT_SECRET = "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";
+    private static final String CLIENT_ID = "660511218870-65dfh0o0snp9rj0nmflkoueaoc9b79t1.apps.googleusercontent.com";
+    private static final String CLIENT_SECRET = "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";
     private static final String REDIRECT_URI = "http://localhost:8085/Callback";
     
     private static final String AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";

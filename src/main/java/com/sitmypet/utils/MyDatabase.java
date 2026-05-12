@@ -17,7 +17,7 @@ public class MyDatabase {
     private Connection connection;
     
     // Paramètres de connexion
-    private static final String URL = "jdbc:mysql://localhost:3306/sitmypet2";
+    private static final String URL = "jdbc:mysql://localhost:3306/sitmypet";
     private static final String USER = "root";
     private static final String PASSWORD = ""; // Vide pour XAMPP
     

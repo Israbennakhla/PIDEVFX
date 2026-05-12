@@ -37,7 +37,6 @@ public class FrontAccueilController {
     @FXML private StackPane announcementFeedHost;
 
     @FXML private Button btnAccueil;
-    @FXML private Button btnProfil;
     @FXML private Button btnMesAnimaux;
     @FXML private Button btnMesAnnonces;
     @FXML private Button btnMesPostulations;
@@ -119,7 +118,6 @@ public class FrontAccueilController {
 
     private void refreshNavLanguage() {
         if (btnAccueil != null) btnAccueil.setText(AppTexts.t("nav.accueil"));
-        if (btnProfil != null) btnProfil.setText(AppTexts.t("nav.profil"));
         if (btnMesAnimaux != null) btnMesAnimaux.setText(AppTexts.t("nav.animaux"));
         if (btnMesAnnonces != null) btnMesAnnonces.setText(AppTexts.t("nav.annonces"));
         if (btnMesPostulations != null) btnMesPostulations.setText(AppTexts.t("nav.postulations"));
@@ -246,11 +244,16 @@ public class FrontAccueilController {
             }
 
             mainContainer.setCenter(profileView);
-            updateNavStyles(btnProfil);
+            updateNavStyles(null);
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Erreur lors du chargement du profil: " + e.getMessage());
         }
+    }
+
+    @FXML
+    private void handleShowProfilClick(javafx.scene.input.MouseEvent event) {
+        handleShowProfil(null);
     }
 
     @FXML
@@ -285,7 +288,7 @@ public class FrontAccueilController {
 
     private void updateNavStyles(Button activeBtn) {
         Button[] navButtons = {
-                btnAccueil, btnProfil, btnMesAnimaux, btnMesAnnonces,
+                btnAccueil, btnMesAnimaux, btnMesAnnonces,
                 btnMesPostulations, btnReclamation, btnMessagerie, btnArticles
         };
         for (Button b : navButtons) {

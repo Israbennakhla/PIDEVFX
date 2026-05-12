@@ -23,7 +23,6 @@
             
             <!-- Liens Généraux -->
             <Button fx:id="btnAccueil" text="Accueil" onAction="#handleShowAccueil" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #8e5bd6; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: transparent transparent #8e5bd6 transparent; -fx-border-width: 0 0 3 0; -fx-padding: 5 10;"/>
-            <Button fx:id="btnProfil" text="Mon Profil" onAction="#handleShowProfil" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
             
             <!-- SECTION PROPRIETAIRE -->
             <HBox fx:id="boxProprietaire" spacing="5" managed="false" visible="false" alignment="CENTER_LEFT" minWidth="-Infinity">
@@ -56,7 +55,7 @@
                             style="-fx-background-radius:14;-fx-padding:4 10;-fx-font-weight:bold;-fx-background-color:-color-bg-card;-fx-border-color:-color-border;-fx-border-radius:14;-fx-cursor:hand;"/>
                 </HBox>
                 <ThemeToggle />
-                <HBox alignment="CENTER" spacing="8" style="-fx-cursor: hand; -fx-background-color: -color-bg-card; -fx-padding: 5 12; -fx-background-radius: 30; -fx-border-color: -color-border; -fx-border-radius: 30;" minWidth="-Infinity">
+                <HBox alignment="CENTER" spacing="8" onMouseClicked="#handleShowProfilClick" style="-fx-cursor: hand; -fx-background-color: -color-bg-card; -fx-padding: 5 12; -fx-background-radius: 30; -fx-border-color: -color-border; -fx-border-radius: 30;" minWidth="-Infinity">
                     <Label text="👤" style="-fx-font-size: 16px;"/>
                     <Label text="Mon Compte" style="-fx-text-fill: -color-text-primary; -fx-font-weight: bold; -fx-font-size: 13px;"/>
                 </HBox>

@@ -8,6 +8,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
+            fx:id="mainContainer"
             fx:controller="com.sitmypet.controllers.AfficherUserController"
             stylesheets="/style.css"
             prefHeight="750.0" prefWidth="1300.0">
@@ -37,11 +38,11 @@
             <!-- Section Gestion -->
             <VBox spacing="5" style="-fx-padding: 5 15 5 15;">
                 <Label text="GESTION" styleClass="sidebar-section"/>
-                <Button text="👥 Utilisateurs" styleClass="sidebar-btn, sidebar-active"/>
-                <Button text="🐾 Animaux" styleClass="sidebar-btn"/>
-                <Button text="📢 Annonces" styleClass="sidebar-btn"/>
-                <Button text="📅 Événements" styleClass="sidebar-btn"/>
-                <Button text="📩 Réclamations" styleClass="sidebar-btn"/>
+                <Button fx:id="navUsersBtn" text="👥 Utilisateurs" styleClass="sidebar-btn, sidebar-active" onAction="#handleNavUsers"/>
+                <Button fx:id="navAnimauxBtn" text="🐾 Animaux" styleClass="sidebar-btn" onAction="#handleNavAnimaux"/>
+                <Button fx:id="navAnnoncesBtn" text="📢 Annonces" styleClass="sidebar-btn" onAction="#handleNavAnnonces"/>
+                <Button fx:id="navEvenementsBtn" text="📅 Événements" styleClass="sidebar-btn" onAction="#handleNavEvenements"/>
+                <Button fx:id="navReclamationsBtn" text="📩 Réclamations" styleClass="sidebar-btn" onAction="#handleNavReclamations"/>
             </VBox>
             
             <!-- Section Publique -->
@@ -72,7 +73,7 @@
 
     <!-- CONTENU CENTRAL -->
     <center>
-        <VBox>
+        <VBox fx:id="userManagementContent">
             <!-- Nouveau En-tête Moderne -->
             <VBox spacing="25" style="-fx-background-color: -color-bg-surface; -fx-padding: 30 40 30 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 10, 0, 0, 5);">
                 <HBox alignment="CENTER_LEFT" spacing="20">
