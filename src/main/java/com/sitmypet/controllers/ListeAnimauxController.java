@@ -22,6 +22,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import com.sitmypet.model.Pet;
 import com.sitmypet.services.ServicePet;
+import com.sitmypet.services.ServiceUser;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +51,7 @@ public class ListeAnimauxController {
 
     // ── Données ───────────────────────────────────────────────
     private final ServicePet        servicePet   = new ServicePet();
+    private final ServiceUser       serviceUser  = new ServiceUser();
     private ObservableList<Pet>     allPets      = FXCollections.observableArrayList();
     private FilteredList<Pet>       filteredPets;
     private ObservableList<Pet>     pageData     = FXCollections.observableArrayList();
@@ -136,6 +138,10 @@ public class ListeAnimauxController {
         Label nom = new Label(pet.getName());
         nom.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2d2d2d;");
 
+        String proprioLabel = serviceUser.getDisplayNameById(pet.getOwnerId());
+        Label proprio = new Label("Propriétaire : " + proprioLabel);
+        proprio.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #7c5cbf;");
+
         String dateStr = (pet.getBirthDate() != null)
                 ? pet.getBirthDate().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
                 : "—";
@@ -151,7 +157,7 @@ public class ListeAnimauxController {
         description.setWrapText(true);
         description.setMaxWidth(260);
 
-        VBox infoBox = new VBox(3, nom, details, poids, description);
+        VBox infoBox = new VBox(3, nom, proprio, details, poids, description);
         infoBox.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(infoBox, Priority.ALWAYS);
 
@@ -182,14 +188,18 @@ public class ListeAnimauxController {
         badgeBox.setAlignment(Pos.CENTER);
 
         // ---- Boutons Actions ----
-        Button btnDelete = new Button("🗑 Supprimer");
-        btnDelete.setStyle("-fx-background-color: #f5f0ff; -fx-text-fill: #9b72e8; -fx-font-size: 12px;"
-                + "-fx-font-weight: bold; -fx-background-radius: 8px; -fx-padding: 7 16; -fx-cursor: hand;"
-                + "-fx-border-color: #9b72e8; -fx-border-radius: 8px;");
-        btnDelete.setOnAction(e -> handleSupprimer(pet));
-
-        VBox actionsBox = new VBox(8, btnDelete);
+        User currentUser = SessionContext.getCurrentUser();
+        VBox actionsBox = new VBox(8);
         actionsBox.setAlignment(Pos.CENTER);
+
+        if (currentUser != null && pet.getOwnerId() == currentUser.getId()) {
+            Button btnDelete = new Button("🗑 Supprimer");
+            btnDelete.setStyle("-fx-background-color: #f5f0ff; -fx-text-fill: #9b72e8; -fx-font-size: 12px;"
+                    + "-fx-font-weight: bold; -fx-background-radius: 8px; -fx-padding: 7 16; -fx-cursor: hand;"
+                    + "-fx-border-color: #9b72e8; -fx-border-radius: 8px;");
+            btnDelete.setOnAction(e -> handleSupprimer(pet));
+            actionsBox.getChildren().add(btnDelete);
+        }
 
         // ---- Carte complète ----
         HBox card = new HBox(16, photoPane, infoBox, badgeBox, actionsBox);
@@ -266,12 +276,7 @@ public class ListeAnimauxController {
 
     // ── Chargement données ────────────────────────────────────
     private void loadData() {
-        User u = SessionContext.getCurrentUser();
-        if (u == null) {
-            allPets.clear();
-            return;
-        }
-        allPets.setAll(servicePet.getByOwnerId(u.getId()));
+        allPets.setAll(servicePet.getAll());
         currentPage = 1;
         applyFilters();
     }

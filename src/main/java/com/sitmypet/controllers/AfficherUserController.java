@@ -561,7 +561,7 @@ public class AfficherUserController {
     @FXML
     private void handleNavEvenements() {
         setActiveNav(navEvenementsBtn);
-        // loadAdminCenter("/com/sitmypet/fxml/AdminEvenementsOverview.fxml"); // Mettre à jour quand le module existe
+        loadAdminCenter("/com/sitmypet/fxml/EvenementView.fxml");
     }
 
     @FXML
@@ -570,21 +570,6 @@ public class AfficherUserController {
         loadAdminCenter("/com/sitmypet/fxml/AdminReclamationsOverview.fxml");
     }
 
-    @FXML
-    private void handleDashboard(javafx.event.ActionEvent event) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/com/sitmypet/fxml/Dashboard.fxml"));
-            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-            stage.setTitle("SitMyPet - Dashboard");
-            javafx.geometry.Rectangle2D bounds = javafx.stage.Screen.getPrimary().getVisualBounds();
-            stage.setScene(new Scene(root, bounds.getWidth() * 0.9, bounds.getHeight() * 0.9));
-            stage.setResizable(true);
-            stage.centerOnScreen();
-            stage.show();
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private void setActiveNav(Button activeBtn) {
         Button[] btns = {navUsersBtn, navAnimauxBtn, navAnnoncesBtn, navEvenementsBtn, navReclamationsBtn};

@@ -8,12 +8,13 @@
       maxWidth="Infinity" maxHeight="Infinity"
       prefWidth="1100" prefHeight="700"
       spacing="16"
-      style="-fx-background-color:#f0f0f8;-fx-padding:24 28;">
+      style="-fx-background-color: -color-bg-main; -fx-padding: 24 28;"
+      stylesheets="/style.css">
 
     <HBox alignment="CENTER_LEFT">
-        <Label text="📋 Toutes les postulations" style="-fx-font-size:24px;-fx-font-weight:bold;"/>
+        <Label text="📋 Toutes les postulations" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: -color-text-main;"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Label fx:id="labelCount" style="-fx-font-size:14px;-fx-text-fill:#666;"/>
+        <Label fx:id="labelCount" style="-fx-font-size: 14px; -fx-text-fill: -color-text-secondary;"/>
     </HBox>
 
     <ListView fx:id="listPostulations" VBox.vgrow="ALWAYS"/>

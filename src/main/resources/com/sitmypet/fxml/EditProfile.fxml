@@ -78,8 +78,8 @@
             
             <!-- Actions -->
             <HBox spacing="20" alignment="CENTER_RIGHT">
-                <Button text="Annuler" onAction="#handleAnnuler" style="-fx-background-color: transparent; -fx-text-fill: #a0aec0; -fx-font-weight: bold; -fx-font-size: 16px; -fx-cursor: hand;"/>
-                <Button text="Enregistrer" onAction="#handleEnregistrer" style="-fx-background-color: #8e5bd6; -fx-text-fill: white; -fx-padding: 12 30; -fx-font-size: 16px; -fx-background-radius: 30; -fx-font-weight: 900; -fx-cursor: hand;"/>
+                <Button text="Annuler" onAction="#handleAnnuler" style="-fx-background-color: transparent; -fx-text-fill: -color-text-secondary; -fx-font-weight: bold; -fx-font-size: 16px; -fx-cursor: hand;"/>
+                <Button text="Enregistrer" onAction="#handleEnregistrer" styleClass="button, btn-primary" style="-fx-padding: 12 30; -fx-font-size: 16px; -fx-background-radius: 30; -fx-font-weight: 900; -fx-cursor: hand;"/>
             </HBox>
         </VBox>
     </VBox>

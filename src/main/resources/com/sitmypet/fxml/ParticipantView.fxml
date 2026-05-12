@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sitmypet.controllers.ParticipantController"
+            stylesheets="@../css/event.css"
+            prefHeight="720.0" prefWidth="1280.0">
+
+
+
+    <left>
+        <VBox style="-fx-padding: 24 16;" spacing="0">
+            <VBox styleClass="form-card">
+                <Label text="📝 Gestion d'Inscription" styleClass="form-title"/>
+                <TextField fx:id="tfEventId" promptText="ID de l'Événement" styleClass="text-field"/>
+                <TextField fx:id="tfUserId"  promptText="ID de l'Utilisateur" styleClass="text-field"/>
+                <HBox spacing="8" alignment="CENTER" style="-fx-padding: 6 0 0 0;">
+                    <Button text="✚ Inscrire (Ajouter)" onAction="#ajouterParticipant" styleClass="btn-add" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="page-content" spacing="16">
+            <Label text="👥 Tableau des Participants" styleClass="page-title"/>
+            
+            <VBox styleClass="card" VBox.vgrow="ALWAYS" spacing="12">
+                
+                <VBox spacing="8">
+                    <TextField fx:id="tfSearch" promptText="🔍 Rechercher par nom d'utilisateur ou événement..." 
+                               styleClass="text-field" />
+                    <!-- Filter and Sort Combo Boxes -->
+                    <HBox spacing="10">
+                        <ComboBox fx:id="cbFilterEvent" promptText="Filtrer par événement" 
+                                  style="-fx-background-color: -color-bg-surface-alt; -fx-border-color: -color-border; -fx-border-radius: 6; -fx-font-size: 13px;" HBox.hgrow="ALWAYS" maxWidth="Infinity" />
+                        <ComboBox fx:id="cbSort" promptText="Trier par" 
+                                  style="-fx-background-color: -color-bg-surface-alt; -fx-border-color: -color-border; -fx-border-radius: 6; -fx-font-size: 13px;" />
+                    </HBox>
+                </VBox>
+
+                <ListView fx:id="listParticipants" styleClass="admin-list" VBox.vgrow="ALWAYS" />
+                
+                <HBox alignment="CENTER_RIGHT">
+                    <Button text="🗑 Désinscrire (Supprimer)" onAction="#supprimerParticipant" styleClass="btn-delete" />
+                </HBox>
+            </VBox>
+        </VBox>
+    </center>
+
+</BorderPane>
+

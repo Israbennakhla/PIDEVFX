@@ -7,35 +7,36 @@
       fx:controller="com.sitmypet.controllers.ListeAnimauxController"
       prefWidth="1100" prefHeight="700"
       spacing="16"
-      style="-fx-background-color:#f0f0f8;-fx-padding:24 28;">
+      style="-fx-background-color: -color-bg-main; -fx-padding: 24 28;"
+      stylesheets="/style.css">
 
     <HBox alignment="CENTER_LEFT">
-        <Label text="🐾 Mes animaux" style="-fx-font-size:24px;-fx-font-weight:bold;"/>
+        <Label text="🐾 Mes animaux" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: -color-text-main;"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button text="+ Ajouter un animal" onAction="#handleAjouter"
-                style="-fx-background-color:#9b72e8;-fx-text-fill:white;-fx-padding:10 20;"/>
+        <Button text="+ Ajouter un animal" onAction="#handleAjouter" styleClass="button, btn-primary"
+                style="-fx-padding:10 20;"/>
     </HBox>
 
     <HBox spacing="12" alignment="CENTER_LEFT"
-          style="-fx-background-color:white;-fx-background-radius:10px;-fx-padding:14px 18px;">
-        <TextField fx:id="searchNom" promptText="Rechercher par nom" prefWidth="200"/>
-        <ComboBox fx:id="filterType" prefWidth="130"/>
-        <ComboBox fx:id="filterGenre" prefWidth="120"/>
-        <ComboBox fx:id="filterVaccine" prefWidth="120"/>
-        <ComboBox fx:id="filterCritique" prefWidth="120"/>
-        <Button text="Rechercher" onAction="#handleRechercher"/>
-        <Button text="Réinitialiser" onAction="#handleReinitialiser"/>
+          style="-fx-background-color: -color-bg-surface; -fx-background-radius: 10px; -fx-padding: 14px 18px; -fx-border-color: -color-border; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.02), 10, 0, 0, 3);">
+        <TextField fx:id="searchNom" promptText="Rechercher par nom" prefWidth="200" styleClass="text-field"/>
+        <ComboBox fx:id="filterType" prefWidth="130" styleClass="combo-box"/>
+        <ComboBox fx:id="filterGenre" prefWidth="120" styleClass="combo-box"/>
+        <ComboBox fx:id="filterVaccine" prefWidth="120" styleClass="combo-box"/>
+        <ComboBox fx:id="filterCritique" prefWidth="120" styleClass="combo-box"/>
+        <Button text="Rechercher" onAction="#handleRechercher" styleClass="button, btn-info" style="-fx-padding: 8 20; -fx-font-size: 13px;"/>
+        <Button text="Réinitialiser" onAction="#handleReinitialiser" styleClass="button, btn-secondary" style="-fx-padding: 8 20; -fx-font-size: 13px;"/>
     </HBox>
 
-    <ListView fx:id="listAnimaux" VBox.vgrow="ALWAYS"/>
+    <ListView fx:id="listAnimaux" VBox.vgrow="ALWAYS" styleClass="custom-list-view"/>
 
-    <HBox alignment="CENTER" spacing="8" style="-fx-background-color:white;-fx-padding:10 20;">
-        <Label fx:id="labelPagination"/>
+    <HBox alignment="CENTER" spacing="8" style="-fx-background-color: -color-bg-surface; -fx-padding: 10 20; -fx-border-color: -color-border; -fx-border-width: 1 0 0 0; -fx-background-radius: 0 0 10 10;">
+        <Label fx:id="labelPagination" style="-fx-text-fill: -color-text-secondary; -fx-font-weight: bold;"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button fx:id="btnPrev" text="Préc." onAction="#handlePrevPage"/>
+        <Button fx:id="btnPrev" text="Préc." onAction="#handlePrevPage" styleClass="button, btn-secondary" style="-fx-padding: 5 15; -fx-font-size: 12px;"/>
         <HBox fx:id="pageButtons" spacing="4"/>
-        <Button fx:id="btnNext" text="Suiv." onAction="#handleNextPage"/>
-        <Label text="Par page :"/>
-        <ComboBox fx:id="comboPerPage" prefWidth="70"/>
+        <Button fx:id="btnNext" text="Suiv." onAction="#handleNextPage" styleClass="button, btn-secondary" style="-fx-padding: 5 15; -fx-font-size: 12px;"/>
+        <Label text="Par page :" style="-fx-text-fill: -color-text-main;"/>
+        <ComboBox fx:id="comboPerPage" prefWidth="70" styleClass="combo-box"/>
     </HBox>
 </VBox>

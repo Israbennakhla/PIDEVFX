@@ -55,7 +55,7 @@
             <Label text="Vérification de sécurité *" style="-fx-font-weight: 800; -fx-text-fill: #2d3748;"/>
             <HBox alignment="CENTER" spacing="15">
                 <ImageView fx:id="imgCaptcha" fitHeight="50" fitWidth="160"/>
-                <Button text="🔄" onAction="#genererNouveauCaptcha" style="-fx-background-color: #edf2f7; -fx-text-fill: #4a5568; -fx-font-size: 16px; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 5 10;"/>
+                <Button text="🔄" onAction="#genererNouveauCaptcha" styleClass="button, btn-secondary" style="-fx-padding: 5 10;"/>
             </HBox>
             <TextField fx:id="txtCaptcha" promptText="Saisissez le texte de l'image" alignment="CENTER" style="-fx-padding: 10; -fx-font-size: 14px; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #cbd5e0; -fx-background-color: white; -fx-pref-width: 200;"/>
         </VBox>
@@ -64,7 +64,7 @@
             <!-- Message d'erreur caché par défaut -->
             <Label fx:id="lblErreur" text="Email ou mot de passe incorrect." style="-fx-text-fill: #e53e3e; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-color: #fff5f5; -fx-padding: 10 20; -fx-background-radius: 8;" visible="false"/>
 
-            <Button text="Se Connecter avec Google" onAction="#handleGoogleLogin" maxWidth="Infinity" style="-fx-background-color: white; -fx-text-fill: #4a5568; -fx-padding: 12 0; -fx-font-size: 15px; -fx-font-weight: bold; -fx-border-color: #e2e8f0; -fx-border-radius: 30; -fx-background-radius: 30; -fx-cursor: hand;"/>
+            <Button text="Se Connecter avec Google" onAction="#handleGoogleLogin" maxWidth="Infinity" styleClass="button, btn-secondary" style="-fx-padding: 12 0;"/>
             
             <HBox alignment="CENTER" spacing="10">
                 <Separator HBox.hgrow="ALWAYS"/>
@@ -72,7 +72,7 @@
                 <Separator HBox.hgrow="ALWAYS"/>
             </HBox>
 
-            <Button text="Se Connecter" onAction="#handleLogin" maxWidth="Infinity" style="-fx-background-color: #2d1354; -fx-text-fill: white; -fx-padding: 15 0; -fx-font-size: 18px; -fx-font-weight: 900; -fx-background-radius: 30; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(45, 19, 84, 0.4), 15, 0, 0, 5);"/>
+            <Button text="Se Connecter" onAction="#handleLogin" maxWidth="Infinity" styleClass="button, btn-primary" style="-fx-padding: 15 0;"/>
             
             <HBox alignment="CENTER" spacing="8">
                 <Label text="Vous n'avez pas de compte ?" style="-fx-text-fill: #718096; -fx-font-size: 15px;"/>

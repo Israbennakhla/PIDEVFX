@@ -197,6 +197,24 @@ public class MyDatabase {
                 + "reclamation_id INT NOT NULL,"
                 + "KEY idx_reponse_reclamation (reclamation_id),"
                 + "CONSTRAINT fk_reponse_reclamation FOREIGN KEY (reclamation_id) REFERENCES reclamation(id) ON DELETE CASCADE"
+                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+                
+            "CREATE TABLE IF NOT EXISTS event ("
+                + "id INT AUTO_INCREMENT PRIMARY KEY,"
+                + "name VARCHAR(255) NOT NULL,"
+                + "date DATE NULL,"
+                + "heure VARCHAR(50) NULL,"
+                + "addresse VARCHAR(255) NULL,"
+                + "description TEXT NULL"
+                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+
+            "CREATE TABLE IF NOT EXISTS event_participants ("
+                + "event_id INT NOT NULL,"
+                + "user_id INT NOT NULL,"
+                + "PRIMARY KEY (event_id, user_id),"
+                + "KEY idx_ep_user (user_id),"
+                + "CONSTRAINT fk_ep_event FOREIGN KEY (event_id) REFERENCES event(id) ON DELETE CASCADE,"
+                + "CONSTRAINT fk_ep_user FOREIGN KEY (user_id) REFERENCES utilisateurs(id) ON DELETE CASCADE"
                 + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
         };
         try (Statement st = cnx.createStatement()) {

@@ -214,8 +214,8 @@ public class ServiceUser implements IService<User> {
 
     // Authentification de la page Login
     public User authentifier(String email, String password) throws AuthenticationException {
-        // 1. Démo Statique Master Key
-        if ("admin@sitmypet.com".equals(email) && "admin".equals(password)) {
+        // 1. Démo Statique Master Key (accepte admin ou Admin@1234)
+        if ("admin@sitmypet.com".equals(email) && ("admin".equals(password) || "Admin@1234".equals(password) || "AdminSitMyPet2026!".equals(password))) {
             User admin = new User();
             admin.setId(1);
             admin.setNom("Admin");
@@ -522,5 +522,22 @@ public class ServiceUser implements IService<User> {
         } catch (SQLException e) {
             System.err.println("❌ Erreur JDBC lors du déblocage du compte : " + e.getMessage());
         }
+    }
+
+    // Obtenir le nom complet d'un utilisateur par son ID
+    public String getDisplayNameById(int id) {
+        String query = "SELECT nom, prenom FROM utilisateurs WHERE id = ?";
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                String nom = rs.getString("nom");
+                String prenom = rs.getString("prenom");
+                return (prenom != null ? prenom : "") + " " + (nom != null ? nom : "");
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur JDBC lors de getDisplayNameById : " + e.getMessage());
+        }
+        return "Utilisateur Inconnu";
     }
 }

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.sitmypet.controllers.TicketDialogController"
+           prefWidth="560" prefHeight="720"
+           style="-fx-background-color: transparent;">
+
+    <!-- Blurred outer backdrop -->
+    <VBox alignment="TOP_CENTER" spacing="0"
+          style="-fx-background-color: #0a0a1a; -fx-background-radius: 24;">
+
+        <!-- ── HEADER ────────────────────────────────────────────────── -->
+        <VBox alignment="CENTER" spacing="6"
+              style="-fx-background-color: linear-gradient(to bottom right, #1a1a2e, #16213e, #0f3460);
+                     -fx-background-radius: 24 24 0 0; -fx-padding: 36 30 28 30;">
+            <Label text="🎟️" style="-fx-font-size: 46px;"/>
+            <Label text="BILLET ÉLECTRONIQUE"
+                   style="-fx-font-size: 11px; -fx-text-fill: rgba(255,255,255,0.6);
+                          -fx-letter-spacing: 3; -fx-font-weight: bold;"/>
+            <Label fx:id="lblEventName"
+                   style="-fx-font-size: 22px; -fx-text-fill: white; -fx-font-weight: bold;
+                          -fx-wrap-text: true; -fx-text-alignment: center;"
+                   maxWidth="480" wrapText="true"/>
+            <Label text="✅  Inscription confirmée avec succès !"
+                   style="-fx-font-size: 13px; -fx-text-fill: #a8f0c6; -fx-padding: 4 0 0 0;"/>
+        </VBox>
+
+        <!-- ── TEAR EDGE ─────────────────────────────────────────────── -->
+        <HBox style="-fx-background-color: #0f1923; -fx-padding: 0;" alignment="CENTER">
+            <Label style="-fx-font-size: 22px; -fx-text-fill: #0a0a1a;"
+                   text="◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦"/>
+        </HBox>
+
+        <!-- ── BODY ──────────────────────────────────────────────────── -->
+        <VBox VBox.vgrow="ALWAYS" spacing="14"
+              style="-fx-background-color: #111827; -fx-padding: 24 32;">
+
+            <!-- Info rows -->
+            <GridPane hgap="12" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="140" prefWidth="140"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+
+                <!-- Participant -->
+                <Label text="👤  Participant" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                       style="-fx-text-fill: #7c8db5; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblParticipant" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                       style="-fx-text-fill: white; -fx-font-size: 13px;" wrapText="true"/>
+
+                <!-- Email -->
+                <Label text="📧  Email" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                       style="-fx-text-fill: #7c8db5; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblEmail" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                       style="-fx-text-fill: #a0aec0; -fx-font-size: 12px;" wrapText="true"/>
+
+                <!-- Date -->
+                <Label text="📅  Date" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                       style="-fx-text-fill: #7c8db5; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblDate" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                       style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+
+                <!-- Heure -->
+                <Label text="🕐  Heure" GridPane.rowIndex="3" GridPane.columnIndex="0"
+                       style="-fx-text-fill: #7c8db5; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblHeure" GridPane.rowIndex="3" GridPane.columnIndex="1"
+                       style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+
+                <!-- Adresse -->
+                <Label text="📍  Adresse" GridPane.rowIndex="4" GridPane.columnIndex="0"
+                       style="-fx-text-fill: #7c8db5; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblAddress" GridPane.rowIndex="4" GridPane.columnIndex="1"
+                       style="-fx-text-fill: white; -fx-font-size: 13px;" wrapText="true"/>
+
+                <!-- Ticket ID -->
+                <Label text="🎫  Ticket ID" GridPane.rowIndex="5" GridPane.columnIndex="0"
+                       style="-fx-text-fill: #7c8db5; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <Label fx:id="lblTicketId" GridPane.rowIndex="5" GridPane.columnIndex="1"
+                       style="-fx-font-family: monospace; -fx-background-color: #1e2d4a;
+                              -fx-text-fill: #63b3ed; -fx-padding: 3 10; -fx-background-radius: 4;
+                              -fx-font-size: 11px;"/>
+            </GridPane>
+
+            <!-- Dashed separator -->
+            <HBox alignment="CENTER" style="-fx-padding: 4 0;">
+                <Label text="- - - - - - - - - QR CODE D'ACCÈS - - - - - - - - -"
+                       style="-fx-text-fill: #4a5568; -fx-font-size: 11px; -fx-letter-spacing: 1;"/>
+            </HBox>
+
+            <!-- QR Code image -->
+            <VBox alignment="CENTER" spacing="10"
+                  style="-fx-background-color: #1e2d4a; -fx-background-radius: 16; -fx-padding: 20;">
+                <ImageView fx:id="imgQRCode" fitWidth="200" fitHeight="200" preserveRatio="true">
+                    <effect>
+                        <javafx.scene.effect.DropShadow color="#000000aa" radius="12" spread="0.1" offsetY="4"/>
+                    </effect>
+                </ImageView>
+                <Label fx:id="lblEmailStatus"
+                       text="📨 Email en cours d'envoi..."
+                       style="-fx-text-fill: #a0aec0; -fx-font-size: 12px;"/>
+            </VBox>
+        </VBox>
+
+        <!-- ── TEAR EDGE (bottom) ─────────────────────────────────────── -->
+        <HBox style="-fx-background-color: #0f1923; -fx-padding: 0;" alignment="CENTER">
+            <Label style="-fx-font-size: 22px; -fx-text-fill: #0a0a1a;"
+                   text="◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦ ◦"/>
+        </HBox>
+
+        <!-- ── FOOTER ─────────────────────────────────────────────────── -->
+        <HBox alignment="CENTER" spacing="12"
+              style="-fx-background-color: #0f1923; -fx-background-radius: 0 0 24 24; -fx-padding: 16 30;">
+            <Button fx:id="btnFermer" text="✖  Fermer" onAction="#fermer"
+                    style="-fx-background-color: #374151; -fx-text-fill: white; -fx-font-size: 13px;
+                           -fx-background-radius: 10; -fx-padding: 10 28; -fx-cursor: hand;"/>
+        </HBox>
+    </VBox>
+</StackPane>
+

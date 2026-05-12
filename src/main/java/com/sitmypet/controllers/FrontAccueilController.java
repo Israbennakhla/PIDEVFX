@@ -43,6 +43,7 @@ public class FrontAccueilController {
     @FXML private Button btnReclamation;
     @FXML private Button btnMessagerie;
     @FXML private Button btnArticles;
+    @FXML private Button btnEvenements;
     @FXML private Button btnDeconnexion;
     @FXML private Button btnLangFr;
     @FXML private Button btnLangEn;
@@ -202,6 +203,25 @@ public class FrontAccueilController {
 
     private void showMessagerieInternal() {
         loadCenter("/com/sitmypet/fxml/Messagerie.fxml", btnMessagerie);
+    }
+
+    @FXML
+    private void handleEvenements(ActionEvent event) {
+        if (isGardienRole()) {
+            loadCenter("/com/sitmypet/fxml/EvenementView.fxml", btnEvenements);
+        } else {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sitmypet/fxml/FrontEvenement.fxml"));
+                Node view = loader.load();
+                Object controller = loader.getController();
+                // Si FrontEvenementController a besoin d'être initialisé avec currentUser,
+                // il peut le faire ici ou via SessionContext (s'il est utilisé).
+                mainContainer.setCenter(view);
+                updateNavStyles(btnEvenements);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML

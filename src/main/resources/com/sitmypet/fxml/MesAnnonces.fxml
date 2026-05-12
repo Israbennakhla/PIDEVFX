@@ -7,44 +7,43 @@
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.sitmypet.controllers.MesAnnoncesController"
       prefWidth="1100" prefHeight="700"
-      style="-fx-background-color:#f0f0f8;">
+      style="-fx-background-color: -color-bg-main;"
+      stylesheets="/style.css">
 
     <HBox fx:id="navbarHBox" alignment="CENTER_RIGHT" spacing="12"
-          style="-fx-background-color:white;-fx-padding:12 20;-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.06),8,0,0,2);">
+          style="-fx-background-color: -color-bg-surface; -fx-padding: 12 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2); -fx-border-color: -color-border; -fx-border-width: 0 0 1 0;">
         <Region HBox.hgrow="ALWAYS"/>
     </HBox>
 
     <VBox VBox.vgrow="ALWAYS" spacing="16" style="-fx-padding:20 28;">
         <HBox alignment="CENTER_LEFT">
             <Label text="Mes annonces"
-                   style="-fx-font-size:22px;-fx-font-weight:bold;-fx-text-fill:#2d2d2d;"/>
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: -color-text-main;"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button text="+ Nouvelle annonce" onAction="#handleNouvelle"
-                    style="-fx-background-color:#9b72e8;-fx-text-fill:white;-fx-font-size:13px;
-                           -fx-font-weight:bold;-fx-background-radius:8px;-fx-padding:10 20;-fx-cursor:hand;"/>
+            <Button text="+ Nouvelle annonce" onAction="#handleNouvelle" styleClass="button, btn-primary"
+                    style="-fx-padding: 10 20;"/>
         </HBox>
 
         <HBox spacing="12" alignment="CENTER_LEFT"
-              style="-fx-background-color:white;-fx-background-radius:10px;-fx-padding:14px 18px;">
-            <TextField fx:id="searchAdresse" promptText="Rechercher par adresse" prefWidth="220"/>
-            <DatePicker fx:id="filterDateDebut" promptText="Date début" prefWidth="150"/>
-            <DatePicker fx:id="filterDateFin" promptText="Date fin" prefWidth="150"/>
-            <Button text="Rechercher" onAction="#handleRechercher"/>
-            <Button text="Réinitialiser" onAction="#handleReinitialiser"/>
+              style="-fx-background-color: -color-bg-surface; -fx-background-radius: 10px; -fx-padding: 14px 18px; -fx-border-color: -color-border; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.02), 10, 0, 0, 3);">
+            <TextField fx:id="searchAdresse" promptText="Rechercher par adresse" prefWidth="220" styleClass="text-field"/>
+            <DatePicker fx:id="filterDateDebut" promptText="Date début" prefWidth="150" styleClass="text-field"/>
+            <DatePicker fx:id="filterDateFin" promptText="Date fin" prefWidth="150" styleClass="text-field"/>
+            <Button text="Rechercher" onAction="#handleRechercher" styleClass="button, btn-info" style="-fx-padding: 8 20; -fx-font-size: 13px;"/>
+            <Button text="Réinitialiser" onAction="#handleReinitialiser" styleClass="button, btn-secondary" style="-fx-padding: 8 20; -fx-font-size: 13px;"/>
         </HBox>
 
-        <ListView fx:id="listAnnonces" VBox.vgrow="ALWAYS"
-                  style="-fx-background-color:transparent;-fx-border-color:transparent;"/>
+        <ListView fx:id="listAnnonces" VBox.vgrow="ALWAYS" styleClass="custom-list-view"/>
 
         <HBox alignment="CENTER" spacing="8"
-              style="-fx-background-color:white;-fx-background-radius:10px;-fx-padding:10px 20px;">
-            <Label fx:id="labelPagination" style="-fx-font-size:12px;-fx-text-fill:#666;"/>
+              style="-fx-background-color: -color-bg-surface; -fx-padding: 10 20; -fx-border-color: -color-border; -fx-border-width: 1 0 0 0; -fx-background-radius: 0 0 10 10;">
+            <Label fx:id="labelPagination" style="-fx-font-size: 12px; -fx-text-fill: -color-text-secondary; -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button fx:id="btnPrev" text="Préc." onAction="#handlePrevPage"/>
+            <Button fx:id="btnPrev" text="Préc." onAction="#handlePrevPage" styleClass="button, btn-secondary" style="-fx-padding: 5 15; -fx-font-size: 12px;"/>
             <HBox fx:id="pageButtons" spacing="4" alignment="CENTER"/>
-            <Button fx:id="btnNext" text="Suiv." onAction="#handleNextPage"/>
-            <Label text="Par page :"/>
-            <ComboBox fx:id="comboPerPage" prefWidth="70"/>
+            <Button fx:id="btnNext" text="Suiv." onAction="#handleNextPage" styleClass="button, btn-secondary" style="-fx-padding: 5 15; -fx-font-size: 12px;"/>
+            <Label text="Par page :" style="-fx-text-fill: -color-text-main;"/>
+            <ComboBox fx:id="comboPerPage" prefWidth="70" styleClass="combo-box"/>
         </HBox>
     </VBox>
 </VBox>

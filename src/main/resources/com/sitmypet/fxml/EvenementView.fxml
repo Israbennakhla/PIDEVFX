@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sitmypet.controllers.EvenementController"
+            stylesheets="@../css/event.css, /style.css"
+            prefHeight="720.0" prefWidth="1280.0">
+
+
+
+    <center>
+        <VBox styleClass="page-content" VBox.vgrow="ALWAYS" spacing="16">
+
+            <Label text="📅 Tous les Événements" styleClass="page-title"/>
+
+            <VBox styleClass="card" VBox.vgrow="ALWAYS" spacing="12">
+                
+                <!-- Search & Sort Bar -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <TextField fx:id="tfSearch" promptText="🔍 Rechercher (nom, lieu)..." 
+                               styleClass="text-field" HBox.hgrow="ALWAYS" />
+                    <ComboBox fx:id="cbSort" promptText="Trier par" 
+                              style="-fx-background-color: -color-bg-surface-alt; -fx-border-color: -color-border; -fx-border-radius: 6; -fx-font-size: 13px;" />
+                    <Button text="✚ Nouvel Événement" onAction="#allerVersAjout" styleClass="btn-add"/>
+                </HBox>
+
+                <!-- Event Grid (Grid View) -->
+                <ScrollPane fx:id="gridScrollPane" fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-padding: 0;">
+                    <FlowPane fx:id="gridPane" hgap="20" vgap="20" style="-fx-padding: 10;" />
+                </ScrollPane>
+
+            </VBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>

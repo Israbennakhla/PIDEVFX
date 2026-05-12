@@ -7,7 +7,8 @@
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.sitmypet.controllers.AjouterAnimalController"
       prefWidth="800" prefHeight="720"
-      style="-fx-background-color:#f5f5f5;">
+      style="-fx-background-color: -color-bg-main;"
+      stylesheets="/style.css">
 
     <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
                 style="-fx-background-color:transparent;">
@@ -15,17 +16,17 @@
             <padding><Insets top="20" right="40" bottom="20" left="40"/></padding>
 
             <HBox alignment="CENTER_LEFT">
-                <Label text="🐾 Ajouter un animal" style="-fx-font-size:22px;-fx-font-weight:bold;"/>
+                <Label text="🐾 Ajouter un animal" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: -color-text-main;"/>
                 <Region HBox.hgrow="ALWAYS"/>
                 <Hyperlink fx:id="btnRetour" text="← Fermer" onAction="#handleRetour"/>
             </HBox>
 
             <HBox alignment="CENTER_LEFT" spacing="15"
-                  style="-fx-background-color:#c9b8f0;-fx-background-radius:16px;-fx-padding:20px;">
+                  style="-fx-background-color: -color-bg-surface-alt; -fx-background-radius: 16px; -fx-padding: 20px;">
                 <Button fx:id="btnPhoto" text="📷" onAction="#handlePhotoUpload"
                         prefWidth="70" prefHeight="70"
-                        style="-fx-background-color:white;-fx-background-radius:50%;-fx-font-size:22px;"/>
-                <TextField fx:id="nomAnimal" promptText="Nom de l'animal" HBox.hgrow="ALWAYS"/>
+                        style="-fx-background-color: -color-bg-surface; -fx-background-radius: 50%; -fx-font-size: 22px;"/>
+                <TextField fx:id="nomAnimal" promptText="Nom de l'animal" HBox.hgrow="ALWAYS" styleClass="text-field"/>
             </HBox>
 
             <GridPane hgap="30" vgap="15">
@@ -35,59 +36,59 @@
                 </columnConstraints>
 
                 <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                    <Label text="Race"/>
-                    <TextField fx:id="race"/>
+                    <Label text="Race" style="-fx-text-fill: -color-text-main;"/>
+                    <TextField fx:id="race" styleClass="text-field"/>
                 </VBox>
 
                 <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                    <Label text="Type d'animal"/>
+                    <Label text="Type d'animal" style="-fx-text-fill: -color-text-main;"/>
                     <fx:define><ToggleGroup fx:id="typeAnimalGroup"/></fx:define>
                     <FlowPane hgap="8" vgap="8">
-                        <RadioButton text="CHAT" toggleGroup="$typeAnimalGroup" userData="CHAT"/>
-                        <RadioButton text="CHIEN" toggleGroup="$typeAnimalGroup" userData="CHIEN"/>
-                        <RadioButton text="TORTUE" toggleGroup="$typeAnimalGroup" userData="TORTUE"/>
-                        <RadioButton text="LAPIN" toggleGroup="$typeAnimalGroup" userData="LAPIN"/>
+                        <RadioButton text="CHAT" toggleGroup="$typeAnimalGroup" userData="CHAT" style="-fx-text-fill: -color-text-main;"/>
+                        <RadioButton text="CHIEN" toggleGroup="$typeAnimalGroup" userData="CHIEN" style="-fx-text-fill: -color-text-main;"/>
+                        <RadioButton text="TORTUE" toggleGroup="$typeAnimalGroup" userData="TORTUE" style="-fx-text-fill: -color-text-main;"/>
+                        <RadioButton text="LAPIN" toggleGroup="$typeAnimalGroup" userData="LAPIN" style="-fx-text-fill: -color-text-main;"/>
                     </FlowPane>
                 </VBox>
 
                 <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                    <Label text="Poids (kg)"/>
-                    <TextField fx:id="poids"/>
+                    <Label text="Poids (kg)" style="-fx-text-fill: -color-text-main;"/>
+                    <TextField fx:id="poids" styleClass="text-field"/>
                 </VBox>
 
                 <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                    <Label text="Genre"/>
+                    <Label text="Genre" style="-fx-text-fill: -color-text-main;"/>
                     <fx:define><ToggleGroup fx:id="genreGroup"/></fx:define>
                     <HBox spacing="15">
-                        <RadioButton fx:id="radioMale" text="MALE" toggleGroup="$genreGroup" userData="MALE"/>
-                        <RadioButton fx:id="radioFemale" text="FEMALE" toggleGroup="$genreGroup" userData="FEMALE"/>
+                        <RadioButton fx:id="radioMale" text="MALE" toggleGroup="$genreGroup" userData="MALE" style="-fx-text-fill: -color-text-main;"/>
+                        <RadioButton fx:id="radioFemale" text="FEMALE" toggleGroup="$genreGroup" userData="FEMALE" style="-fx-text-fill: -color-text-main;"/>
                     </HBox>
                 </VBox>
 
                 <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="2">
-                    <Label text="Date de naissance"/>
-                    <DatePicker fx:id="dateNaissance"/>
+                    <Label text="Date de naissance" style="-fx-text-fill: -color-text-main;"/>
+                    <DatePicker fx:id="dateNaissance" styleClass="text-field"/>
                 </VBox>
 
                 <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2">
-                    <Label text="Description"/>
+                    <Label text="Description" style="-fx-text-fill: -color-text-main;"/>
                     <TextArea fx:id="description" prefHeight="80" wrapText="true"/>
                 </VBox>
             </GridPane>
 
             <VBox spacing="10">
-                <Label text="État de santé" style="-fx-font-size:15px;-fx-font-weight:bold;"/>
+                <Label text="État de santé" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: -color-text-main;"/>
                 <FlowPane hgap="12" vgap="10">
-                    <CheckBox fx:id="vaccine" text="Vacciné"/>
-                    <CheckBox fx:id="maladieContagieuse" text="Maladie contagieuse"/>
-                    <CheckBox fx:id="dossierMedical" text="Dossier médical"/>
-                    <CheckBox fx:id="etatCritique" text="État critique"/>
+                    <CheckBox fx:id="vaccine" text="Vacciné" style="-fx-text-fill: -color-text-main;"/>
+                    <CheckBox fx:id="maladieContagieuse" text="Maladie contagieuse" style="-fx-text-fill: -color-text-main;"/>
+                    <CheckBox fx:id="dossierMedical" text="Dossier médical" style="-fx-text-fill: -color-text-main;"/>
+                    <CheckBox fx:id="etatCritique" text="État critique" style="-fx-text-fill: -color-text-main;"/>
                 </FlowPane>
             </VBox>
 
             <HBox alignment="CENTER_RIGHT">
                 <Button fx:id="btnEnregistrer" text="Enregistrer" onAction="#handleEnregistrer"
-                        style="-fx-background-color:#9b72e8;-fx-text-fill:white;-fx-padding:10 28;"/>
+                        styleClass="button, btn-primary" style="-fx-padding: 10 28;"/>
             </HBox>
         </VBox>
     </ScrollPane>

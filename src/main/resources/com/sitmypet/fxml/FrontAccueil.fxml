@@ -11,12 +11,12 @@
     
     <!-- TOP NAVBAR -->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: white; -fx-padding: 15 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 4);">
+        <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: -color-bg-surface; -fx-padding: 15 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 4); -fx-border-color: -color-border; -fx-border-width: 0 0 1 0;">
             
             <!-- Logo -->
             <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-cursor: hand;" minWidth="-Infinity">
                 <Label text="🐾" style="-fx-font-size: 28px; -fx-text-fill: #8e5bd6;"/>
-                <Label text="SitMyPet" style="-fx-font-size: 22px; -fx-font-weight: 900; -fx-text-fill: #2d1354;"/>
+                <Label text="SitMyPet" style="-fx-font-size: 22px; -fx-font-weight: 900; -fx-text-fill: -color-text-main;"/>
             </HBox>
             
             <Region prefWidth="20"/> <!-- Espace après le logo -->
@@ -26,22 +26,23 @@
             
             <!-- SECTION PROPRIETAIRE -->
             <HBox fx:id="boxProprietaire" spacing="5" managed="false" visible="false" alignment="CENTER_LEFT" minWidth="-Infinity">
-                <Button fx:id="btnMesAnimaux" text="Mes Animaux" onAction="#handleMesAnimaux" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
-                <Button fx:id="btnMesAnnonces" text="Mes Annonces" onAction="#handleMesAnnonces" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
+                <Button fx:id="btnMesAnimaux" text="Mes Animaux" onAction="#handleMesAnimaux" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: -color-text-secondary; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
+                <Button fx:id="btnMesAnnonces" text="Mes Annonces" onAction="#handleMesAnnonces" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: -color-text-secondary; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
             </HBox>
 
             <!-- SECTION GARDIEN -->
             <HBox fx:id="boxGardien" spacing="5" managed="false" visible="false" alignment="CENTER_LEFT" minWidth="-Infinity">
-                <Button fx:id="btnMesPostulations" text="Mes Postulations" onAction="#handleMesPostulations" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
+                <Button fx:id="btnMesPostulations" text="Mes Postulations" onAction="#handleMesPostulations" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: -color-text-secondary; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
             </HBox>
 
             <!-- Réclamation : propriétaire ou gardien -->
             <HBox fx:id="boxReclamationNav" spacing="5" managed="false" visible="false" alignment="CENTER_LEFT" minWidth="-Infinity">
-                <Button fx:id="btnReclamation" text="Réclamation" onAction="#handleReclamation" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #c0392b; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
+                <Button fx:id="btnReclamation" text="Réclamation" onAction="#handleReclamation" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: -color-text-danger; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
             </HBox>
 
-            <Button fx:id="btnMessagerie" text="Messagerie" onAction="#handleMessagerie" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
-            <Button fx:id="btnArticles" text="Blog" onAction="#handleBlog" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: #4a5568; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
+            <Button fx:id="btnMessagerie" text="Messagerie" onAction="#handleMessagerie" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: -color-text-secondary; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
+            <Button fx:id="btnArticles" text="Blog" onAction="#handleBlog" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: -color-text-secondary; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
+            <Button fx:id="btnEvenements" text="Événements" onAction="#handleEvenements" minWidth="-Infinity" style="-fx-background-color: transparent; -fx-text-fill: -color-text-secondary; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 5 10;"/>
             
             <!-- Espace flexible pour pousser la déconnexion à droite -->
             <Region HBox.hgrow="ALWAYS" />
@@ -69,7 +70,7 @@
         <ScrollPane fx:id="accueilScroll" fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;">
         <VBox fx:id="accueilContent" style="-fx-background-color: -color-bg-main;">
             <!-- Nouveau En-tête Moderne -->
-            <VBox spacing="15" style="-fx-background-color: -color-bg-surface; -fx-padding: 60 80 40 80; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.02), 10, 0, 0, 5);">
+            <VBox spacing="15" style="-fx-background-color: -color-bg-surface; -fx-padding: 60 80 40 80; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.02), 10, 0, 0, 5); -fx-border-color: -color-border; -fx-border-width: 0 0 1 0;">
                 <HBox alignment="CENTER_LEFT" spacing="20">
                     <VBox spacing="10" HBox.hgrow="ALWAYS">
                         <Label fx:id="lblWelcomeTitle" text="Bienvenue sur votre espace !" style="-fx-font-size: 42px; -fx-font-weight: 900; -fx-text-fill: -color-text-primary;"/>
@@ -85,41 +86,41 @@
 
             <!-- Dashboard Cards Content -->
             <VBox spacing="30" style="-fx-padding: 40 80;" VBox.vgrow="ALWAYS">
-                <Label text="Aperçu Rapide" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                <Label text="Aperçu Rapide" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: -color-text-main;"/>
                 
                 <HBox spacing="30">
                     <!-- Card 1 -->
-                    <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: #f1f5f9; -fx-border-radius: 15; -fx-border-width: 1; -fx-cursor: hand;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
+                    <VBox style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: -color-border; -fx-border-radius: 15; -fx-border-width: 1; -fx-cursor: hand;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
                         <StackPane style="-fx-background-color: #ebf4ff; -fx-background-radius: 12; -fx-padding: 15; -fx-max-width: 70; -fx-max-height: 70;" alignment="CENTER_LEFT">
                             <Label text="🐾" style="-fx-font-size: 32px;"/>
                         </StackPane>
-                        <Label text="Gérer mes compagnons" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
-                        <Label text="Accédez rapidement à vos fiches animaux." style="-fx-font-size: 14px; -fx-text-fill: #a0aec0;" wrapText="true"/>
+                        <Label text="Gérer mes compagnons" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: -color-text-main;"/>
+                        <Label text="Accédez rapidement à vos fiches animaux." style="-fx-font-size: 14px; -fx-text-fill: -color-text-muted;" wrapText="true"/>
                     </VBox>
 
                     <!-- Card 2 -->
-                    <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: #f1f5f9; -fx-border-radius: 15; -fx-border-width: 1; -fx-cursor: hand;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
+                    <VBox style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: -color-border; -fx-border-radius: 15; -fx-border-width: 1; -fx-cursor: hand;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
                         <StackPane style="-fx-background-color: #f3e8ff; -fx-background-radius: 12; -fx-padding: 15; -fx-max-width: 70; -fx-max-height: 70;" alignment="CENTER_LEFT">
                             <Label text="💬" style="-fx-font-size: 32px;"/>
                         </StackPane>
-                        <Label text="Messagerie intégrée" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
-                        <Label text="Communiquez avec les gardiens ou propriétaires." style="-fx-font-size: 14px; -fx-text-fill: #a0aec0;" wrapText="true"/>
+                        <Label text="Messagerie intégrée" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: -color-text-main;"/>
+                        <Label text="Communiquez avec les gardiens ou propriétaires." style="-fx-font-size: 14px; -fx-text-fill: -color-text-muted;" wrapText="true"/>
                     </VBox>
 
                     <!-- Card 3 -->
-                    <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: #f1f5f9; -fx-border-radius: 15; -fx-border-width: 1; -fx-cursor: hand;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
+                    <VBox style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: -color-border; -fx-border-radius: 15; -fx-border-width: 1; -fx-cursor: hand;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
                         <StackPane style="-fx-background-color: #e6fffa; -fx-background-radius: 12; -fx-padding: 15; -fx-max-width: 70; -fx-max-height: 70;" alignment="CENTER_LEFT">
                             <Label text="📢" style="-fx-font-size: 32px;"/>
                         </StackPane>
-                        <Label text="Explorer les annonces" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
-                        <Label text="Trouvez les meilleures offres de garde." style="-fx-font-size: 14px; -fx-text-fill: #a0aec0;" wrapText="true"/>
+                        <Label text="Explorer les annonces" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: -color-text-main;"/>
+                        <Label text="Trouvez les meilleures offres de garde." style="-fx-font-size: 14px; -fx-text-fill: -color-text-muted;" wrapText="true"/>
                     </VBox>
                 </HBox>
 
                 <!-- Feed annonces (gardien : annonces disponibles pour postuler) -->
                 <VBox fx:id="gardienFeedSection" spacing="16" visible="false" managed="false" style="-fx-padding: 10 0 0 0;" VBox.vgrow="ALWAYS">
-                    <Label text="Annonces disponibles" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
-                    <StackPane fx:id="announcementFeedHost" minHeight="440" prefHeight="520" VBox.vgrow="ALWAYS" style="-fx-background-color: #f6f7fb; -fx-background-radius: 12; -fx-padding: 8;"/>
+                    <Label text="Annonces disponibles" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: -color-text-main;"/>
+                    <StackPane fx:id="announcementFeedHost" minHeight="440" prefHeight="520" VBox.vgrow="ALWAYS" style="-fx-background-color: -color-input-bg; -fx-background-radius: 12; -fx-padding: 8;"/>
                 </VBox>
                 
                 <!-- Bannière Promo ou Info -->
@@ -129,7 +130,7 @@
                         <Label text="Découvrez notre nouveau blog !" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: white;"/>
                         <Label text="Astuces de garde, conseils de santé pour vos animaux et bien plus encore." style="-fx-font-size: 15px; -fx-text-fill: #d1cadd;"/>
                     </VBox>
-                    <Button text="Lire les articles" style="-fx-background-color: white; -fx-text-fill: #633694; -fx-padding: 12 30; -fx-font-weight: bold; -fx-background-radius: 30; -fx-font-size: 16px; -fx-cursor: hand;"/>
+                    <Button text="Lire les articles" styleClass="button, btn-secondary" style="-fx-padding: 12 30;"/>
                 </HBox>
             </VBox>
         </VBox>

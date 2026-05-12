@@ -91,7 +91,7 @@
                 <HBox spacing="25" alignment="CENTER_LEFT">
                     <!-- Total -->
                     <HBox style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: -color-border; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
-                        <StackPane style="-fx-background-color: #ebf4ff; -fx-background-radius: 12; -fx-padding: 15;">
+                        <StackPane style="-fx-background-color: -color-bg-surface-alt; -fx-background-radius: 12; -fx-padding: 15;">
                             <Label text="👥" style="-fx-font-size: 24px;"/>
                         </StackPane>
                         <VBox alignment="CENTER_LEFT" spacing="2">
@@ -102,7 +102,7 @@
                     
                     <!-- Admins -->
                     <HBox style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: -color-border; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
-                        <StackPane style="-fx-background-color: #f3e8ff; -fx-background-radius: 12; -fx-padding: 15;">
+                        <StackPane style="-fx-background-color: -color-bg-surface-alt; -fx-background-radius: 12; -fx-padding: 15;">
                             <Label text="⭐" style="-fx-font-size: 24px;"/>
                         </StackPane>
                         <VBox alignment="CENTER_LEFT" spacing="2">
@@ -113,7 +113,7 @@
 
                     <!-- Propriétaires -->
                     <HBox style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: -color-border; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
-                        <StackPane style="-fx-background-color: #e6fffa; -fx-background-radius: 12; -fx-padding: 15;">
+                        <StackPane style="-fx-background-color: -color-bg-surface-alt; -fx-background-radius: 12; -fx-padding: 15;">
                             <Label text="🏠" style="-fx-font-size: 24px;"/>
                         </StackPane>
                         <VBox alignment="CENTER_LEFT" spacing="2">
@@ -124,7 +124,7 @@
 
                     <!-- Gardiens -->
                     <HBox style="-fx-background-color: -color-bg-card; -fx-background-radius: 15; -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 15, 0, 0, 5); -fx-border-color: -color-border; -fx-border-radius: 15; -fx-border-width: 1;" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="15">
-                        <StackPane style="-fx-background-color: #fffff0; -fx-background-radius: 12; -fx-padding: 15;">
+                        <StackPane style="-fx-background-color: -color-bg-surface-alt; -fx-background-radius: 12; -fx-padding: 15;">
                             <Label text="🐾" style="-fx-font-size: 24px;"/>
                         </StackPane>
                         <VBox alignment="CENTER_LEFT" spacing="2">
@@ -204,8 +204,8 @@
                             <Label text="Inscrit le :" GridPane.columnIndex="0" GridPane.rowIndex="6" style="-fx-font-weight: bold;"/>
                             <Label fx:id="lblDetailDate" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
                         </GridPane>
-                        <Button fx:id="btnVoirCertificat" text="Voir le certificat" style="-fx-background-color: #8e5bd6; -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 20; -fx-font-weight: bold; -fx-cursor: hand;" maxWidth="Infinity" visible="false" managed="false" onAction="#handleVoirCertificat"/>
-                        <Button fx:id="btnDebloquer" text="🔓 Débloquer le compte" style="-fx-background-color: #e53e3e; -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 20; -fx-font-weight: bold; -fx-cursor: hand;" maxWidth="Infinity" visible="false" managed="false" onAction="#handleDebloquer"/>
+                        <Button fx:id="btnVoirCertificat" text="Voir le certificat" styleClass="button, btn-primary" style="-fx-padding: 8 15; -fx-background-radius: 20; -fx-font-weight: bold; -fx-cursor: hand;" maxWidth="Infinity" visible="false" managed="false" onAction="#handleVoirCertificat"/>
+                        <Button fx:id="btnDebloquer" text="🔓 Débloquer le compte" styleClass="button, btn-danger" style="-fx-padding: 8 15; -fx-background-radius: 20; -fx-font-weight: bold; -fx-cursor: hand;" maxWidth="Infinity" visible="false" managed="false" onAction="#handleDebloquer"/>
                     </VBox>
                 </HBox>
                 

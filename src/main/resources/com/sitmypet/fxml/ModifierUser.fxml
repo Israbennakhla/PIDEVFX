@@ -7,13 +7,13 @@
 <?import com.sitmypet.components.SmallThemeToggle?>
 
 <ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.sitmypet.controllers.ModifierUserController" stylesheets="/style.css" fitToWidth="true" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
-    <VBox alignment="CENTER" style="-fx-background-color: linear-gradient(to right bottom, #f4f7f6, #e2e8f0);">
+    <VBox alignment="CENTER" style="-fx-background-color: -color-bg-main;">
     <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
     
     <VBox styleClass="details-pane" spacing="25" maxWidth="750" style="-fx-effect: dropshadow(gaussian, rgba(142, 91, 214, 0.15), 30, 0, 0, 10); -fx-border-color: #e2e8f0; -fx-border-width: 1; -fx-border-radius: 20;">
         <!-- En-tête du formulaire -->
         <HBox alignment="CENTER_LEFT" spacing="20">
-            <StackPane style="-fx-background-color: #f3e8ff; -fx-background-radius: 15; -fx-padding: 15;">
+            <StackPane style="-fx-background-color: -color-bg-surface-alt; -fx-background-radius: 15; -fx-padding: 15;">
                 <Label text="✎" style="-fx-font-size: 32px; -fx-text-fill: #8e5bd6;"/>
             </StackPane>
             <VBox>
@@ -32,22 +32,22 @@
             <VBox spacing="20" HBox.hgrow="ALWAYS">
                 <VBox spacing="8">
                     <Label text="Nom de famille *" style="-fx-font-weight: 800; -fx-text-fill: #2d3748;"/>
-                    <TextField fx:id="txtNom" promptText="Ex: Dupont" style="-fx-padding: 12 15; -fx-font-size: 15px; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-background-color: #f7fafc;"/>
+                    <TextField fx:id="txtNom" promptText="Ex: Dupont" styleClass="text-field"/>
                 </VBox>
                 
                 <VBox spacing="8">
                     <Label text="Adresse Email *" style="-fx-font-weight: 800; -fx-text-fill: #2d3748;"/>
-                    <TextField fx:id="txtEmail" promptText="exemple@domaine.com" style="-fx-padding: 12 15; -fx-font-size: 15px; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-background-color: #f7fafc;"/>
+                    <TextField fx:id="txtEmail" promptText="exemple@domaine.com" styleClass="text-field"/>
                 </VBox>
                 
                 <VBox spacing="8">
                     <Label text="Adresse complète" style="-fx-font-weight: 800; -fx-text-fill: #2d3748;"/>
-                    <TextField fx:id="txtAdresse" promptText="Ex: 123 Rue de Paris" style="-fx-padding: 12 15; -fx-font-size: 15px; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-background-color: #f7fafc;"/>
+                    <TextField fx:id="txtAdresse" promptText="Ex: 123 Rue de Paris" styleClass="text-field"/>
                 </VBox>
                 
                 <VBox spacing="8">
                     <Label text="Rôle d'accès *" style="-fx-font-weight: 800; -fx-text-fill: #2d3748;"/>
-                    <ComboBox fx:id="comboRole" maxWidth="Infinity" style="-fx-padding: 8 10; -fx-font-size: 15px; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-background-color: #f7fafc;"/>
+                    <ComboBox fx:id="comboRole" maxWidth="Infinity" styleClass="combo-box"/>
                 </VBox>
             </VBox>
             
@@ -55,19 +55,19 @@
             <VBox spacing="20" HBox.hgrow="ALWAYS">
                 <VBox spacing="8">
                     <Label text="Prénom *" style="-fx-font-weight: 800; -fx-text-fill: #2d3748;"/>
-                    <TextField fx:id="txtPrenom" promptText="Ex: Jean" style="-fx-padding: 12 15; -fx-font-size: 15px; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-background-color: #f7fafc;"/>
+                    <TextField fx:id="txtPrenom" promptText="Ex: Jean" styleClass="text-field"/>
                 </VBox>
                 
                 <VBox spacing="8">
                     <Label text="Numéro de téléphone" style="-fx-font-weight: 800; -fx-text-fill: #2d3748;"/>
-                    <TextField fx:id="txtTelephone" promptText="+216 XX XXX XXX" style="-fx-padding: 12 15; -fx-font-size: 15px; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-background-color: #f7fafc;"/>
+                    <TextField fx:id="txtTelephone" promptText="+216 XX XXX XXX" styleClass="text-field"/>
                 </VBox>
                 
                 <VBox spacing="8">
                     <Label text="Photo de profil" style="-fx-font-weight: 800; -fx-text-fill: #2d3748;"/>
                     <HBox spacing="10">
-                        <TextField fx:id="txtPhoto" HBox.hgrow="ALWAYS" promptText="Aucune photo..." editable="false" style="-fx-padding: 12 15; -fx-font-size: 15px; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; -fx-background-color: #f7fafc;"/>
-                        <Button fx:id="btnParcourir" text="Parcourir" onAction="#handleParcourir" style="-fx-padding: 12 20; -fx-background-color: #edf2f7; -fx-text-fill: #4a5568; -fx-background-radius: 10; -fx-font-weight: 800; -fx-cursor: hand; -fx-border-color: #e2e8f0; -fx-border-radius: 10;"/>
+                        <TextField fx:id="txtPhoto" HBox.hgrow="ALWAYS" promptText="Aucune photo..." editable="false" styleClass="text-field"/>
+                        <Button fx:id="btnParcourir" text="Parcourir" onAction="#handleParcourir" styleClass="button, btn-secondary" style="-fx-padding: 12 20;"/>
                     </HBox>
                 </VBox>
                 
@@ -86,7 +86,7 @@
         <HBox spacing="20" alignment="CENTER_RIGHT">
             <Label text="* Informations requises" styleClass="note-text" HBox.hgrow="ALWAYS" maxWidth="Infinity" style="-fx-font-size: 13px;"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button fx:id="btnAnnuler" text="Annuler" onAction="#handleAnnuler" style="-fx-background-color: transparent; -fx-text-fill: #a0aec0; -fx-font-weight: bold; -fx-font-size: 16px; -fx-cursor: hand;"/>
+            <Button fx:id="btnAnnuler" text="Annuler" onAction="#handleAnnuler" style="-fx-background-color: transparent; -fx-text-fill: -color-text-secondary; -fx-font-weight: bold; -fx-font-size: 16px; -fx-cursor: hand;"/>
             <Button fx:id="btnEnregistrer" text="Enregistrer les modifications" onAction="#handleEnregistrer" styleClass="btn-primary" style="-fx-padding: 15 35; -fx-font-size: 16px; -fx-background-radius: 30; -fx-effect: dropshadow(gaussian, rgba(142, 91, 214, 0.4), 15, 0, 0, 5); -fx-font-weight: 900;"/>
         </HBox>
     </VBox>
